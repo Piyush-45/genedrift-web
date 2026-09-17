@@ -5,6 +5,76 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Live — 2026-09-17
+
+The site is on the internet and the CMS loop is verified end to end: a line
+added to the Leadership page in Creator appeared on the live site.
+
+| Piece | Where |
+|---|---|
+| Repo | `Piyush-45/genedrift-web`, private, branch `main` |
+| Host | Vercel, team `ztm`, project `genedrift-web`, preset **Next.js** |
+| Domain | `www.genedrift.site` — DNS was already pointing at the old preview project, so it moved with no GoDaddy change |
+| Publishing API | Catalyst AppSail, same base URL as before |
+| CMS | Creator `genedrift-website` |
+
+### Three things to know about this deployment
+
+**Vercel auto-detected the wrong preset.** It found the Express service in
+`services/catalyst-website` and offered a multi-service build. It was changed
+to **Next.js** by hand. Do not accept the `vercel.json` it suggests — it
+rewires the build to the service, not the site.
+
+**`SITE_INDEXABLE` is off.** Only the exact string `"true"` makes a deployment
+crawlable. Both halves are wired: `app/robots.ts` serves `Disallow: /` and
+`next.config.ts` sends `X-Robots-Tag: noindex, nofollow`. Verified live —
+a fetch of the site was refused by robots, which is the proof.
+
+**Three env vars were deliberately left empty** — `CATALYST_API_TOKEN`,
+`CREATOR_CONTACT_ENDPOINT`, `CREATOR_CONTACT_TOKEN`. All three are optional in
+code. The consequence of the second one is real and worth saying out loud:
+**the contact form accepts a submission and delivers it nowhere.** That needs
+the Creator endpoint before anyone is invited to use the site.
+
+### Cache timing — what "1m" actually means
+
+`revalidate: 60` does not mean the page refreshes every minute. It means the
+page goes *stale* after 60 seconds; the next request after that serves the old
+copy and regenerates in the background. So a change shows on the **second**
+reload, not the first. This is also why `npm run dev` never shows it —
+revalidation is a production behaviour. Use `npm run build && npm run start`.
+
+The Creator publish buttons skip the wait by calling `/api/revalidate`
+directly, which is why an editor sees their change immediately.
+
+### Still outstanding on our side
+
+- **Add the bare `genedrift.site`** in Vercel. Only `www.` resolves today.
+- **Revoke the GitHub token** that was printed to a terminal during setup:
+  GitHub → Settings → Applications → Authorized OAuth Apps → GitHub CLI →
+  Revoke.
+- **Rotate both signing secrets** before handover.
+- **Creator trial expired 2026-09-18** — everything built this week lives in
+  that application.
+- Rename the certifications report button to "Publish menu & footer" (it
+  publishes all three forms; the name is the only thing wrong).
+- Read-only system fields (Key, Link, Parent Key, CTA Link) are hidden on the
+  forms rather than permission-locked. Deferred to handover.
+
+### Migration
+
+`claude/genedrift-migration-guide.md` in the project docs covers moving the
+Zoho apps to the client's account. Two constraints found while writing it,
+both worth knowing before promising a date:
+
+- **Creator `.ds` exports cannot be imported.** Migration is an ownership
+  transfer of the existing application, not an export/import.
+- **Catalyst does not move.** The zip is redeployed into the new account and
+  the base URL changes — which means every Creator application variable
+  pointing at it changes too.
+
+---
+
 ## Where the client's September feedback actually stands — 2026-09-17
 
 Checked item by item against `client-feedback-2026-09-15.md`, not from memory.
@@ -41,14 +111,13 @@ border whether or not a line is drawn.
 | 7.2, 7.3 | Adverse-event form: mandatory fields, routing, accountable owner. **The safety intent stays disabled until answered** |
 | 7.1 | The real PV contact list — page is built, placeholders in place |
 | 10.2, 10.3 | Careers: openings report URL and OAuth credentials (the report is private) |
-| 11 | Hosting — which Zoho account, Catalyst subscription |
+| 11 | Hosting — which Zoho account, Catalyst subscription. The *frontend* is settled (Vercel + genedrift.site); this is the Zoho half |
 
 ### Not from the client, but ours to finish
 
 - **Creator trial expires 2026-09-18.** Everything built this week lives in it.
 - Rotate both signing secrets. The editorial one is in plaintext in every `.ds`
   export.
-- Neither repo has a git remote.
 - 19 of 21 pages are still Draft in Creator.
 - The capability data itself is **unverified** — "Regulatory Affairs available,
   the other two not" across most of Africa came from the design file, not from
@@ -681,4 +750,9 @@ engagement had been living with **no git remote and 141 uncommitted files**.
 The old repo still holds Catalyst, Creator, the editor widget and the docs, and
 still has no remote. That is one folder deletion away from losing the engagement.
 
-**Push both repos to private remotes.** This is not a nice-to-have.
+**The website repo now has a remote** — `Piyush-45/genedrift-web`, private,
+pushed 2026-09-17. `.env.local` and the tooling folder are gitignored and were
+verified excluded before the first push.
+
+**The platform repo still has none.** Catalyst, Creator, the editor widget and
+its docs are still one folder deletion away from being lost. Push it.
