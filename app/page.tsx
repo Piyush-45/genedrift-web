@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import { getPage } from "@/lib/content/fixtures";
+import { getPage } from "@/lib/content/pages";
 import { RenderSections } from "@/components/sections/registry";
 
-export default function HomePage() {
-  const page = getPage("home");
+export default async function HomePage() {
+  const page = await getPage("home");
   if (!page) notFound();
 
   return (

@@ -27,6 +27,23 @@
   --color-accent-soft: #7c63e8; /* second capability edge                 */
   --color-deep:      #241653;   /* dark sections, third capability edge   */
 
+  --color-dim:       #a9a3bc;   /* two-tone heading tail, stage numerals     */
+  --color-rule:      #edebf6;   /* hairline inside a card                    */
+  --color-line-soft: #d3ccee;   /* card border on hover                      */
+  --color-line-tint: #c6bce6;   /* underline on a hovered market link        */
+  --color-sep:       #c9c5d6;   /* the dot between market names              */
+  --color-band-line: #e4e2db;   /* rules inside the warm band                */
+  --color-band-tint: #fbfaf7;   /* warm band cell on hover                   */
+  --color-slate:     #4a4a55;   /* tag copy on a neutral pill                */
+  --color-slate-soft:#4a4560;   /* playlist row on hover                     */
+  --color-placeholder: #8a8a94; /* form field placeholder                    */
+  --color-rail:      #f7f6fb;   /* tab rail ground, industries index panel   */
+  --color-rail-line: #f0eef6;   /* row rule inside the industries index panel*/
+
+  /* on-accent (copy sitting on the purple CTA panel) */
+  --color-on-accent:       #ffffff;
+  --color-on-accent-muted: #dcd6f5;
+
   /* on-dark */
   --color-on-deep:        #ffffff;
   --color-on-deep-muted:  #b8afdf;
@@ -42,11 +59,15 @@
   --font-sans: var(--font-archivo), "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, Menlo, Consolas, monospace;
 
-  --text-display:   3.375rem;  /* 54 — homepage h1                        */
-  --text-display--line-height: 4rem;
-  --text-h1:        2.5rem;    /* 40 — section headings                   */
+  /* Fluid from ~360px to the 1440 design canvas. The max of each clamp is
+     the approved desktop value, so the design is reproduced exactly at
+     canvas width and degrades on a curve below it — no breakpoint steps.
+     Line heights must stay unitless here, or they will not track the clamp. */
+  --text-display:   clamp(2.125rem, 5vw, 3.375rem);     /* 34 → 54         */
+  --text-display--line-height: 1.18;
+  --text-h1:        clamp(1.75rem, 3.6vw, 2.5rem);      /* 28 → 40         */
   --text-h1--line-height: 1.12;
-  --text-h2:        2.0625rem; /* 33 — billboard, large cards             */
+  --text-h2:        clamp(1.5rem, 3vw, 2.0625rem);      /* 24 → 33         */
   --text-h2--line-height: 1.16;
   --text-h3:        1.5rem;    /* 24 — capability titles                  */
   --text-h3--line-height: 1.25;
@@ -64,12 +85,20 @@
   --text-label--line-height: 1.4;
   --text-label--letter-spacing: 0.16em;
 
+  --text-stat:      1.625rem;  /* 26 — region counts                      */
+  --text-h5:        1.1875rem; /* 19 — why-cards                          */
+  --text-md:        0.9375rem; /* 15 — dense card copy, pills, nav        */
+  --text-watermark: 5.375rem;  /* 86 — billboard numeral                  */
+
   --tracking-display: -0.035em;
 
   /* ---- layout ------------------------------------------------------- */
-  --spacing-gutter:  6rem;     /* 96 — page side padding                  */
-  --spacing-section: 7rem;     /* 112 — vertical rhythm between sections  */
-  --spacing-band:    6.5rem;   /* 104 — padding inside dark/warm bands    */
+  /* Fluid too. A fixed 96px gutter left 208px of content on a 400px screen,
+     which is what made every section unreadable on a phone. Fixing the token
+     fixes all ten places it is used. */
+  --spacing-gutter:  clamp(1.25rem, 6.7vw, 6rem);   /* 20 → 96             */
+  --spacing-section: clamp(4rem, 7.8vw, 7rem);      /* 64 → 112            */
+  --spacing-band:    clamp(3.5rem, 7.2vw, 6.5rem);  /* 56 → 104            */
 
   --container-page:  90rem;    /* 1440 — design canvas width              */
   --container-body:  78rem;    /* 1248 — content width inside the gutter  */
@@ -77,8 +106,12 @@
   --radius-card:     1.125rem; /* 18                                      */
   --radius-control:  0.5625rem;/* 9 — buttons, fields                     */
   --radius-pill:     6.25rem;
+  --radius-panel:    1rem;     /* 16 — region and route cards             */
+  --radius-hero:     1.375rem; /* 22 — the contact panel                  */
+
 
   --shadow-card: 0 20px 44px rgb(36 22 83 / 0.10), 0 2px 6px rgb(36 22 83 / 0.05);
+  --shadow-lift: 0 18px 40px rgb(36 22 83 / 0.11);
 
   /* ---- motion ------------------------------------------------------- */
   --ease-out-soft: cubic-bezier(0.2, 0.7, 0.3, 1);

@@ -1,0 +1,26 @@
+/*
+ * The "Publish markets" button on the Website_Markets report.
+ *
+ * Creator path: Design > Website_Markets Report > Actions > Action Item
+ *               "Publish markets" > workflow "Publish_Markets"
+ *
+ * Set the action item's execution to run ONCE for the report, not once per
+ * selected record — this publishes the whole collection, so clicking it with
+ * three rows selected must not fire three publishes.
+ *
+ * `info`, not `alert`: Creator restricts `alert` to on-load, on-validate and
+ * on-change FORM actions and rejects it in a report action item.
+ */
+outcome = thisapp.publish_markets();
+if(outcome.get("ok") == true)
+{
+	info "Markets published. " + ifnull(outcome.get("marketCount"),0) + " markets are live on the site.";
+}
+else
+{
+	/* Catalyst names the market and the field it refused — a duplicate country
+	   path, a status word it does not recognise, a slug with a space in it.
+	   Showing that verbatim is the difference between a two-second fix and a
+	   hunt through 46 rows. */
+	info "Not published — " + ifnull(outcome.get("message"),"unknown error");
+}

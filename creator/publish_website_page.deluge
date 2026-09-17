@@ -1,0 +1,208 @@
+/*
+ * GeneDrift Website — publish one page to Catalyst.
+ *
+ * Creator application: genedrift-website
+ * Trigger:            a "Publish" button on the Website_Pages report
+ * Catalyst endpoint:  POST <base>/v1/website/publications
+ *
+ * Application variables required (namespace "Publishing"):
+ *   Catalyst_Base_URL   e.g. https://gd-genedrift-website-<n>.development.catalystappsail.in
+ *   Signing_Secret      the 64-character secret, identical to the Catalyst
+ *                       env var WEBSITE_HMAC_SECRET
+ *
+ * If your variables are NOT inside a namespace, drop the ".Publishing" part
+ * from the two lines that read them.
+ *
+ * WHY THE SIGNATURE. The Catalyst endpoint is on the open internet and has no
+ * login. Without this, anyone who knows the URL could rewrite any page on the
+ * live site. The signature proves the request came from this app; the
+ * timestamp stops an old captured request being replayed later.
+ */
+map publish_website_page(int pageId)
+{
+	result = Map();
+	result.put("ok",false);
+
+	page = Website_Pages[ID == pageId];
+	if(page.count() == 0)
+	{
+		result.put("message","Page not found.");
+		return result;
+	}
+
+	pagePath = ifnull(page.Path,"").trim();
+	if(pagePath == "" || !pagePath.startsWith("/"))
+	{
+		result.put("message","Path must be set and start with a forward slash.");
+		return result;
+	}
+
+	sections = Website_Sections[Page == pageId];
+	if(sections.count() == 0)
+	{
+		result.put("message","This page has no sections, so there is nothing to publish.");
+		return result;
+	}
+
+	/* Catalyst sorts by Display_Order and drops hidden sections itself, so this
+	   loop stays a straight copy. Sorting in two places is how two places
+	   disagree. */
+	sectionList = List();
+	for each sectionRow in sections
+	{
+		sectionItem = Map();
+		sectionItem.put("sectionUuid",ifnull(sectionRow.Section_UUID,"").trim());
+		sectionItem.put("displayOrder",ifnull(sectionRow.Display_Order,0));
+		sectionItem.put("sectionType",ifnull(sectionRow.Section_Type,"").trim());
+		sectionItem.put("sectionData",ifnull(sectionRow.Section_Data,"").trim());
+		sectionItem.put("hidden",sectionRow.Hidden);
+		sectionItem.put("isRequired",sectionRow.Is_Required);
+		sectionList.add(sectionItem);
+	}
+
+	pagePayload = Map();
+	pagePayload.put("pageUuid",ifnull(page.Page_UUID,"").trim());
+	pagePayload.put("path",pagePath);
+	pagePayload.put("internalTitle",ifnull(page.Internal_Title,"").trim());
+	pagePayload.put("pageFamily",ifnull(page.Page_Family,"").trim());
+	pagePayload.put("seoTitle",ifnull(page.SEO_Title,""));
+	pagePayload.put("seoDescription",ifnull(page.SEO_Description,""));
+	pagePayload.put("robotsDirective",ifnull(page.Robots_Directive,"Index Follow"));
+	pagePayload.put("canonicalUrlOverride",ifnull(page.Canonical_URL_Override,"").toString());
+	pagePayload.put("publishNote",ifnull(page.Publish_Note,""));
+
+	payload = Map();
+	payload.put("page",pagePayload);
+	payload.put("sections",sectionList);
+	bodyText = payload.toString();
+
+	try
+	{
+		baseUrl = thisapp.variables.Publishing.Catalyst_Base_URL.toString().trim();
+		secret = thisapp.variables.Publishing.Signing_Secret.toString();
+		if(baseUrl == "" || secret == "")
+		{
+			result.put("message","Catalyst publishing variables are not configured.");
+			return result;
+		}
+
+		path = "/v1/website/publications";
+		timestampMillis = zoho.currenttime.toLong();
+		timestampSeconds = (timestampMillis / 1000).toLong().toString();
+		nonce = "creator-" + pageId + "-" + timestampMillis;
+
+		/* The signature covers the method, the path, the time, a one-off nonce
+		   and a hash of the exact bytes being sent. Signing the hash rather
+		   than the body keeps the string short; including the path and the
+		   timestamp stops a captured request being replayed elsewhere or
+		   later. */
+		bodyHash = zoho.encryption.sha256(bodyText);
+		signatureBase = "POST\n" + path + "\n" + timestampSeconds + "\n" + nonce + "\n" + bodyHash;
+		signature = zoho.encryption.hmacsha256(secret,signatureBase,"hex");
+
+		headers = Map();
+		headers.put("Content-Type","application/json");
+		headers.put("X-GeneDrift-Timestamp",timestampSeconds);
+		headers.put("X-GeneDrift-Nonce",nonce);
+		headers.put("X-GeneDrift-Signature",signature);
+
+		publishResponse = invokeurl
+		[
+			url :baseUrl + path
+			type :POST
+			body :bodyText
+			headers:headers
+		];
+
+		if(publishResponse.get("ok") != true)
+		{
+			/* Catalyst names the offending field when it refuses. Surface that
+			   verbatim — "publish failed" costs a round trip every time
+			   someone mistypes a section type. */
+			rejection = ifnull(publishResponse.get("code"),"PUBLISH_REJECTED").toString();
+			issues = publishResponse.get("issues");
+			if(issues != null)
+			{
+				rejection = rejection + ": " + issues.toString();
+			}
+			result.put("message",rejection);
+			return result;
+		}
+
+		page.Live_Publication_ID = publishResponse.get("publicationId").toString();
+		page.Last_Published_At = zoho.currenttime;
+		page.Status = "Published";
+
+		/* Tell the website to drop its cached copy of this page, so the edit
+		   appears at once instead of at the end of the 60-second cache window.
+		   That is the difference between an editor believing the CMS works and
+		   an editor pressing Publish three more times.
+
+		   OPTIONAL BY DESIGN. Leave Website_Base_URL empty and this is skipped
+		   -- which is what you want while the site only runs on localhost,
+		   since Zoho cannot reach a laptop. The page still updates within a
+		   minute on its own.
+
+		   A failure here is logged and ignored: the publish itself SUCCEEDED,
+		   and reporting it as failed would be a lie that sends someone hunting
+		   for a problem that is not there. */
+		/* READ INSIDE A TRY. `ifnull` protects against a variable being EMPTY,
+		   not against it not EXISTING — Deluge fails resolving the name before
+		   ifnull ever runs. These two are optional by design, so a missing one
+		   must not fail a publish that has already succeeded: at this point
+		   Catalyst holds the content and all that is left is a cache hint. */
+		websiteBaseUrl = "";
+		revalidateSecret = "";
+		try
+		{
+			websiteBaseUrl = ifnull(thisapp.variables.Publishing.Website_Base_URL,"").toString().trim();
+			revalidateSecret = ifnull(thisapp.variables.Publishing.Revalidate_Secret,"").toString();
+		}
+		catch (missingVariable)
+		{
+			websiteBaseUrl = "";
+		}
+		/* `startsWith("http")`, not `!= ""`. Creator will not store an empty
+		   application variable, so an unconfigured one holds a placeholder like
+		   "none" — which is not empty and would produce a confusing failed
+		   request. A half-filled value ("genedrift.com", no scheme) is skipped
+		   for the same reason. */
+		if(websiteBaseUrl.startsWith("http") && revalidateSecret != "" && revalidateSecret != "none")
+		{
+			try
+			{
+				revalidateHeaders = Map();
+				revalidateHeaders.put("Content-Type","application/json");
+				revalidateHeaders.put("Authorization","Bearer " + revalidateSecret);
+				revalidateBody = Map();
+				revalidateBody.put("path",pagePath);
+				invokeurl
+				[
+					url :websiteBaseUrl + "/api/revalidate"
+					type :POST
+					body :revalidateBody.toString()
+					headers:revalidateHeaders
+				];
+			}
+			catch (revalidateError)
+			{
+				info "Published, but the site cache could not be refreshed: " + revalidateError.toString();
+			}
+		}
+
+		result.put("ok",true);
+		result.put("message","Published.");
+		result.put("publicationId",publishResponse.get("publicationId"));
+		result.put("sectionCount",publishResponse.get("sectionCount"));
+		return result;
+	}
+	catch (publishError)
+	{
+		/* Do NOT mark the page published here. The live site is whatever
+		   Catalyst last accepted; saying "Published" when the call failed is
+		   how a CMS starts lying to the person using it. */
+		result.put("message","Publish failed: " + publishError.toString());
+		return result;
+	}
+	return result;
+}

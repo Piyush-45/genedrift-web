@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ALL_FIXTURES } from "@/lib/content/fixtures";
+import { ALL_FIXTURES } from "@/lib/content/pages";
 import { RenderSections } from "@/components/sections/registry";
 import { REGISTERED_TYPES } from "@/components/sections/registry";
 

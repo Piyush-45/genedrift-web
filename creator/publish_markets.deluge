@@ -1,0 +1,222 @@
+/*
+ * GeneDrift Website — publish the whole Markets collection to Catalyst.
+ *
+ * Creator application: genedrift-website
+ * Trigger:            a "Publish markets" button on the Website_Markets report
+ * Catalyst endpoint:  POST <base>/v1/website/markets
+ *
+ * Forms this reads:
+ *   Website_Markets                one row per country
+ *   Website_Market_Capabilities    one row per service offered in a country,
+ *                                  linked to a market
+ *
+ * WHY THE WHOLE COLLECTION, NOT ONE MARKET. A market is rendered by the
+ * homepage map, the Global Presence table, its region page and its own page.
+ * Publishing row by row means those four can disagree with each other for as
+ * long as the publish takes. Publishing the set means the site swaps from one
+ * consistent picture of the world to the next.
+ *
+ * It is also the only way DELETION works: a market unticked or deleted here
+ * is simply absent from the next payload, and disappears from the site.
+ *
+ * Application variables required (namespace "Publishing") — the same ones the
+ * page publisher uses. Nothing new to configure.
+ */
+map publish_markets()
+{
+	result = Map();
+	result.put("ok",false);
+
+	/* Only ACTIVE markets go to the site. Unticking Active is the safe way to
+	   take a market down: the row, its capabilities and its history stay in
+	   Creator, so putting it back is one tick rather than re-typing it. */
+	markets = Website_Markets[Active == true];
+	if(markets.count() == 0)
+	{
+		result.put("message","No active markets found, so there is nothing to publish. Publishing an empty world map would take every country off the site.");
+		return result;
+	}
+
+	/* Capabilities are read ONCE and grouped in memory, rather than queried
+	   inside the market loop. 46 markets would otherwise be 46 extra queries
+	   against the same small form.
+
+	   GROUPED BY SLUG, NOT BY RECORD ID. `capRow.Market` is a lookup, and
+	   depending on context Deluge hands back either the record ID or the
+	   display value. If it returned the display value while the key was the
+	   ID, every market would publish with ZERO capabilities — the Global
+	   Presence table would go blank with no error anywhere to explain it. The
+	   slug is the same string on both sides, so it cannot be ambiguous. */
+	capsBySlug = Map();
+	for each capRow in Website_Market_Capabilities[ID != 0]
+	{
+		marketKey = ifnull(capRow.Market.Market_Slug,"").trim().toLowerCase();
+		if(marketKey != "")
+		{
+			capItem = Map();
+			capItem.put("name",ifnull(capRow.Capability_Name,"").trim());
+			capItem.put("status",ifnull(capRow.Status,"Not available").trim());
+			capItem.put("displayOrder",ifnull(capRow.Display_Order,0));
+
+			existing = ifnull(capsBySlug.get(marketKey),List());
+			existing.add(capItem);
+			capsBySlug.put(marketKey,existing);
+		}
+	}
+
+	marketList = List();
+	for each marketRow in markets
+	{
+		marketSlug = ifnull(marketRow.Market_Slug,"").trim().toLowerCase();
+		regionName = ifnull(marketRow.Region,"").trim();
+
+		/* The region SLUG is derived, never typed. A hand-typed slug that
+		   disagrees with the region name is a page that 404s with no error
+		   anywhere to explain it. Catalyst refuses anything that does not come
+		   out URL-safe, and names the market when it does. */
+		regionSlug = regionName.toLowerCase().replaceAll(" ","-").replaceAll("&","and").replaceAll("--","-");
+
+		marketItem = Map();
+		marketItem.put("slug",marketSlug);
+		marketItem.put("name",ifnull(marketRow.Market_Name,"").trim());
+		marketItem.put("region",regionName);
+		marketItem.put("regionSlug",regionSlug);
+		marketItem.put("utcOffset",ifnull(marketRow.UTC_Offset,0));
+		marketItem.put("x",ifnull(marketRow.Map_X,0));
+		marketItem.put("y",ifnull(marketRow.Map_Y,0));
+		marketItem.put("capabilities",ifnull(capsBySlug.get(marketSlug),List()));
+		marketList.add(marketItem);
+	}
+
+	payload = Map();
+	payload.put("markets",marketList);
+	bodyText = payload.toString();
+
+	try
+	{
+		baseUrl = thisapp.variables.Publishing.Catalyst_Base_URL.toString().trim();
+		secret = thisapp.variables.Publishing.Signing_Secret.toString();
+		if(baseUrl == "" || secret == "")
+		{
+			result.put("message","Catalyst publishing variables are not configured.");
+			return result;
+		}
+
+		path = "/v1/website/markets";
+		timestampMillis = zoho.currenttime.toLong();
+		timestampSeconds = (timestampMillis / 1000).toLong().toString();
+		nonce = "creator-markets-" + timestampMillis;
+
+		bodyHash = zoho.encryption.sha256(bodyText);
+		signatureBase = "POST\n" + path + "\n" + timestampSeconds + "\n" + nonce + "\n" + bodyHash;
+		signature = zoho.encryption.hmacsha256(secret,signatureBase,"hex");
+
+		headers = Map();
+		headers.put("Content-Type","application/json");
+		headers.put("X-GeneDrift-Timestamp",timestampSeconds);
+		headers.put("X-GeneDrift-Nonce",nonce);
+		headers.put("X-GeneDrift-Signature",signature);
+
+		publishResponse = invokeurl
+		[
+			url :baseUrl + path
+			type :POST
+			body :bodyText
+			headers:headers
+		];
+
+		if(publishResponse.get("ok") != true)
+		{
+			/* Catalyst names the market and the field it refused — a duplicate
+			   country path, an unrecognised status word, a slug with a space
+			   in it. Surface that verbatim rather than "publish failed". */
+			/* A BARE "PUBLISH_REJECTED" IS A BAD ERROR MESSAGE. Catalyst names
+			   the market and the field when it genuinely refuses — but a 404
+			   from a build that predates this endpoint returns HTML, with no
+			   `code` to read, so the fallback fired and said nothing useful.
+			   Fall back to the raw response instead: "404" is a diagnosis,
+			   "PUBLISH_REJECTED" is a guessing game. */
+			rejection = ifnull(publishResponse.get("code"),"PUBLISH_REJECTED").toString();
+			detail = ifnull(publishResponse.get("message"),publishResponse.get("issues"));
+			if(detail != null)
+			{
+				rejection = rejection + ": " + detail.toString();
+			}
+			else
+			{
+				rejection = rejection + " — Catalyst returned no error code. Raw response: " + publishResponse.toString().subString(0,300);
+			}
+			result.put("message",rejection);
+			return result;
+		}
+
+		/* One revalidate call for the whole collection, not 54 paths.
+		   Publishing markets changes the homepage, Global Presence, six region
+		   pages and every country page; listing those paths here would be a
+		   list that goes out of date the moment a market is added.
+
+		   OPTIONAL BY DESIGN. Leave Website_Base_URL empty and this is skipped
+		   -- which is what you want while the site only runs on localhost,
+		   since Zoho cannot reach a laptop. The site still updates within a
+		   minute on its own.
+
+		   A failure here is logged and ignored: the publish itself SUCCEEDED,
+		   and reporting it as failed would send someone hunting for a problem
+		   that is not there. */
+		/* READ INSIDE A TRY. `ifnull` protects against a variable being EMPTY,
+		   not against it not EXISTING — Deluge fails resolving the name before
+		   ifnull ever runs. These two are optional by design, so a missing one
+		   must not fail a publish that has already succeeded: at this point
+		   Catalyst holds the content and all that is left is a cache hint. */
+		websiteBaseUrl = "";
+		revalidateSecret = "";
+		try
+		{
+			websiteBaseUrl = ifnull(thisapp.variables.Publishing.Website_Base_URL,"").toString().trim();
+			revalidateSecret = ifnull(thisapp.variables.Publishing.Revalidate_Secret,"").toString();
+		}
+		catch (missingVariable)
+		{
+			websiteBaseUrl = "";
+		}
+		/* `startsWith("http")`, not `!= ""`. Creator will not store an empty
+		   application variable, so an unconfigured one holds a placeholder like
+		   "none" — which is not empty and would produce a confusing failed
+		   request. A half-filled value ("genedrift.com", no scheme) is skipped
+		   for the same reason. */
+		if(websiteBaseUrl.startsWith("http") && revalidateSecret != "" && revalidateSecret != "none")
+		{
+			try
+			{
+				revalidateHeaders = Map();
+				revalidateHeaders.put("Content-Type","application/json");
+				revalidateHeaders.put("Authorization","Bearer " + revalidateSecret);
+				revalidateBody = Map();
+				revalidateBody.put("collection","markets");
+				invokeurl
+				[
+					url :websiteBaseUrl + "/api/revalidate"
+					type :POST
+					body :revalidateBody.toString()
+					headers:revalidateHeaders
+				];
+			}
+			catch (revalidateError)
+			{
+				info "Markets published, but the site cache could not be refreshed: " + revalidateError.toString();
+			}
+		}
+
+		result.put("ok",true);
+		result.put("message","Markets published.");
+		result.put("publicationId",publishResponse.get("publicationId"));
+		result.put("marketCount",publishResponse.get("marketCount"));
+		return result;
+	}
+	catch (publishError)
+	{
+		result.put("message","Publish failed: " + publishError.toString());
+		return result;
+	}
+	return result;
+}

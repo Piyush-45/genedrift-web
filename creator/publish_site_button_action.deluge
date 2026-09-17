@@ -1,0 +1,19 @@
+/*
+ * The "Publish menu & footer" button.
+ *
+ * Put it on the Website_Nav_Items report AND the Website_Certifications
+ * report — an editor who has just changed a certification should not have to
+ * navigate somewhere else to make it live. Same function, same name, both
+ * places.
+ *
+ * `info`, not `alert`: Creator rejects `alert` in report actions.
+ */
+outcome = thisapp.publish_site();
+if(outcome.get("ok") == true)
+{
+	info "Menu and footer published. " + ifnull(outcome.get("menuCount"),0) + " menu items are live.";
+}
+else
+{
+	info "Not published — " + ifnull(outcome.get("message"),"unknown error");
+}

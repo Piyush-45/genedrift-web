@@ -1,0 +1,1394 @@
+{
+  "generatedAt": "2026-09-16T10:19:35.612Z",
+  "sections": {
+    "hero-map": {
+      "label": "Headline & world map",
+      "fields": [
+        {
+          "key": "headingLead",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "headingJoin",
+          "label": "Joining word",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": true
+        },
+        {
+          "key": "actions",
+          "label": "Buttons",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "variant",
+              "label": "Style",
+              "kind": "select",
+              "required": true,
+              "options": [
+                "solid",
+                "quiet"
+              ]
+            }
+          ],
+          "titleKey": "label",
+          "maxItems": 2
+        },
+        {
+          "key": "defaultMarket",
+          "label": "Market shown first",
+          "kind": "text",
+          "required": true,
+          "help": "The market shown before a visitor touches the map. Use the country's URL name, e.g. india."
+        },
+        {
+          "key": "cardLabel",
+          "label": "Card label",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "tickerLabel",
+          "label": "Ticker label",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "ticker",
+          "label": "Ticker entries",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "source",
+              "label": "Source",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "text",
+              "label": "Text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": false,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            }
+          ],
+          "titleKey": "source"
+        }
+      ]
+    },
+    "page-head": {
+      "label": "Page heading",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "headingTail",
+          "label": "Heading — second line (lighter)",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "actions",
+          "label": "Buttons",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "variant",
+              "label": "Style",
+              "kind": "select",
+              "required": true,
+              "options": [
+                "solid",
+                "quiet"
+              ]
+            }
+          ],
+          "titleKey": "label",
+          "maxItems": 2
+        }
+      ]
+    },
+    "sub-capability-grid": {
+      "label": "Links to sub-pages",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": false
+            }
+          ],
+          "titleKey": "title"
+        }
+      ]
+    },
+    "metric-row": {
+      "label": "Numbers strip",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": false,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "value",
+              "label": "Value",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "note",
+              "label": "Note",
+              "kind": "text",
+              "required": false
+            }
+          ],
+          "titleKey": "value"
+        }
+      ]
+    },
+    "faq-accordion": {
+      "label": "Questions & answers",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "question",
+              "label": "Question",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "answer",
+              "label": "Answer",
+              "kind": "longtext",
+              "required": true
+            }
+          ],
+          "titleKey": "question"
+        }
+      ]
+    },
+    "country-head": {
+      "label": "Country heading",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": false,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "localTimeLabel",
+          "label": "Local time label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "showLocator",
+          "label": "Show locator",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "key": "actions",
+          "label": "Buttons",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "variant",
+              "label": "Style",
+              "kind": "select",
+              "required": true,
+              "options": [
+                "solid",
+                "quiet"
+              ]
+            }
+          ],
+          "titleKey": "label",
+          "maxItems": 2
+        }
+      ]
+    },
+    "capability-status": {
+      "label": "What we offer here",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": false,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "notes",
+          "label": "Notes",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "footnote",
+          "label": "Footnote",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "job-list": {
+      "label": "Job openings list",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "source",
+          "label": "Source",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "emptyMessage",
+          "label": "Empty message",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "emptyCtaLabel",
+          "label": "Empty cta label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "emptyCtaHref",
+          "label": "Empty cta href",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "job-detail": {
+      "label": "Job advert",
+      "fields": [
+        {
+          "key": "applyLabel",
+          "label": "Apply label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "responsibilitiesLabel",
+          "label": "Responsibilities label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "requirementsLabel",
+          "label": "Requirements label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "unverifiedNotice",
+          "label": "Unverified notice",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "article-grid": {
+      "label": "Article listing",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "showFilters",
+          "label": "Show filters",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "key": "allLabel",
+          "label": "All label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "emptyMessage",
+          "label": "Empty message",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "article-head": {
+      "label": "Article heading",
+      "fields": [
+        {
+          "key": "backLabel",
+          "label": "Back label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "backHref",
+          "label": "Back href",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "article-body": {
+      "label": "Article body",
+      "fields": []
+    },
+    "contact-form": {
+      "label": "Contact form",
+      "fields": [
+        {
+          "key": "intent",
+          "label": "Intent",
+          "kind": "select",
+          "required": true,
+          "options": [
+            "enquiry",
+            "proposal",
+            "partnership",
+            "safety"
+          ]
+        }
+      ]
+    },
+    "explore-journeys": {
+      "label": "Explore panels",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "linkLabel",
+          "label": "Link text",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "resting",
+              "label": "Resting",
+              "kind": "boolean",
+              "required": false
+            }
+          ],
+          "titleKey": "title"
+        },
+        {
+          "key": "certificationsLabel",
+          "label": "Certifications label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "showCertifications",
+          "label": "Show certifications",
+          "kind": "boolean",
+          "required": false
+        }
+      ]
+    },
+    "statement": {
+      "label": "Big statement",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "lead",
+          "label": "Opening line",
+          "kind": "longtext",
+          "required": true
+        },
+        {
+          "key": "tail",
+          "label": "Closing line (lighter)",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "actions",
+          "label": "Buttons",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "variant",
+              "label": "Style",
+              "kind": "select",
+              "required": true,
+              "options": [
+                "solid",
+                "outline"
+              ]
+            }
+          ],
+          "titleKey": "label",
+          "maxItems": 2
+        }
+      ]
+    },
+    "capability-panels": {
+      "label": "Service panels",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "intro",
+          "label": "Intro",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "linkLabel",
+          "label": "Link text",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "linkHref",
+          "label": "Link href",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": true,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": true
+            },
+            {
+              "key": "tags",
+              "label": "Tags",
+              "kind": "textlist",
+              "required": false
+            },
+            {
+              "key": "emphasis",
+              "label": "Emphasis",
+              "kind": "select",
+              "required": false,
+              "options": [
+                "primary",
+                "secondary",
+                "deep"
+              ]
+            },
+            {
+              "key": "wide",
+              "label": "Wide",
+              "kind": "boolean",
+              "required": false
+            }
+          ],
+          "titleKey": "title"
+        }
+      ]
+    },
+    "industry-index": {
+      "label": "Industries list",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "countLabel",
+          "label": "Word after the number",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "summary",
+              "label": "Short description",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "icon",
+              "label": "Icon",
+              "kind": "select",
+              "required": false,
+              "options": [
+                "pharmaceuticals",
+                "devices",
+                "supplements",
+                "cosmetics",
+                "veterinary"
+              ]
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": false,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "productTypes",
+              "label": "Product types",
+              "kind": "textlist",
+              "required": false
+            }
+          ],
+          "titleKey": "title"
+        }
+      ]
+    },
+    "market-directory": {
+      "label": "Country search table",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": false,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "searchLabel",
+          "label": "Search label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "searchPlaceholder",
+          "label": "Search placeholder",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "countryColumnLabel",
+          "label": "Country column label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "regionColumnLabel",
+          "label": "Region column label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "emptyLabel",
+          "label": "Empty label",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "region-cards": {
+      "label": "Regions & markets",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "headingTail",
+          "label": "Heading — second line (lighter)",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "regions",
+          "label": "Regions",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "name",
+              "label": "Name",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "count",
+              "label": "Count",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": false,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "markets",
+              "label": "Markets",
+              "kind": "grouplist",
+              "required": false,
+              "fields": [
+                {
+                  "key": "name",
+                  "label": "Name",
+                  "kind": "text",
+                  "required": true
+                },
+                {
+                  "key": "href",
+                  "label": "Link",
+                  "kind": "text",
+                  "required": true,
+                  "help": "A path on this site, like /contact — or a full https:// address."
+                }
+              ],
+              "titleKey": "name"
+            }
+          ],
+          "titleKey": "name"
+        },
+        {
+          "key": "footnoteLeft",
+          "label": "Footnote left",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "footnoteRight",
+          "label": "Footnote right",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "process-grid": {
+      "label": "How we work — stages",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "stages",
+          "label": "Stages",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": true
+            }
+          ],
+          "titleKey": "title"
+        }
+      ]
+    },
+    "pill-row": {
+      "label": "Certifications strip",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": false,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            }
+          ],
+          "titleKey": "label"
+        }
+      ]
+    },
+    "value-grid": {
+      "label": "Values",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": true
+            }
+          ],
+          "titleKey": "title"
+        }
+      ]
+    },
+    "proof-billboard": {
+      "label": "Client proof",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "cases",
+          "label": "Cases",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": true
+            },
+            {
+              "key": "tags",
+              "label": "Tags",
+              "kind": "textlist",
+              "required": false
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": false,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            }
+          ],
+          "titleKey": "label"
+        }
+      ]
+    },
+    "insight-feed": {
+      "label": "Knowledge Hub feed",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "featured",
+          "label": "Featured",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "listLabel",
+          "label": "List label",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "listLinkLabel",
+          "label": "List link label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "listLinkHref",
+          "label": "List link href",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "items",
+          "label": "Items",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": true,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "kind",
+              "label": "Kind",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "meta",
+              "label": "Meta",
+              "kind": "text",
+              "required": false
+            },
+            {
+              "key": "standfirst",
+              "label": "Intro paragraph",
+              "kind": "longtext",
+              "required": false
+            },
+            {
+              "key": "image",
+              "label": "Image",
+              "kind": "text",
+              "required": false
+            }
+          ],
+          "titleKey": "title"
+        }
+      ]
+    },
+    "contact-split": {
+      "label": "Enquiry form & route cards",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "fields",
+          "label": "Form fields",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "label",
+              "label": "Button text",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "wide",
+              "label": "Wide",
+              "kind": "boolean",
+              "required": false
+            }
+          ],
+          "titleKey": "label"
+        },
+        {
+          "key": "submitLabel",
+          "label": "Submit label",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "submitHref",
+          "label": "Submit href",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "routes",
+          "label": "Cards",
+          "kind": "grouplist",
+          "required": false,
+          "fields": [
+            {
+              "key": "title",
+              "label": "Title",
+              "kind": "text",
+              "required": true
+            },
+            {
+              "key": "body",
+              "label": "Text",
+              "kind": "longtext",
+              "required": true
+            },
+            {
+              "key": "href",
+              "label": "Link",
+              "kind": "text",
+              "required": false,
+              "help": "A path on this site, like /contact — or a full https:// address."
+            },
+            {
+              "key": "linkLabel",
+              "label": "Link text",
+              "kind": "text",
+              "required": false
+            },
+            {
+              "key": "emphasis",
+              "label": "Emphasis",
+              "kind": "select",
+              "required": false,
+              "options": [
+                "neutral",
+                "safety"
+              ]
+            }
+          ],
+          "titleKey": "title"
+        },
+        {
+          "key": "generalLabel",
+          "label": "General label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "generalEmail",
+          "label": "General email",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    }
+  }
+}

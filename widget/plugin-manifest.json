@@ -1,0 +1,5 @@
+{
+  "service": "CREATOR",
+  "cspDomains": { "connect-src": [] },
+  "config": []
+}

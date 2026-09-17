@@ -1,0 +1,68 @@
+/*
+ * GeneDrift Website — one-time repair after importing capabilities.
+ *
+ * Creator path: Settings > Functions > New > run once from the editor
+ *
+ * ## Why this exists
+ *
+ * `Website_Market_Capabilities.Market` is a LOOKUP. A spreadsheet import has
+ * no record IDs in it, so the imported rows carry the market's SLUG in the
+ * helper field `Import_Market_Slug` and arrive with the lookup EMPTY.
+ *
+ * This function does the join once: for every capability row with no market
+ * linked, it finds the market with that slug and links it.
+ *
+ * It is SAFE TO RUN TWICE. Rows that already have a market are skipped, so
+ * running it again after adding more rows only fills in the new ones.
+ *
+ * If Creator's importer did manage to match the lookup on its own, this
+ * reports "0 linked" and changes nothing — which is the answer you want, not
+ * an error.
+ */
+string link_capabilities_to_markets()
+{
+	/* Slug -> record ID, read once. The alternative is a query per capability
+	   row, which is 138 queries to do 138 lookups of the same 46 values. */
+	idBySlug = Map();
+	for each marketRow in Website_Markets[ID != 0]
+	{
+		slugKey = ifnull(marketRow.Market_Slug,"").trim().toLowerCase();
+		if(slugKey != "")
+		{
+			idBySlug.put(slugKey,marketRow.ID);
+		}
+	}
+
+	linked = 0;
+	unmatched = List();
+
+	for each capRow in Website_Market_Capabilities[ID != 0]
+	{
+		/* Only touch rows that are NOT linked. A row someone has since fixed
+		   by hand must not be overwritten by whatever the import said. */
+		if(ifnull(capRow.Market,"").toString() == "")
+		{
+			wanted = ifnull(capRow.Import_Market_Slug,"").trim().toLowerCase();
+			marketId = idBySlug.get(wanted);
+			if(marketId != null)
+			{
+				capRow.Market = marketId;
+				linked = linked + 1;
+			}
+			else
+			{
+				/* Name the ones that failed. A count alone means hunting
+				   through 138 rows for the three that did not take. */
+				unmatched.add(capRow.ID + " (" + wanted + ")");
+			}
+		}
+	}
+
+	summary = linked + " capability rows linked to their market.";
+	if(unmatched.size() > 0)
+	{
+		summary = summary + " " + unmatched.size() + " could not be matched — no market has that slug: " + unmatched.toString();
+	}
+	info summary;
+	return summary;
+}

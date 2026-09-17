@@ -1,0 +1,139 @@
+Import_Market_Slug	Capability_Name	Status	Display_Order
+benin	Regulatory Affairs	Available	10
+benin	MAH & Local Representation	Not available	20
+benin	Pharmacovigilance	Not available	30
+burkina-faso	Regulatory Affairs	Available	10
+burkina-faso	MAH & Local Representation	Not available	20
+burkina-faso	Pharmacovigilance	Not available	30
+cameroon	Regulatory Affairs	Available	10
+cameroon	MAH & Local Representation	Not available	20
+cameroon	Pharmacovigilance	Not available	30
+chad	Regulatory Affairs	Available	10
+chad	MAH & Local Representation	Not available	20
+chad	Pharmacovigilance	Not available	30
+cote-divoire	Regulatory Affairs	Available	10
+cote-divoire	MAH & Local Representation	Not available	20
+cote-divoire	Pharmacovigilance	Not available	30
+dr-congo	Regulatory Affairs	Available	10
+dr-congo	MAH & Local Representation	Not available	20
+dr-congo	Pharmacovigilance	Not available	30
+ethiopia	Regulatory Affairs	Available	10
+ethiopia	MAH & Local Representation	Upcoming	20
+ethiopia	Pharmacovigilance	Upcoming	30
+ghana	Regulatory Affairs	Available	10
+ghana	MAH & Local Representation	Not available	20
+ghana	Pharmacovigilance	Upcoming	30
+kenya	Regulatory Affairs	Available	10
+kenya	MAH & Local Representation	Available	20
+kenya	Pharmacovigilance	Available	30
+madagascar	Regulatory Affairs	Available	10
+madagascar	MAH & Local Representation	Not available	20
+madagascar	Pharmacovigilance	Not available	30
+nigeria	Regulatory Affairs	Available	10
+nigeria	MAH & Local Representation	Available	20
+nigeria	Pharmacovigilance	Available	30
+senegal	Regulatory Affairs	Available	10
+senegal	MAH & Local Representation	Not available	20
+senegal	Pharmacovigilance	Not available	30
+south-africa	Regulatory Affairs	Available	10
+south-africa	MAH & Local Representation	Available	20
+south-africa	Pharmacovigilance	Available	30
+tanzania	Regulatory Affairs	Available	10
+tanzania	MAH & Local Representation	Available	20
+tanzania	Pharmacovigilance	Upcoming	30
+togo	Regulatory Affairs	Available	10
+togo	MAH & Local Representation	Not available	20
+togo	Pharmacovigilance	Not available	30
+uganda	Regulatory Affairs	Available	10
+uganda	MAH & Local Representation	Upcoming	20
+uganda	Pharmacovigilance	Upcoming	30
+zimbabwe	Regulatory Affairs	Available	10
+zimbabwe	MAH & Local Representation	Upcoming	20
+zimbabwe	Pharmacovigilance	Upcoming	30
+brunei	Regulatory Affairs	Available	10
+brunei	MAH & Local Representation	Not available	20
+brunei	Pharmacovigilance	Not available	30
+cambodia	Regulatory Affairs	Available	10
+cambodia	MAH & Local Representation	Upcoming	20
+cambodia	Pharmacovigilance	Available	30
+hong-kong	Regulatory Affairs	Available	10
+hong-kong	MAH & Local Representation	Available	20
+hong-kong	Pharmacovigilance	Available	30
+india	Regulatory Affairs	Available	10
+india	MAH & Local Representation	Available	20
+india	Pharmacovigilance	Available	30
+indonesia	Regulatory Affairs	Available	10
+indonesia	MAH & Local Representation	Not available	20
+indonesia	Pharmacovigilance	Available	30
+laos	Regulatory Affairs	Available	10
+laos	MAH & Local Representation	Not available	20
+laos	Pharmacovigilance	Not available	30
+malaysia	Regulatory Affairs	Available	10
+malaysia	MAH & Local Representation	Available	20
+malaysia	Pharmacovigilance	Available	30
+myanmar	Regulatory Affairs	Available	10
+myanmar	MAH & Local Representation	Available	20
+myanmar	Pharmacovigilance	Available	30
+pakistan	Regulatory Affairs	Available	10
+pakistan	MAH & Local Representation	Upcoming	20
+pakistan	Pharmacovigilance	Upcoming	30
+philippines	Regulatory Affairs	Available	10
+philippines	MAH & Local Representation	Available	20
+philippines	Pharmacovigilance	Available	30
+singapore	Regulatory Affairs	Available	10
+singapore	MAH & Local Representation	Available	20
+singapore	Pharmacovigilance	Available	30
+sri-lanka	Regulatory Affairs	Available	10
+sri-lanka	MAH & Local Representation	Available	20
+sri-lanka	Pharmacovigilance	Available	30
+taiwan	Regulatory Affairs	Available	10
+taiwan	MAH & Local Representation	Available	20
+taiwan	Pharmacovigilance	Available	30
+thailand	Regulatory Affairs	Available	10
+thailand	MAH & Local Representation	Available	20
+thailand	Pharmacovigilance	Available	30
+vietnam	Regulatory Affairs	Available	10
+vietnam	MAH & Local Representation	Available	20
+vietnam	Pharmacovigilance	Available	30
+azerbaijan	Regulatory Affairs	Available	10
+azerbaijan	MAH & Local Representation	Not available	20
+azerbaijan	Pharmacovigilance	Not available	30
+kazakhstan	Regulatory Affairs	Upcoming	10
+kazakhstan	MAH & Local Representation	Upcoming	20
+kazakhstan	Pharmacovigilance	Upcoming	30
+kyrgyzstan	Regulatory Affairs	Available	10
+kyrgyzstan	MAH & Local Representation	Upcoming	20
+kyrgyzstan	Pharmacovigilance	Upcoming	30
+uzbekistan	Regulatory Affairs	Available	10
+uzbekistan	MAH & Local Representation	Available	20
+uzbekistan	Pharmacovigilance	Available	30
+russia	Regulatory Affairs	Upcoming	10
+russia	MAH & Local Representation	Upcoming	20
+russia	Pharmacovigilance	Upcoming	30
+ukraine	Regulatory Affairs	Upcoming	10
+ukraine	MAH & Local Representation	Upcoming	20
+ukraine	Pharmacovigilance	Upcoming	30
+chile	Regulatory Affairs	Upcoming	10
+chile	MAH & Local Representation	Not available	20
+chile	Pharmacovigilance	Upcoming	30
+el-salvador	Regulatory Affairs	Available	10
+el-salvador	MAH & Local Representation	Not available	20
+el-salvador	Pharmacovigilance	Upcoming	30
+guatemala	Regulatory Affairs	Available	10
+guatemala	MAH & Local Representation	Not available	20
+guatemala	Pharmacovigilance	Upcoming	30
+honduras	Regulatory Affairs	Available	10
+honduras	MAH & Local Representation	Not available	20
+honduras	Pharmacovigilance	Upcoming	30
+nicaragua	Regulatory Affairs	Available	10
+nicaragua	MAH & Local Representation	Not available	20
+nicaragua	Pharmacovigilance	Upcoming	30
+peru	Regulatory Affairs	Available	10
+peru	MAH & Local Representation	Upcoming	20
+peru	Pharmacovigilance	Upcoming	30
+saudi-arabia	Regulatory Affairs	Available	10
+saudi-arabia	MAH & Local Representation	Available	20
+saudi-arabia	Pharmacovigilance	Available	30
+united-arab-emirates	Regulatory Affairs	Upcoming	10
+united-arab-emirates	MAH & Local Representation	Upcoming	20
+united-arab-emirates	Pharmacovigilance	Upcoming	30

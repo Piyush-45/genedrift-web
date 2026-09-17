@@ -1,0 +1,94 @@
+import Link from "next/link";
+import { LAND_PATHS, MAP_VIEWBOX } from "@/lib/map/land";
+import type { Market } from "@/lib/map/markets";
+import { LocalTime } from "./local-time";
+import type { CountryHeadProps } from "./schema";
+
+/**
+ * Server component. The locator map reuses the same approved landmass as the
+ * hero — rendered as HTML, no JavaScript, no image request — with this one
+ * market marked. Reusing the geometry means a country page can never show a
+ * different world from the homepage.
+ */
+export function CountryHead({
+  eyebrow,
+  standfirst,
+  localTimeLabel,
+  showLocator,
+  actions,
+  market,
+}: CountryHeadProps & { market?: Market }) {
+  if (!market) return null;
+
+  return (
+    <section className="px-gutter pt-12 lg:pt-16">
+      <div className="mx-auto grid max-w-body gap-10 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-16">
+        <div>
+          <p className="label text-accent">{eyebrow}</p>
+
+          <h1 className="mt-4 text-display font-bold">{market.name}</h1>
+
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <Link
+              href={`/markets/${market.regionSlug}`}
+              className="label text-deep transition-colors hover:text-accent"
+            >
+              {market.region}
+            </Link>
+            <span className="label text-faint">
+              {localTimeLabel} <LocalTime utcOffset={market.utcOffset} />
+            </span>
+          </div>
+
+          {standfirst && <p className="mt-6 max-w-[58ch] text-lead text-muted">{standfirst}</p>}
+
+          {actions.length > 0 && (
+            <div className="mt-8 flex flex-wrap items-center gap-6">
+              {actions.map((a) => (
+                <Link
+                  key={a.href}
+                  href={a.href}
+                  className={
+                    a.variant === "solid"
+                      ? "rounded-control bg-accent px-6.5 py-3.5 text-md font-semibold text-on-accent transition-colors hover:bg-deep"
+                      : "text-md font-semibold text-deep transition-colors hover:text-accent"
+                  }
+                >
+                  {a.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {showLocator && (
+          <div className="w-full lg:w-125">
+            <svg
+              viewBox={MAP_VIEWBOX}
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label={`Locator map showing ${market.name}. No international boundaries are drawn.`}
+              className="block h-auto w-full"
+            >
+              <g fill="var(--color-hair)">
+                {LAND_PATHS.map((d, i) => (
+                  <path key={i} d={d} />
+                ))}
+              </g>
+              <ellipse cx={market.x} cy={market.y} rx="49.4" ry="48.8" fill="url(#locator-glow)" />
+              <defs>
+                <radialGradient id="locator-glow">
+                  <stop offset="0" stopColor="var(--color-accent)" stopOpacity=".55" />
+                  <stop offset=".45" stopColor="var(--color-accent)" stopOpacity=".28" />
+                  <stop offset="1" stopColor="var(--color-accent)" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <circle cx={market.x} cy={market.y} r="11" fill="var(--color-accent)" opacity="0.34" />
+              <circle cx={market.x} cy={market.y} r="4.4" fill="var(--color-deep)" />
+            </svg>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

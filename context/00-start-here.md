@@ -1,6 +1,6 @@
 # Start here
 
-Last updated: 2026-09-12.
+Last updated: 2026-09-16.
 
 ## What this project is
 
@@ -23,7 +23,9 @@ production build of that design.
 | Building or changing a section | `design-spec.md`, then `architecture.md` §section contract |
 | Making a technical choice | `decisions.md` — check it is not already decided (or already rejected) |
 | Wondering why something is unfinished | `blocked-on-client.md` |
-| Touching anything CMS or API shaped | `integration.md` |
+| Asked about anything the client said in the September review | `client-feedback-2026-09-15.md` |
+| Touching anything CMS or API shaped | `integration.md`, then `cms-architecture.md` |
+| Building Insights (templates E/F) | `article-contract.md` — the real Creator model and publish payload |
 | Needing the client's own words | `reference/` — their baseline doc, sitemap and URL architecture |
 
 ## The one-paragraph version
@@ -35,8 +37,11 @@ schema and a fixture. The schemas compose into one discriminated union, and
 `components/sections/registry.tsx` maps type to component. Content comes from
 fixtures today and from the Catalyst API later — that swap is one function.
 
-Two sections exist. Twenty-four to go. The chain is proven end to end, so the
-remaining work is volume, not risk.
+**Twenty-five section types are built and every template A–H exists.** The
+homepage, 46 country pages, 6 region pages, the hubs, Insights, Careers,
+Contact, Search and Global Presence all render from fixtures. What remains is
+the client's September feedback (see `client-feedback-2026-09-15.md`) and the
+Creator/Catalyst wiring in `BUILD-GUIDE.md`.
 
 ## Where the design lives
 

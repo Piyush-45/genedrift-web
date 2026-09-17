@@ -1,0 +1,199 @@
+/*
+ * GeneDrift Website — publish the navigation, footer and certification row.
+ *
+ * Creator application: genedrift-website
+ * Trigger:            a "Publish menu & footer" button on the Nav Items report
+ * Catalyst endpoint:  POST <base>/v1/website/site
+ *
+ * Forms this reads:
+ *   Website_Nav_Items       the menu and the legal links
+ *   Website_Footer          one record — tagline, contact details, header CTA
+ *   Website_Certifications  the compliance row, each with an expiry
+ *
+ * WHY ONE PUBLISH FOR THREE FORMS. All three render on EVERY page, and the
+ * footer's link columns are derived from the menu. Publishing them separately
+ * would let the header and footer disagree for as long as it took someone to
+ * press the second button.
+ *
+ * Application variables required (namespace "Publishing") — the same ones the
+ * page and market publishers use. Nothing new to configure.
+ */
+map publish_site()
+{
+	result = Map();
+	result.put("ok",false);
+
+	navRows = Website_Nav_Items[ID != 0];
+	if(navRows.count() == 0)
+	{
+		result.put("message","No navigation items found. Publishing an empty menu would leave every page without a header.");
+		return result;
+	}
+
+	navList = List();
+	for each navRow in navRows
+	{
+		navItem = Map();
+		navItem.put("key",ifnull(navRow.Key,"").trim());
+		navItem.put("label",ifnull(navRow.Label,"").trim());
+		/* The LINK is a system field. Editors rename, reorder and hide; they
+		   never retype a URL. That is what makes a broken menu link
+		   structurally impossible rather than something to validate later. */
+		navItem.put("href",ifnull(navRow.Link,"").trim());
+		navItem.put("parentKey",ifnull(navRow.Parent_Key,"").trim());
+		navItem.put("displayOrder",ifnull(navRow.Display_Order,0));
+		navItem.put("visible",navRow.Visible);
+		navItem.put("group",ifnull(navRow.Nav_Group,"menu").trim());
+		navList.add(navItem);
+	}
+
+	/* The footer is a SINGLE record. If someone has added a second, the first
+	   is used and the rest ignored — silently picking an arbitrary one would
+	   make "my change did nothing" impossible to explain. */
+	footerMap = Map();
+	footerRows = Website_Footer[ID != 0] sort by ID;
+	if(footerRows.count() == 0)
+	{
+		result.put("message","No footer record found. Add one row to Website_Footer.");
+		return result;
+	}
+	for each footerRow in footerRows
+	{
+		if(footerMap.isEmpty())
+		{
+			footerMap.put("tagline",ifnull(footerRow.Tagline,"").trim());
+			footerMap.put("description",ifnull(footerRow.Description,"").trim());
+			footerMap.put("site",ifnull(footerRow.Site,"").trim());
+			footerMap.put("email",ifnull(footerRow.Email,"").trim());
+			footerMap.put("address",ifnull(footerRow.Address,"").trim());
+			footerMap.put("ctaLabel",ifnull(footerRow.CTA_Label,"").trim());
+			footerMap.put("ctaHref",ifnull(footerRow.CTA_Link,"").trim());
+		}
+	}
+
+	certList = List();
+	for each certRow in Website_Certifications[ID != 0]
+	{
+		certItem = Map();
+		certItem.put("name",ifnull(certRow.Certification_Name,"").trim());
+		/* Sent as YYYY-MM-DD. Catalyst refuses anything else rather than
+		   guessing, because an expiry that does not parse means a lapsed
+		   certification claim displaying forever. */
+		expiry = ifnull(certRow.Expires_On,"");
+		if(expiry != "")
+		{
+			expiry = expiry.toString("yyyy-MM-dd");
+		}
+		certItem.put("expiresOn",expiry.toString());
+		certItem.put("certificateNumber",ifnull(certRow.Certificate_Number,"").trim());
+		certItem.put("displayOrder",ifnull(certRow.Display_Order,0));
+		certList.add(certItem);
+	}
+
+	payload = Map();
+	payload.put("nav",navList);
+	payload.put("footer",footerMap);
+	payload.put("certifications",certList);
+	bodyText = payload.toString();
+
+	try
+	{
+		baseUrl = thisapp.variables.Publishing.Catalyst_Base_URL.toString().trim();
+		secret = thisapp.variables.Publishing.Signing_Secret.toString();
+		if(baseUrl == "" || secret == "")
+		{
+			result.put("message","Catalyst publishing variables are not configured.");
+			return result;
+		}
+
+		path = "/v1/website/site";
+		timestampMillis = zoho.currenttime.toLong();
+		timestampSeconds = (timestampMillis / 1000).toLong().toString();
+		nonce = "creator-site-" + timestampMillis;
+
+		bodyHash = zoho.encryption.sha256(bodyText);
+		signatureBase = "POST\n" + path + "\n" + timestampSeconds + "\n" + nonce + "\n" + bodyHash;
+		signature = zoho.encryption.hmacsha256(secret,signatureBase,"hex");
+
+		headers = Map();
+		headers.put("Content-Type","application/json");
+		headers.put("X-GeneDrift-Timestamp",timestampSeconds);
+		headers.put("X-GeneDrift-Nonce",nonce);
+		headers.put("X-GeneDrift-Signature",signature);
+
+		publishResponse = invokeurl
+		[
+			url :baseUrl + path
+			type :POST
+			body :bodyText
+			headers:headers
+		];
+
+		if(publishResponse.get("ok") != true)
+		{
+			/* Catalyst names what it refused — a duplicate key, an entirely
+			   hidden menu, a malformed expiry date. Surface it verbatim. */
+			rejection = ifnull(publishResponse.get("code"),"PUBLISH_REJECTED").toString();
+			detail = ifnull(publishResponse.get("message"),publishResponse.get("issues"));
+			if(detail != null)
+			{
+				rejection = rejection + ": " + detail.toString();
+			}
+			else
+			{
+				rejection = rejection + " — Catalyst returned no error code. Raw response: " + publishResponse.toString().subString(0,300);
+			}
+			result.put("message",rejection);
+			return result;
+		}
+
+		/* The menu and footer are on every page, so this is the one refresh
+		   that genuinely touches the whole site. Still one tag, not a list of
+		   paths — a path list goes stale the moment a page is added. */
+		websiteBaseUrl = "";
+		revalidateSecret = "";
+		try
+		{
+			websiteBaseUrl = ifnull(thisapp.variables.Publishing.Website_Base_URL,"").toString().trim();
+			revalidateSecret = ifnull(thisapp.variables.Publishing.Revalidate_Secret,"").toString();
+		}
+		catch (missingVariable)
+		{
+			websiteBaseUrl = "";
+		}
+		if(websiteBaseUrl.startsWith("http") && revalidateSecret != "" && revalidateSecret != "none")
+		{
+			try
+			{
+				revalidateHeaders = Map();
+				revalidateHeaders.put("Content-Type","application/json");
+				revalidateHeaders.put("Authorization","Bearer " + revalidateSecret);
+				revalidateBody = Map();
+				revalidateBody.put("collection","site");
+				invokeurl
+				[
+					url :websiteBaseUrl + "/api/revalidate"
+					type :POST
+					body :revalidateBody.toString()
+					headers:revalidateHeaders
+				];
+			}
+			catch (revalidateError)
+			{
+				info "Published, but the site cache could not be refreshed: " + revalidateError.toString();
+			}
+		}
+
+		result.put("ok",true);
+		result.put("message","Menu and footer published.");
+		result.put("publicationId",publishResponse.get("publicationId"));
+		result.put("menuCount",publishResponse.get("menuCount"));
+		return result;
+	}
+	catch (publishError)
+	{
+		result.put("message","Publish failed: " + publishError.toString());
+		return result;
+	}
+	return result;
+}

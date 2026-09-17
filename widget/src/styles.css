@@ -1,0 +1,98 @@
+/*
+ * Deliberately plain. This is an internal tool inside Creator, not a page of
+ * the website — dressing it in the brand's display type would make an editor
+ * think they were looking at the site itself.
+ *
+ * One accent borrowed from the design system so it does not feel foreign.
+ */
+:root {
+  --accent: #5b3fd2;
+  --ink: #181528;
+  --mid: #5b5770;
+  --faint: #9a94b4;
+  --line: #e7e4f2;
+  --rail: #f7f6fb;
+  --bad: #b3261e;
+  --ok: #1a7f4b;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: #fff; }
+code { font-family: ui-monospace, Menlo, Consolas, monospace; background: var(--rail); padding: 1px 4px; border-radius: 3px; }
+
+.boot { padding: 40px; color: var(--mid); }
+.boot.bad { color: var(--bad); }
+
+.shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+.sidebar { background: var(--rail); border-right: 1px solid var(--line); padding: 20px 0; }
+.sidebar h1 { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin: 0 20px 14px; }
+.pagelist { list-style: none; margin: 0; padding: 0; }
+.pagelist button {
+  display: block; width: 100%; text-align: left; background: none; border: 0;
+  border-left: 3px solid transparent; padding: 10px 20px; cursor: pointer;
+}
+.pagelist button:hover { background: #f0eefb; }
+.pagelist button.on { background: #fff; border-left-color: var(--accent); }
+.ptitle { display: block; font-weight: 600; }
+.ppath { display: block; color: var(--faint); font-size: 12px; margin-top: 2px; }
+.pstatus { display: inline-block; margin-top: 5px; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.s-published { color: var(--ok); }
+
+.main { padding: 24px 28px 60px; max-width: 760px; }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+.head h2 { margin: 0; font-size: 20px; }
+.path { margin: 2px 0 0; color: var(--faint); font-size: 12px; }
+.actions { display: flex; align-items: center; gap: 10px; }
+.dirty { color: var(--accent); font-size: 12px; }
+
+button { font: inherit; border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 7px 14px; cursor: pointer; }
+button:hover:not(:disabled) { border-color: #d3ccee; }
+button:disabled { opacity: .45; cursor: default; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.notice { padding: 10px 12px; border-radius: 6px; margin: 0 0 16px; }
+.notice.ok { background: #eaf6ef; color: var(--ok); }
+.notice.bad { background: #fdecea; color: var(--bad); }
+.empty { color: var(--mid); }
+
+.sections { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.sec + .sec { border-top: 1px solid var(--line); }
+.sechead { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; border-radius: 0; padding: 14px 16px; background: #fff; }
+.sechead:hover { background: var(--rail); }
+.secname { font-weight: 600; flex: 1; text-align: left; }
+.lock, .hiddenflag { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.chev { color: var(--faint); width: 12px; text-align: center; }
+.secbody { padding: 4px 16px 20px; background: var(--rail); }
+
+.field { display: block; margin: 14px 0; }
+.field.inline { display: flex; align-items: center; gap: 8px; }
+.lbl { display: block; font-size: 12px; color: var(--mid); margin-bottom: 5px; }
+.lbl em { color: var(--accent); font-style: normal; margin-left: 3px; }
+.field input[type="text"], .field input[type="number"], .field textarea, .field select {
+  width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line);
+  border-radius: 6px; background: #fff; color: var(--ink);
+}
+.field textarea { resize: vertical; line-height: 1.5; }
+.field input:focus, .field textarea:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+.hint { display: block; font-size: 12px; color: var(--faint); margin-top: 4px; }
+
+.list .row { display: flex; gap: 8px; margin-bottom: 6px; }
+.add { font-size: 13px; padding: 5px 10px; }
+.x { font-size: 12px; padding: 5px 9px; color: var(--mid); }
+
+.grouplist { border-left: 2px solid var(--line); padding-left: 12px; }
+.group { border: 1px solid var(--line); border-radius: 8px; background: #fff; margin-bottom: 8px; }
+.group > summary { display: flex; align-items: center; gap: 10px; padding: 9px 12px; cursor: pointer; list-style: none; }
+.group > summary::-webkit-details-marker { display: none; }
+.gnum { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--faint); }
+.gtitle { font-weight: 500; }
+.gbody { padding: 0 12px 12px; }
+
+.seo { margin-top: 26px; border: 1px solid var(--line); border-radius: 10px; }
+.seo > summary { padding: 12px 16px; cursor: pointer; font-weight: 600; }
+.metabody { padding: 0 16px 16px; }

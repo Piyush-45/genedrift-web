@@ -1,0 +1,25 @@
+/*
+ * The Publish button on the Website_Pages report.
+ *
+ * Creator path: Design > Website_Pages Report > Actions > Action Item "Publish"
+ *               > workflow "Publish_Website_Page"
+ *
+ * Use `info`, NOT `alert`. Creator restricts `alert` to on-load, on-validate
+ * and on-change form actions; in a report action item it fails validation with
+ * "'ALERT' task can be used only in on load, on validate and on change
+ * actions". `info` is the equivalent for report actions.
+ *
+ * `input.ID` is the record the button was clicked on.
+ */
+outcome = thisapp.publish_website_page(input.ID);
+if(outcome.get("ok") == true)
+{
+	info "Published. " + ifnull(outcome.get("sectionCount"),0) + " sections are live.";
+}
+else
+{
+	/* Surface Catalyst's own message. It names the offending field when a
+	   section type or Section_Data is wrong, which is the difference between
+	   a two-second fix and a round trip. */
+	info "Not published — " + ifnull(outcome.get("message"),"unknown error");
+}
