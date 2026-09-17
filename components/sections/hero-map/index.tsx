@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LAND_PATHS } from "@/lib/map/land";
 import type { Market } from "@/lib/map/markets";
+import { MarketSearch } from "./market-search";
 import { WorldMap } from "./world-map";
 import type { HeroMapProps } from "./schema";
 
@@ -26,6 +27,9 @@ export function HeroMap({
   actions,
   defaultMarket,
   cardLabel,
+  searchLabel,
+  searchPlaceholder,
+  searchEmptyLabel,
   bulletinLabel,
   bulletin,
   tickerLabel,
@@ -44,6 +48,15 @@ export function HeroMap({
         intro={
           <>
             <p className="mt-4 text-md leading-normal text-mid">{standfirst}</p>
+
+            {/* Phone only. See market-search.tsx for why the map stopped being
+                the way into the markets below lg. */}
+            <MarketSearch
+              markets={markets}
+              label={searchLabel}
+              placeholder={searchPlaceholder}
+              emptyLabel={searchEmptyLabel}
+            />
             {actions.length > 0 && (
               <div className="mt-7 flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-6.5">
                 {actions.map((a) => (

@@ -17,6 +17,9 @@ export const heroMapFixture: HeroMapProps = {
   defaultMarket: "india",
   marketSource: "all",
   cardLabel: "Market status",
+  searchLabel: "Find your market",
+  searchPlaceholder: "Search 46 markets",
+  searchEmptyLabel: "No market by that name. Try a region — Africa, Asia Pacific.",
   /**
    * ⚠️ PLACEHOLDER. The client asked for this strip "starting with FDA" and
    * has not said what it should contain — authority names alone, or real

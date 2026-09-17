@@ -41,6 +41,18 @@ export const heroMapSchema = z.object({
   cardLabel: z.string().min(1),
 
   /**
+   * "Find your market" — the phone-only search under the standfirst.
+   *
+   * Editable because the wording is the whole of it: a field labelled
+   * "Search" asks the reader to guess what is searchable, and on a
+   * regulatory site the answer ("the 46 markets we can file in") is the
+   * selling point. Not rendered above lg, where the map is the control.
+   */
+  searchLabel: z.string().default("Find your market"),
+  searchPlaceholder: z.string().default("Search 46 markets"),
+  searchEmptyLabel: z.string().default("No market by that name. Try a region — Africa, Asia Pacific."),
+
+  /**
    * Rolling health authority bulletin — client request, 15 September:
    * "New strip between the Market Status card and the Latest Updates ticker,
    * rotating authority names, starting with FDA."
