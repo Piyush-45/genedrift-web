@@ -209,13 +209,26 @@ export function WorldMap({
             })}
           </g>
         </svg>
+
+        {/* The cropped map has to end somewhere. A hard edge reads as a
+            clipped image; this fades it into the page so the headline sits on
+            clean ground. Mobile only -- at lg the map is the full world with
+            the design's own radial wash behind the headline. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 lg:hidden"
+          style={{
+            background:
+              "linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--color-canvas) 86%, transparent) 62%, var(--color-canvas) 100%)",
+          }}
+        />
       </div>
 
       {/* Headline, standfirst, actions and status card are ONE flow column,
           exactly as in the design — absolutely positioned once at lg, stacked
           by normal margins inside. Positioning each block separately would
           mean hand-maintaining offsets that drift the moment copy changes. */}
-      <div className="relative z-10 lg:absolute lg:top-11 lg:left-gutter lg:w-105">
+      <div className="relative z-10 px-gutter lg:absolute lg:top-11 lg:left-gutter lg:w-105 lg:px-0">
         <h1 className="pointer-events-none text-display font-bold">
           <span className="block">{headingLead}</span>
           <span className="flex items-baseline gap-3.5">
@@ -265,11 +278,16 @@ export function WorldMap({
             is the one value that has to reach the stylesheet.
 
             An empty list renders nothing at all, so switching the strip off is
-            an editing action rather than a deploy. */}
+            an editing action rather than a deploy.
+
+            MOBILE: "Health authority bulletin" is 25 characters of tracked-out
+            mono. Inline at 390px it took two thirds of the strip and left a
+            stub for the content it labels, so below lg the label sits on its
+            own line above the rotating entry. */}
         {bulletin.length > 0 && (
-          <div className="mt-3.5 flex items-center gap-3 rounded-control border border-line bg-canvas px-4 py-1.5">
+          <div className="mt-3.5 flex flex-col gap-1 rounded-control border border-line bg-canvas px-4 py-2 lg:flex-row lg:items-center lg:gap-3 lg:py-1.5">
             <span className="label flex-none whitespace-nowrap text-faint">{bulletinLabel}</span>
-            <span aria-hidden className="block h-3.75 w-px flex-none bg-line" />
+            <span aria-hidden className="hidden h-3.75 w-px flex-none bg-line lg:block" />
 
             <div
               className="bulletin-window flex-1 overflow-hidden"

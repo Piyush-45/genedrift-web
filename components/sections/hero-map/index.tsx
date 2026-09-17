@@ -32,7 +32,7 @@ export function HeroMap({
   ticker,
 }: HeroMapProps & { markets?: Market[] }) {
   return (
-    <section className="relative overflow-hidden px-gutter pt-4 pb-6 lg:h-172 lg:px-0 lg:pt-0 lg:pb-0">
+    <section className="relative overflow-hidden pb-6 lg:h-172 lg:pb-0">
       <WorldMap
         markets={markets}
         defaultMarket={defaultMarket}
@@ -45,15 +45,20 @@ export function HeroMap({
           <>
             <p className="mt-4 text-md leading-normal text-mid">{standfirst}</p>
             {actions.length > 0 && (
-              <div className="mt-7 flex flex-wrap items-center gap-6.5">
+              <div className="mt-7 flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-6.5">
                 {actions.map((a) => (
                   <Link
                     key={a.href}
                     href={a.href}
                     className={
                       a.variant === "solid"
-                        ? "rounded-control bg-accent px-6.5 py-3.5 text-md font-semibold text-on-accent transition-colors hover:bg-deep"
-                        : "text-md font-semibold text-deep transition-colors hover:text-accent"
+                        ? "flex w-full items-center justify-center rounded-control bg-accent px-6.5 py-3.5 text-md font-semibold text-on-accent transition-colors hover:bg-deep lg:w-auto"
+                        : // A ghost link stacked under a solid button on a phone
+                          // reads as a section heading, not a control -- it was
+                          // being skipped. Below lg it gets an outline and the
+                          // same height so it is visibly the second button;
+                          // above lg it is the design's plain text link again.
+                          "flex w-full items-center justify-center rounded-control border border-line px-6.5 py-3.5 text-md font-semibold text-deep transition-colors hover:text-accent lg:w-auto lg:rounded-none lg:border-0 lg:px-0 lg:py-0"
                     }
                   >
                     {a.label}

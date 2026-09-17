@@ -47,6 +47,36 @@
    without any JS. The global reduced-motion reset collapses them to ~0ms,
    which is the correct outcome — everything simply appears.
 --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   Mobile: the map is CROPPED, not fitted.
+
+   Fitting all 1160 units of an Equal Earth world into a 390px phone renders
+   every marker at roughly 2px and gives them hit areas smaller than a
+   fingertip -- measured, not assumed. So below lg the same single SVG is
+   scaled up and pushed off-centre so the frame lands on Africa, the Middle
+   East and South Asia, where 37 of the 46 markets are. Markers come out at
+   ~2x, the coastline reads, and it is still ONE svg: cropping in CSS avoids
+   shipping a second 43KB copy of the path data for a different viewBox.
+
+   Every offset is a percentage so the framing holds across phone widths.
+   The numbers frame viewBox x 560-1020, y 120-325.
+--------------------------------------------------------------------------- */
+@media (max-width: 63.999rem) {
+  .landwrap {
+    position: relative;
+    height: 13.5rem;
+    overflow: hidden;
+  }
+
+  .landwrap > svg {
+    position: absolute;
+    width: 252%;
+    max-width: none;
+    left: -121.8%;
+    top: -29.7%;
+  }
+}
+
 @keyframes land-in { from { opacity: 0; transform: translateY(7px) scale(.985); } to { opacity: 1; transform: none; } }
 @keyframes marker-in { 0% { opacity: 0; transform: scale(.2); } 62% { opacity: 1; transform: scale(1.42); } 100% { opacity: 1; transform: scale(1); } }
 
