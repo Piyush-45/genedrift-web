@@ -398,12 +398,23 @@ export function WorldMap({
               className="bulletin-window flex-1 overflow-hidden"
               style={{ "--bulletin-count": bulletin.length } as React.CSSProperties}
             >
+              {/* Rendered TWICE. The track slides left by half its width, so
+                  the second copy is what is on screen when the first has run
+                  off — the same trick the updates ticker uses, and the reason
+                  the loop has no visible jump. The duplicate is hidden from
+                  screen readers so the list is not announced twice. */}
               <div className="bulletin-track">
-                {bulletin.map((item, i) => (
-                  <p key={`${item.authority}-${i}`} className="truncate text-sm leading-6">
-                    <BulletinEntry item={item} />
-                  </p>
-                ))}
+                {[0, 1].map((copy) =>
+                  bulletin.map((item, i) => (
+                    <span
+                      key={`${copy}-${item.authority}-${i}`}
+                      className="text-sm leading-6"
+                      aria-hidden={copy === 1 ? true : undefined}
+                    >
+                      <BulletinEntry item={item} />
+                    </span>
+                  )),
+                )}
               </div>
             </div>
           </div>
@@ -430,14 +441,20 @@ export function WorldMap({
               style={{ "--bulletin-count": authorities.length } as React.CSSProperties}
             >
               <div className="bulletin-track">
-                {authorities.map((a) => (
-                  <p key={a.slug} className="truncate text-sm leading-6">
-                    <Link href={a.href} className="transition-colors hover:text-accent">
-                      <strong className="font-semibold text-deep">{a.authority}</strong>
-                      <span className="text-mid"> — {a.name}</span>
-                    </Link>
-                  </p>
-                ))}
+                {[0, 1].map((copy) =>
+                  authorities.map((a) => (
+                    <span
+                      key={`${copy}-${a.slug}`}
+                      className="text-sm leading-6"
+                      aria-hidden={copy === 1 ? true : undefined}
+                    >
+                      <Link href={a.href} className="transition-colors hover:text-accent">
+                        <strong className="font-semibold text-deep">{a.authority}</strong>
+                        <span className="text-mid"> — {a.name}</span>
+                      </Link>
+                    </span>
+                  )),
+                )}
               </div>
             </div>
           </div>

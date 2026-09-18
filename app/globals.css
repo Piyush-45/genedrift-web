@@ -129,39 +129,60 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Rolling health authority bulletin.
+   The two rolling strips: the health authority bulletin, and the regulatory
+   authority per market.
 
-   A window one line tall over a track of N lines, stepped through with
-   `steps(N)` so each entry sits still long enough to read rather than
-   scrolling past. Continuous scrolling was the other option and is worse
-   here: an authority name is a thing you read, not a thing you watch.
+   They RUN rather than step. Both were originally a one-line window stepping
+   through a stack with `steps(N)`, which holds each entry still for four
+   seconds — better for reading, and it is what the bulletin shipped with. The
+   client asked on 18 September for both to glide like the updates ticker
+   underneath, so they now use the ticker's own mechanism: the list is rendered
+   twice and the track slides left by exactly half its width, which puts the
+   second copy where the first started and makes the loop seamless.
 
-   The component knows how many entries there are and nothing else has to:
-   `--bulletin-count` carries it, so adding a tenth entry in the CMS needs no
-   CSS change. Four seconds per entry.
+   Duration scales with the number of entries, so adding a tenth authority in
+   Creator keeps the reading speed the same instead of making the strip race.
+   `--bulletin-count` is the one value the component has to supply.
 
-   REDUCED MOTION shows every entry at once rather than freezing on the first.
-   Stopping the animation would silently hide the rest of the bulletin, which
-   is a content loss, not a motion preference.
+   REDUCED MOTION stops the track and lets the strip wrap to its full height,
+   showing every entry at once. Freezing on the first would silently hide the
+   rest, which is a content loss rather than a motion preference.
 --------------------------------------------------------------------------- */
 .bulletin-window {
   height: 1.5rem;
+  overflow: hidden;
+  /* Softens the entry and exit so an item does not appear and vanish at a
+     hard edge mid-word. */
+  mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 44px), transparent 100%);
 }
 
 .bulletin-track {
-  animation: bulletin-rotate calc(var(--bulletin-count, 1) * 4s)
-    steps(var(--bulletin-count, 1)) infinite;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 2.75rem;
+  white-space: nowrap;
+  animation: bulletin-run calc(var(--bulletin-count, 1) * 6s) linear infinite;
 }
 
 .bulletin-track:hover { animation-play-state: paused; }
 
-@keyframes bulletin-rotate {
-  to { transform: translateY(-100%); }
+@keyframes bulletin-run {
+  to { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bulletin-window { height: auto; }
-  .bulletin-track { animation: none !important; }
+  .bulletin-window {
+    height: auto;
+    mask-image: none;
+  }
+  .bulletin-track {
+    width: auto;
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: 0.25rem 1.5rem;
+    animation: none !important;
+  }
 }
 
 /* ---------------------------------------------------------------------------
