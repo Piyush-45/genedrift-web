@@ -72,12 +72,16 @@ export function HeroMap({
                     className={
                       a.variant === "solid"
                         ? "flex w-full items-center justify-center rounded-control bg-accent px-6.5 py-3.5 text-md font-semibold text-on-accent transition-colors hover:bg-deep lg:w-auto"
-                        : // A ghost link stacked under a solid button on a phone
-                          // reads as a section heading, not a control -- it was
-                          // being skipped. Below lg it gets an outline and the
-                          // same height so it is visibly the second button;
-                          // above lg it is the design's plain text link again.
-                          "flex w-full items-center justify-center rounded-control border border-line px-6.5 py-3.5 text-md font-semibold text-deep transition-colors hover:text-accent lg:w-auto lg:rounded-none lg:border-0 lg:px-0 lg:py-0"
+                        : // The second action is an OUTLINED button at every
+                          // width, not a bare text link. As plain text it read
+                          // as a heading rather than a control -- on a phone,
+                          // stacked under the solid button, it was being
+                          // skipped entirely. It keeps the outline on desktop
+                          // for the same reason: a link with no affordance
+                          // beside a filled button is a link nobody presses.
+                          // Hover fills it rather than only recolouring the
+                          // text, so the whole target responds.
+                          "flex w-full items-center justify-center rounded-control border border-line px-6.5 py-3.5 text-md font-semibold text-deep transition-colors hover:border-line-soft hover:bg-lavender hover:text-accent lg:w-auto"
                     }
                   >
                     {a.label}
