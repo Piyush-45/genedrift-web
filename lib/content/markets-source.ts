@@ -93,6 +93,10 @@ function toMarket(value: unknown): Market | null {
     x,
     y,
     capabilities,
+    // Absent is the normal case, not an error: the field is new and the client
+    // fills it market by market. `undefined` keeps the strip and the country
+    // page silent rather than printing an empty label.
+    authority: str(row.authority) || undefined,
   };
 }
 

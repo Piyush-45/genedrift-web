@@ -85,6 +85,14 @@ export const heroMapSchema = z.object({
     .max(20)
     .default([]),
 
+  /**
+   * Label on the second strip — the one that rotates each market's health
+   * authority. Its ENTRIES are not here: they come from the Markets
+   * collection, so an authority is edited once on its own market and appears
+   * here and on that market's country page.
+   */
+  authorityLabel: z.string().default("Regulatory authorities"),
+
   tickerLabel: z.string().min(1),
   ticker: z
     .array(z.object({ source: z.string().min(1), text: z.string().min(1), href: z.string().optional() }))

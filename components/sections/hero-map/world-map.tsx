@@ -54,6 +54,7 @@ export function WorldMap({
   cardLabel,
   bulletinLabel,
   bulletin,
+  authorityLabel,
   headingLead,
   headingJoin,
   /** Standfirst + actions. Static, so it is rendered on the server. */
@@ -65,6 +66,7 @@ export function WorldMap({
   cardLabel: string;
   bulletinLabel: string;
   bulletin: { authority: string; note: string; href: string }[];
+  authorityLabel: string;
   headingLead: string;
   headingJoin: string;
   intro: ReactNode;
@@ -93,6 +95,15 @@ export function WorldMap({
         });
         return Math.min(14, Math.max(3, nearest * 0.45));
       }),
+    [markets],
+  );
+
+  /** Markets that have an authority on record, in map order. */
+  const authorities = useMemo(
+    () =>
+      markets
+        .filter((m) => (m.authority ?? "").trim() !== "")
+        .map((m) => ({ slug: m.slug, name: m.name, href: m.href, authority: m.authority as string })),
     [markets],
   );
 
@@ -291,7 +302,7 @@ export function WorldMap({
 
         {intro}
 
-        <div className="mt-6.5 rounded-panel border border-line bg-canvas px-5 pt-4 pb-4.5 shadow-lift">
+        <div className="mt-5 rounded-panel border border-line bg-canvas px-5 pt-4 pb-4.5 shadow-lift">
           <div className="flex items-center justify-between">
             <span className="label text-faint">{cardLabel}</span>
             <span className="label tabular-nums text-faint">{time ?? "--:--"}</span>
@@ -335,7 +346,7 @@ export function WorldMap({
             stub for the content it labels, so below lg the label sits on its
             own line above the rotating entry. */}
         {bulletin.length > 0 && (
-          <div className="mt-3.5 flex flex-col gap-1 rounded-control border border-line bg-canvas px-4 py-2 lg:flex-row lg:items-center lg:gap-3 lg:py-1.5">
+          <div className="mt-3 flex flex-col gap-1 rounded-control border border-line bg-canvas px-4 py-2 lg:flex-row lg:items-center lg:gap-3 lg:py-1.5">
             <span className="label flex-none whitespace-nowrap text-faint">{bulletinLabel}</span>
             <span aria-hidden className="hidden h-3.75 w-px flex-none bg-line lg:block" />
 
@@ -347,6 +358,40 @@ export function WorldMap({
                 {bulletin.map((item, i) => (
                   <p key={`${item.authority}-${i}`} className="truncate text-sm leading-6">
                     <BulletinEntry item={item} />
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Second strip: the health authority for each market, rotating the
+            same way. Client request, 18 September.
+
+            DERIVED FROM THE MARKETS, not typed in here. An authority belongs to
+            a market — Kenya's regulator is the PPB whether or not the homepage
+            says so — so it lives on the market record and this reads it. A
+            second hand-kept list would drift the first time a market was added
+            and nobody would notice until a client read their own site.
+
+            Renders nothing until the client fills the field in Creator, which
+            is why it is invisible today. */}
+        {authorities.length > 0 && (
+          <div className="mt-2 flex flex-col gap-1 rounded-control border border-line bg-canvas px-4 py-2 lg:flex-row lg:items-center lg:gap-3 lg:py-1.5">
+            <span className="label flex-none whitespace-nowrap text-faint">{authorityLabel}</span>
+            <span aria-hidden className="hidden h-3.75 w-px flex-none bg-line lg:block" />
+
+            <div
+              className="bulletin-window flex-1 overflow-hidden"
+              style={{ "--bulletin-count": authorities.length } as React.CSSProperties}
+            >
+              <div className="bulletin-track">
+                {authorities.map((a) => (
+                  <p key={a.slug} className="truncate text-sm leading-6">
+                    <Link href={a.href} className="transition-colors hover:text-accent">
+                      <strong className="font-semibold text-deep">{a.authority}</strong>
+                      <span className="text-mid"> — {a.name}</span>
+                    </Link>
                   </p>
                 ))}
               </div>

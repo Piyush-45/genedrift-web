@@ -33,6 +33,7 @@ export function HeroMap({
   searchEmptyLabel,
   bulletinLabel,
   bulletin,
+  authorityLabel,
   tickerLabel,
   ticker,
 }: HeroMapProps & { markets?: Market[] }) {
@@ -44,6 +45,7 @@ export function HeroMap({
         cardLabel={cardLabel}
         bulletinLabel={bulletinLabel}
         bulletin={bulletin}
+        authorityLabel={authorityLabel}
         headingLead={headingLead}
         headingJoin={headingJoin}
         intro={

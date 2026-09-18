@@ -29,6 +29,16 @@ export interface Market {
   x: number;
   y: number;
   capabilities: MarketCapability[];
+  /**
+   * The market's health authority — "CDSCO", "NAFDAC", "SFDA".
+   *
+   * OPTIONAL, and empty in this built-in data on purpose. A regulator's name
+   * is a factual claim on a regulatory consultancy's own site, so it comes
+   * from the client through Creator rather than from us guessing 46 of them.
+   * Until it does, the homepage authority strip renders nothing and the
+   * country pages simply do not mention an authority.
+   */
+  authority?: string;
 }
 
 export const MARKETS: readonly Market[] = [

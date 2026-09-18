@@ -17,6 +17,7 @@ export const heroMapFixture: HeroMapProps = {
   defaultMarket: "india",
   marketSource: "all",
   cardLabel: "Market status",
+  authorityLabel: "Regulatory authorities",
   searchLabel: "Find your market",
   searchPlaceholder: "Search 46 markets",
   searchEmptyLabel: "No market by that name. Try a region — Africa, Asia Pacific.",

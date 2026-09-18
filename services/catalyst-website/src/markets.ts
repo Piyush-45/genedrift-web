@@ -84,6 +84,12 @@ export const marketSchema = z.object({
   x: z.coerce.number().min(0).max(1000),
   y: z.coerce.number().min(0).max(500),
   capabilities: z.array(marketCapabilitySchema).max(24).default([]),
+  /**
+   * Health authority for this market — "CDSCO", "NAFDAC", "SFDA". Optional:
+   * it was added after the 46 markets were first published, so every existing
+   * record is missing it and refusing those would break publishing entirely.
+   */
+  authority: z.string().trim().max(120).optional(),
 });
 
 export const regionSchema = z.object({

@@ -39,6 +39,13 @@ export function CountryHead({
             <span className="label text-faint">
               {localTimeLabel} <LocalTime utcOffset={market.utcOffset} />
             </span>
+            {/* The regulator a filing actually goes to — arguably the single
+                most useful fact on this page, and it was missing. Same field
+                that feeds the homepage authority strip, so it is edited once
+                on the market record. Silent when the client has not set it. */}
+            {market.authority && (
+              <span className="label text-deep">{market.authority}</span>
+            )}
           </div>
 
           {standfirst && <p className="mt-6 max-w-[58ch] text-lead text-muted">{standfirst}</p>}

@@ -84,6 +84,10 @@ map publish_markets()
 		marketItem.put("utcOffset",ifnull(marketRow.UTC_Offset,0));
 		marketItem.put("x",ifnull(marketRow.Map_X,0));
 		marketItem.put("y",ifnull(marketRow.Map_Y,0));
+		/* Health authority — CDSCO, NAFDAC, SFDA. Added after the first 46 were
+		   published, so a record that predates the field sends an empty string and
+		   Catalyst treats that as "not set" rather than refusing the publish. */
+		marketItem.put("authority",ifnull(marketRow.Health_Authority,"").trim());
 		marketItem.put("capabilities",ifnull(capsBySlug.get(marketSlug),List()));
 		marketList.add(marketItem);
 	}
