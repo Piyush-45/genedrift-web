@@ -11,6 +11,7 @@ next-env.d.ts
 services/catalyst-website/node_modules
 services/catalyst-website/dist
 genedrift-website-appsail-*.zip
+genedrift-website-widget-*.zip
 
 # Generated Creator import files
 creator-seed/
