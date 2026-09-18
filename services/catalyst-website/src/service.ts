@@ -146,6 +146,12 @@ export class MarketsService {
         // 404 waiting to happen, and it can disagree with the slug it is
         // supposed to be built from.
         href: `/markets/${m.regionSlug}/${m.slug}`,
+        // Field by field on purpose — a spread would let anything Creator
+        // sends reach the public API. The cost is that a NEW field has to be
+        // added here as well as to the schema: `authority` was accepted by
+        // validation, then silently dropped right here, and the only symptom
+        // was a key missing from the published JSON with no error anywhere.
+        authority: m.authority,
         capabilities: [...m.capabilities]
           .sort((a, b) => a.displayOrder - b.displayOrder)
           .map((c) => ({ name: c.name, status: c.status })),
