@@ -12,14 +12,12 @@ services/catalyst-website/node_modules
 services/catalyst-website/dist
 genedrift-website-appsail-*.zip
 
-# Widget build output
-widget/node_modules
-widget/app
-widget/preview/assets
-widget/*.tsbuildinfo
-genedrift-website-widget-*.zip
+# Generated Creator import files
+creator-seed/
 
-# Working folder for downloaded screenshots and scratch copies. Never in the
-# repo: the name alone discloses tooling, and the contents are duplicates of
-# files that already live in creator-seed/ and context/.
-Claude outputs/
+# Natural Earth source data for scripts/build-countries.mjs.
+# An input, not an asset: ~9MB of shapefile that regenerates lib/map/.
+ne_10m_admin_0_countries*/
+*.shp
+*.dbf
+*.shx

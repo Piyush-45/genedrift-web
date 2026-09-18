@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { COUNTRY_SHAPES } from "@/lib/map/countries";
 import { LAND_PATHS } from "@/lib/map/land";
 import type { Market } from "@/lib/map/markets";
 import { MarketSearch } from "./market-search";
@@ -87,6 +88,19 @@ export function HeroMap({
             <path key={i} d={d} className="land-path" style={{ "--i": i } as React.CSSProperties} />
           ))}
         </g>
+
+        {/* The 46 market outlines, defined once and never painted here.
+            `<use>` in the client map references them by id, so 43KB of path
+            data is streamed as HTML exactly like the landmass above and none
+            of it is serialised into the client payload. Only markets have a
+            shape, so a country we do not operate in cannot light up. */}
+        <defs>
+          {markets.map((m) =>
+            COUNTRY_SHAPES[m.slug] ? (
+              <path key={m.slug} id={`country-${m.slug}`} d={COUNTRY_SHAPES[m.slug]} />
+            ) : null,
+          )}
+        </defs>
       </WorldMap>
 
       {/* Softens the map behind the headline. Purely decorative. */}

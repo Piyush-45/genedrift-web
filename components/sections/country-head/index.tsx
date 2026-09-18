@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { COUNTRY_SHAPES } from "@/lib/map/countries";
 import { LAND_PATHS, MAP_VIEWBOX } from "@/lib/map/land";
 import type { Market } from "@/lib/map/markets";
 import { LocalTime } from "./local-time";
@@ -75,14 +76,30 @@ export function CountryHead({
                   <path key={i} d={d} />
                 ))}
               </g>
-              <ellipse cx={market.x} cy={market.y} rx="49.4" ry="48.8" fill="url(#locator-glow)" />
               <defs>
                 <radialGradient id="locator-glow">
                   <stop offset="0" stopColor="var(--color-accent)" stopOpacity=".55" />
                   <stop offset=".45" stopColor="var(--color-accent)" stopOpacity=".28" />
                   <stop offset="1" stopColor="var(--color-accent)" stopOpacity="0" />
                 </radialGradient>
+                <filter id="locator-blur" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="4.5" />
+                </filter>
               </defs>
+
+              {/* Same feathered fill as the hero. Every one of these 46 pages
+                  used to show an identical world with a dot on it; now the page
+                  shows its own country. Nothing to hover — this locator has one
+                  subject and it is always lit. */}
+              {COUNTRY_SHAPES[market.slug] && (
+                <path
+                  d={COUNTRY_SHAPES[market.slug]}
+                  fill="var(--color-accent)"
+                  opacity="0.42"
+                  filter="url(#locator-blur)"
+                />
+              )}
+              <ellipse cx={market.x} cy={market.y} rx="49.4" ry="48.8" fill="url(#locator-glow)" />
               <circle cx={market.x} cy={market.y} r="11" fill="var(--color-accent)" opacity="0.34" />
               <circle cx={market.x} cy={market.y} r="4.4" fill="var(--color-deep)" />
             </svg>

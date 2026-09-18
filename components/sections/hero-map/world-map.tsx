@@ -138,14 +138,51 @@ export function WorldMap({
           className="block h-auto w-full"
         >
           <defs>
+            {/* Shrunk from rx 49 to 24 when the country fill arrived. At the
+                old size it was a blob that swallowed small countries whole —
+                Nigeria disappeared inside its own highlight. It now reads as a
+                halo on the dot, and carries the highlight on its own for
+                Singapore, Hong Kong and Brunei, which are too small to show a
+                country shape at this scale. */}
             <radialGradient id="market-glow">
-              <stop offset="0" stopColor="var(--color-accent)" stopOpacity=".62" />
-              <stop offset=".45" stopColor="var(--color-accent)" stopOpacity=".34" />
+              <stop offset="0" stopColor="var(--color-accent)" stopOpacity=".5" />
+              <stop offset=".45" stopColor="var(--color-accent)" stopOpacity=".26" />
               <stop offset="1" stopColor="var(--color-accent)" stopOpacity="0" />
             </radialGradient>
+
+            {/* The country highlight is BLURRED, and that is the whole design.
+                The client asked for the entire country to light up (1.3) and
+                for no prominent political boundaries (1.4) — two requests that
+                fight each other, because a country's fill has an edge and that
+                edge is a border. A feathered fill has no edge to read as a
+                line, so it shows the extent without stating the boundary. The
+                reference they sent is exactly this.
+
+                The filter region has to be grown or the blur is clipped to the
+                shape's own bounding box and comes back with hard sides. */}
+            <filter id="country-blur" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="3" />
+            </filter>
           </defs>
 
           {children}
+
+          {/* Highlight layer. One <use> per market referencing the shape the
+              server put in <defs> — the client never holds the path data.
+              Painted between the landmass and the markers so a lit country
+              sits under its own dot. */}
+          <g filter="url(#country-blur)">
+            {markets.map((m, i) => (
+              <use
+                key={m.slug}
+                href={`#country-${m.slug}`}
+                className={cn(
+                  "pointer-events-none fill-accent transition-opacity duration-[260ms]",
+                  i === active ? "opacity-50" : "opacity-0",
+                )}
+              />
+            ))}
+          </g>
 
           <g>
             {markets.map((m, i) => {
@@ -171,8 +208,8 @@ export function WorldMap({
                   <ellipse
                     cx={m.x}
                     cy={m.y}
-                    rx="49.4"
-                    ry="48.8"
+                    rx="24"
+                    ry="23.7"
                     fill="url(#market-glow)"
                     // pointer-events-none is load-bearing, not tidiness. This
                     // ellipse is ~100px across and `opacity-0` STILL receives
@@ -196,6 +233,19 @@ export function WorldMap({
                     )}
                   />
                   <circle cx={m.x} cy={m.y} r="4.4" fill="var(--color-deep)" className="pointer-events-none" />
+                  {/* Two hit areas, deliberately. The COUNTRY is the one the
+                      client is picturing — move the pointer anywhere over
+                      India and India lights. But Singapore, Hong Kong and
+                      Brunei are a couple of pixels across at this scale and
+                      cannot be pointed at, so the circle below stays as the
+                      target that always works. It comes second in the DOM, so
+                      where a dot sits inside a large neighbour's shape the dot
+                      still wins the hover. */}
+                  <use
+                    href={`#country-${m.slug}`}
+                    fill="transparent"
+                    className="cursor-pointer"
+                  />
                   <circle
                     cx={m.x}
                     cy={m.y}
