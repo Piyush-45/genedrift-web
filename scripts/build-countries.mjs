@@ -212,9 +212,18 @@ for (const f of feature(topo, topo.objects.countries).features) {
   const marker = projected[0] && projected[0].length > 3
     ? poleOfInaccessibility(projected[0], projected.slice(1))
     : null;
+  // Radius for the light source inside the country: half its bounding
+  // diagonal, so Russia's glow is big and Togo's is small. A single radius for
+  // all 46 makes the small ones a blob and the large ones a pinprick.
+  let radius = 0;
+  if (marker) {
+    const xs = projected.flat().map((c) => c[0]);
+    const ys = projected.flat().map((c) => c[1]);
+    radius = Math.round(Math.hypot(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) / 2 * 10) / 10;
+  }
   // Singapore and Hong Kong have no usable interior at this scale; their
   // existing marker is the only position they have, so leave them alone.
-  if (marker) markers[slug] = marker;
+  if (marker) markers[slug] = [marker[0], marker[1], Math.max(radius, 6)];
 }
 
 const header = (what) => `/**
@@ -250,16 +259,18 @@ ${Object.keys(countries).sort().map((s) => `  "${s}": "${countries[s]}",`).join(
 };
 
 /**
- * Where each market's marker belongs: the interior point furthest from any
- * coastline, in the same projected space as the shapes above.
+ * Where each market's marker belongs, and how big its light is:
+ * [x, y, radius]. The point is the one furthest from any coastline; the
+ * radius is half the shape's bounding diagonal, so the glow inside a country
+ * is scaled to that country.
  *
  * This OVERRIDES the x/y held in the market record. Those came from the
  * approved artwork, were laid out against a different projection, and put 25
  * of the 46 markers outside their own country. A market with no entry here
  * keeps whatever position its record carries.
  */
-export const COUNTRY_MARKERS: Readonly<Record<string, readonly [number, number]>> = {
-${Object.keys(markers).sort().map((s) => `  "${s}": [${markers[s][0]}, ${markers[s][1]}],`).join("\n")}
+export const COUNTRY_MARKERS: Readonly<Record<string, readonly [number, number, number]>> = {
+${Object.keys(markers).sort().map((s) => `  "${s}": [${markers[s][0]}, ${markers[s][1]}, ${markers[s][2]}],`).join("\n")}
 };
 `,
   "utf8",

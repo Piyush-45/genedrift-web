@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { COUNTRY_MARKERS } from "@/lib/map/countries";
 import { MAP_VIEWBOX } from "@/lib/map/land";
 import type { CapabilityStatus, Market } from "@/lib/map/markets";
 
@@ -115,6 +116,10 @@ export function WorldMap({
 
   const market = markets[active];
 
+  /** Where the light inside the active country comes from, and how far it
+   *  reaches. Falls back to the marker position for a market with no shape. */
+  const light = (market && COUNTRY_MARKERS[market.slug]) ?? [market?.x ?? 0, market?.y ?? 0, 30];
+
   useEffect(() => {
     if (!market) return;
     const tick = () => setTime(localTime(market.utcOffset));
@@ -171,19 +176,35 @@ export function WorldMap({
 
                 The filter region has to be grown or the blur is clipped to the
                 shape's own bounding box and comes back with hard sides. */}
-            {/* TWO blurs, not one. A single flat wash reads as a smudge; a
-                wide soft halo under a tighter brighter core reads as light
-                coming off the country, which is what makes it look lit rather
-                than painted. The halo uses accent-soft so the pair has a
-                gradient without introducing a second colour.
+            {/* The country is lit FROM INSIDE, not painted over.
+                The gradient's source sits at the country's own interior point
+                — the same one the marker uses — and falls off to nothing by
+                the coast, so the light reads as emerging from within the
+                country and spilling past its edge. A flat fill, however
+                bright, reads as a sticker laid on top.
 
-                The filter region has to be grown or the blur is clipped to the
+                Positioned in user space against the live country, so it has to
+                be rendered here rather than shared in the server's <defs>. */}
+            <radialGradient
+              id="country-light"
+              gradientUnits="userSpaceOnUse"
+              cx={light[0]}
+              cy={light[1]}
+              r={light[2]}
+            >
+              <stop offset="0" stopColor="var(--color-accent)" stopOpacity="1" />
+              <stop offset=".35" stopColor="var(--color-accent)" stopOpacity=".92" />
+              <stop offset=".72" stopColor="var(--color-accent-soft)" stopOpacity=".5" />
+              <stop offset="1" stopColor="var(--color-accent-soft)" stopOpacity=".05" />
+            </radialGradient>
+
+            {/* The filter region has to be grown or a blur is clipped to the
                 shape's own bounding box and comes back with hard sides. */}
             <filter id="country-halo" x="-40%" y="-40%" width="180%" height="180%">
               <feGaussianBlur stdDeviation="7" />
             </filter>
             <filter id="country-core" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="1.8" />
+              <feGaussianBlur stdDeviation="1.6" />
             </filter>
           </defs>
 
@@ -200,7 +221,7 @@ export function WorldMap({
                 href={`#country-${m.slug}`}
                 className={cn(
                   "pointer-events-none fill-accent-soft transition-opacity duration-[260ms]",
-                  i === active ? "opacity-55" : "opacity-0",
+                  i === active ? "opacity-45" : "opacity-0",
                 )}
               />
             ))}
@@ -211,8 +232,8 @@ export function WorldMap({
                 key={m.slug}
                 href={`#country-${m.slug}`}
                 className={cn(
-                  "pointer-events-none fill-accent transition-opacity duration-[260ms]",
-                  i === active ? "opacity-80" : "opacity-0",
+                  "country-light pointer-events-none transition-opacity duration-[260ms]",
+                  i === active ? "opacity-95" : "opacity-0",
                 )}
               />
             ))}

@@ -47,6 +47,23 @@
    without any JS. The global reduced-motion reset collapses them to ~0ms,
    which is the correct outcome — everything simply appears.
 --------------------------------------------------------------------------- */
+
+/* The country highlight grows very slightly as it fades in, so the light reads
+   as emerging rather than switching on. fill-box keeps the origin at the
+   country's own centre; the global reduced-motion reset collapses it to
+   nothing, which is the right outcome — it simply appears. */
+.country-light {
+  fill: url(#country-light);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: country-emerge 420ms var(--ease-out-soft) both;
+}
+
+@keyframes country-emerge {
+  from { transform: scale(.94); }
+  to { transform: scale(1); }
+}
+
 /* ---------------------------------------------------------------------------
    Mobile: the map is CROPPED, not fitted.
 

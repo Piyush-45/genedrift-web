@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { COUNTRY_SHAPES } from "@/lib/map/countries";
+import { COUNTRY_MARKERS, COUNTRY_SHAPES } from "@/lib/map/countries";
 import { LAND_PATHS, MAP_VIEWBOX } from "@/lib/map/land";
 import type { Market } from "@/lib/map/markets";
 import { LocalTime } from "./local-time";
@@ -20,6 +20,8 @@ export function CountryHead({
   market,
 }: CountryHeadProps & { market?: Market }) {
   if (!market) return null;
+
+  const locatorLight = COUNTRY_MARKERS[market.slug] ?? [market.x, market.y, 30];
 
   return (
     <section className="px-gutter pt-12 lg:pt-16">
@@ -93,8 +95,22 @@ export function CountryHead({
                   <feGaussianBlur stdDeviation="7" />
                 </filter>
                 <filter id="locator-core" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="1.8" />
+                  <feGaussianBlur stdDeviation="1.6" />
                 </filter>
+                {/* Same light-from-within as the hero: the source sits at the
+                    country's interior point and falls off by the coast. */}
+                <radialGradient
+                  id="locator-light"
+                  gradientUnits="userSpaceOnUse"
+                  cx={locatorLight[0]}
+                  cy={locatorLight[1]}
+                  r={locatorLight[2]}
+                >
+                  <stop offset="0" stopColor="var(--color-accent)" stopOpacity="1" />
+                  <stop offset=".35" stopColor="var(--color-accent)" stopOpacity=".92" />
+                  <stop offset=".72" stopColor="var(--color-accent-soft)" stopOpacity=".5" />
+                  <stop offset="1" stopColor="var(--color-accent-soft)" stopOpacity=".05" />
+                </radialGradient>
               </defs>
 
               {/* Same feathered fill as the hero. Every one of these 46 pages
@@ -106,13 +122,13 @@ export function CountryHead({
                   <path
                     d={COUNTRY_SHAPES[market.slug]}
                     fill="var(--color-accent-soft)"
-                    opacity="0.55"
+                    opacity="0.45"
                     filter="url(#locator-halo)"
                   />
                   <path
                     d={COUNTRY_SHAPES[market.slug]}
-                    fill="var(--color-accent)"
-                    opacity="0.8"
+                    fill="url(#locator-light)"
+                    opacity="0.95"
                     filter="url(#locator-core)"
                   />
                 </>
