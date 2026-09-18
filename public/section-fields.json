@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T10:06:33.882Z",
+  "generatedAt": "2026-09-18T14:13:27.355Z",
   "sections": {
     "hero-map": {
       "label": "Headline & world map",
@@ -69,6 +69,24 @@
           "required": true
         },
         {
+          "key": "searchLabel",
+          "label": "Search label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "searchPlaceholder",
+          "label": "Search placeholder",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "searchEmptyLabel",
+          "label": "Search empty label",
+          "kind": "text",
+          "required": false
+        },
+        {
           "key": "bulletinLabel",
           "label": "Bulletin label",
           "kind": "text",
@@ -104,6 +122,12 @@
           ],
           "titleKey": "authority",
           "maxItems": 20
+        },
+        {
+          "key": "authorityLabel",
+          "label": "Authority label",
+          "kind": "text",
+          "required": false
         },
         {
           "key": "tickerLabel",

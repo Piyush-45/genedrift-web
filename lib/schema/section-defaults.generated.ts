@@ -9,8 +9,12 @@ export const SECTION_DEFAULTS: Record<string, Record<string, unknown>> = {
   "hero-map": {
     "actions": [],
     "marketSource": "all",
+    "searchLabel": "Find your market",
+    "searchPlaceholder": "Search 46 markets",
+    "searchEmptyLabel": "No market by that name. Try a region — Africa, Asia Pacific.",
     "bulletinLabel": "Health authority bulletin",
     "bulletin": [],
+    "authorityLabel": "Regulatory authorities",
     "ticker": []
   },
   "page-head": {

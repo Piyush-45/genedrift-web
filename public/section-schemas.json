@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "generatedAt": "2026-09-17T10:06:33.152Z",
+  "generatedAt": "2026-09-18T14:13:26.680Z",
   "sectionTypes": [
     "hero-map",
     "page-head",
@@ -118,6 +118,18 @@
                   "type": "string",
                   "minLength": 1
                 },
+                "searchLabel": {
+                  "default": "Find your market",
+                  "type": "string"
+                },
+                "searchPlaceholder": {
+                  "default": "Search 46 markets",
+                  "type": "string"
+                },
+                "searchEmptyLabel": {
+                  "default": "No market by that name. Try a region — Africa, Asia Pacific.",
+                  "type": "string"
+                },
                 "bulletinLabel": {
                   "default": "Health authority bulletin",
                   "type": "string"
@@ -146,6 +158,10 @@
                       "authority"
                     ]
                   }
+                },
+                "authorityLabel": {
+                  "default": "Regulatory authorities",
+                  "type": "string"
                 },
                 "tickerLabel": {
                   "type": "string",
@@ -1531,6 +1547,18 @@
             "type": "string",
             "minLength": 1
           },
+          "searchLabel": {
+            "default": "Find your market",
+            "type": "string"
+          },
+          "searchPlaceholder": {
+            "default": "Search 46 markets",
+            "type": "string"
+          },
+          "searchEmptyLabel": {
+            "default": "No market by that name. Try a region — Africa, Asia Pacific.",
+            "type": "string"
+          },
           "bulletinLabel": {
             "default": "Health authority bulletin",
             "type": "string"
@@ -1559,6 +1587,10 @@
                 "authority"
               ]
             }
+          },
+          "authorityLabel": {
+            "default": "Regulatory authorities",
+            "type": "string"
           },
           "tickerLabel": {
             "type": "string",
@@ -2876,8 +2908,12 @@
     "hero-map": {
       "actions": [],
       "marketSource": "all",
+      "searchLabel": "Find your market",
+      "searchPlaceholder": "Search 46 markets",
+      "searchEmptyLabel": "No market by that name. Try a region — Africa, Asia Pacific.",
       "bulletinLabel": "Health authority bulletin",
       "bulletin": [],
+      "authorityLabel": "Regulatory authorities",
       "ticker": []
     },
     "page-head": {
