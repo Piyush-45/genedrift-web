@@ -53,9 +53,6 @@ export function WorldMap({
   markets,
   defaultMarket,
   cardLabel,
-  bulletinLabel,
-  bulletin,
-  authorityLabel,
   headingLead,
   headingJoin,
   /** Standfirst + actions. Static, so it is rendered on the server. */
@@ -65,9 +62,6 @@ export function WorldMap({
   markets: readonly Market[];
   defaultMarket: string;
   cardLabel: string;
-  bulletinLabel: string;
-  bulletin: { authority: string; note: string; href: string }[];
-  authorityLabel: string;
   headingLead: string;
   headingJoin: string;
   intro: ReactNode;
@@ -96,15 +90,6 @@ export function WorldMap({
         });
         return Math.min(14, Math.max(3, nearest * 0.45));
       }),
-    [markets],
-  );
-
-  /** Markets that have an authority on record, in map order. */
-  const authorities = useMemo(
-    () =>
-      markets
-        .filter((m) => (m.authority ?? "").trim() !== "")
-        .map((m) => ({ slug: m.slug, name: m.name, href: m.href, authority: m.authority as string })),
     [markets],
   );
 
@@ -374,118 +359,8 @@ export function WorldMap({
           </div>
         </div>
 
-        {/* Rolling health authority bulletin — client request, 15 Sept:
-            a strip between the status card and the updates ticker.
-
-            CSS ONLY, like every other motion on this site. The track holds one
-            line per entry and steps through them, so it works for any number
-            of entries without the component knowing how many. `--bulletin-count`
-            is the one value that has to reach the stylesheet.
-
-            An empty list renders nothing at all, so switching the strip off is
-            an editing action rather than a deploy.
-
-            MOBILE: "Health authority bulletin" is 25 characters of tracked-out
-            mono. Inline at 390px it took two thirds of the strip and left a
-            stub for the content it labels, so below lg the label sits on its
-            own line above the rotating entry. */}
-        {bulletin.length > 0 && (
-          <div className="mt-3 flex flex-col gap-1 rounded-control border border-line bg-canvas px-4 py-2 lg:flex-row lg:items-center lg:gap-3 lg:py-1.5">
-            <span className="label flex-none whitespace-nowrap text-faint">{bulletinLabel}</span>
-            <span aria-hidden className="hidden h-3.75 w-px flex-none bg-line lg:block" />
-
-            <div
-              className="bulletin-window flex-1 overflow-hidden"
-              style={{ "--bulletin-count": bulletin.length } as React.CSSProperties}
-            >
-              {/* Rendered TWICE. The track slides left by half its width, so
-                  the second copy is what is on screen when the first has run
-                  off — the same trick the updates ticker uses, and the reason
-                  the loop has no visible jump. The duplicate is hidden from
-                  screen readers so the list is not announced twice. */}
-              <div className="bulletin-track">
-                {[0, 1].map((copy) =>
-                  bulletin.map((item, i) => (
-                    <span
-                      key={`${copy}-${item.authority}-${i}`}
-                      className="text-sm leading-6"
-                      aria-hidden={copy === 1 ? true : undefined}
-                    >
-                      <BulletinEntry item={item} />
-                    </span>
-                  )),
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Second strip: the health authority for each market, rotating the
-            same way. Client request, 18 September.
-
-            DERIVED FROM THE MARKETS, not typed in here. An authority belongs to
-            a market — Kenya's regulator is the PPB whether or not the homepage
-            says so — so it lives on the market record and this reads it. A
-            second hand-kept list would drift the first time a market was added
-            and nobody would notice until a client read their own site.
-
-            Renders nothing until the client fills the field in Creator, which
-            is why it is invisible today. */}
-        {authorities.length > 0 && (
-          <div className="mt-2 flex flex-col gap-1 rounded-control border border-line bg-canvas px-4 py-2 lg:flex-row lg:items-center lg:gap-3 lg:py-1.5">
-            <span className="label flex-none whitespace-nowrap text-faint">{authorityLabel}</span>
-            <span aria-hidden className="hidden h-3.75 w-px flex-none bg-line lg:block" />
-
-            <div
-              className="bulletin-window flex-1 overflow-hidden"
-              style={{ "--bulletin-count": authorities.length } as React.CSSProperties}
-            >
-              <div className="bulletin-track">
-                {[0, 1].map((copy) =>
-                  authorities.map((a) => (
-                    <span
-                      key={`${copy}-${a.slug}`}
-                      className="text-sm leading-6"
-                      aria-hidden={copy === 1 ? true : undefined}
-                    >
-                      <Link href={a.href} className="transition-colors hover:text-accent">
-                        <strong className="font-semibold text-deep">{a.authority}</strong>
-                        <span className="text-mid"> — {a.name}</span>
-                      </Link>
-                    </span>
-                  )),
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
     </>
-  );
-}
-
-/**
- * One bulletin line.
- *
- * The note is OPTIONAL by design: with every note empty the strip rotates bare
- * authority names, which is what the client asked for before they had decided;
- * filled in, it reads as a headline feed. Their answer changes the content,
- * not this component.
- */
-function BulletinEntry({ item }: { item: { authority: string; note: string; href: string } }) {
-  const body = (
-    <>
-      <strong className="font-semibold text-deep">{item.authority}</strong>
-      {item.note ? <span className="text-mid"> — {item.note}</span> : null}
-    </>
-  );
-
-  return item.href ? (
-    <Link href={item.href} className="transition-colors hover:text-accent">
-      {body}
-    </Link>
-  ) : (
-    body
   );
 }

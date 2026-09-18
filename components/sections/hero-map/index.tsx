@@ -14,11 +14,10 @@ import type { HeroMapProps } from "./schema";
  * Markets arrive as a PROP, resolved by lib/content/resolve.ts. This
  * component must never import the Markets collection — see that file.
  *
- * HEIGHT: 688px at lg, up from 632. The approved design sized the hero for a
- * column ending at the status card; the client then asked for the authority
- * bulletin strip beneath it, which collided with the updates ticker. With the
- * header at ~86px this still lands inside the 780px fold the design is built
- * around — measured, not assumed.
+ * HEIGHT: back to the approved design's 632px. It grew to 688 to fit the
+ * bulletin strip under the status card; both strips are now full-width bands
+ * below the hero, so the column ends at the card again, which is what the
+ * design was sized for.
  */
 export function HeroMap({
   markets = [],
@@ -37,15 +36,19 @@ export function HeroMap({
   tickerLabel,
   ticker,
 }: HeroMapProps & { markets?: Market[] }) {
+  /** Markets carrying an authority, in map order. Derived, not typed in:
+   *  the authority lives on the market record. */
+  const authorities = markets
+    .filter((m) => (m.authority ?? "").trim() !== "")
+    .map((m) => ({ slug: m.slug, name: m.name, href: m.href, authority: m.authority as string }));
+
   return (
-    <section className="relative overflow-hidden pb-6 lg:h-172 lg:pb-0">
+    <>
+    <section className="relative overflow-hidden pb-6 lg:h-158 lg:pb-0">
       <WorldMap
         markets={markets}
         defaultMarket={defaultMarket}
         cardLabel={cardLabel}
-        bulletinLabel={bulletinLabel}
-        bulletin={bulletin}
-        authorityLabel={authorityLabel}
         headingLead={headingLead}
         headingJoin={headingJoin}
         intro={
@@ -146,5 +149,109 @@ export function HeroMap({
         </div>
       )}
     </section>
+
+      {/* The two running bands sit UNDER the hero, full width, matching the
+          ticker above them. They were narrow boxes inside the 420px status
+          column; a strip whose whole job is to run was the worst thing to put
+          in the narrowest part of the page.
+
+          Server-rendered: neither depends on which market is hovered, so
+          nothing here needs to be a client component. */}
+      <RunningBand label={bulletinLabel} count={bulletin.length}>
+        {[0, 1].map((copy) =>
+          bulletin.map((item, i) => (
+            <span
+              key={`${copy}-${item.authority}-${i}`}
+              className="text-sm leading-6"
+              aria-hidden={copy === 1 ? true : undefined}
+            >
+              <BulletinEntry item={item} />
+            </span>
+          )),
+        )}
+      </RunningBand>
+
+      <RunningBand label={authorityLabel} count={authorities.length}>
+        {[0, 1].map((copy) =>
+          authorities.map((a) => (
+            <span
+              key={`${copy}-${a.slug}`}
+              className="text-sm leading-6"
+              aria-hidden={copy === 1 ? true : undefined}
+            >
+              <Link href={a.href} className="transition-colors hover:text-accent">
+                <strong className="font-semibold text-deep">{a.authority}</strong>
+                <span className="text-mid"> — {a.name}</span>
+              </Link>
+            </span>
+          )),
+        )}
+      </RunningBand>
+    </>
+  );
+}
+
+/**
+ * A full-width running band at the foot of the hero.
+ *
+ * The bulletin and the authority strip used to be narrow boxes stacked under
+ * the status card, sharing a 420px column with everything else. Moved out to
+ * the full width of the page on 18 September: a strip whose whole job is to
+ * run needs room to run, and three bands of the same shape read as a system
+ * rather than as two boxes and a ticker.
+ *
+ * Empty renders nothing, so switching a band off is an editing action.
+ */
+function RunningBand({
+  label,
+  count,
+  children,
+}: {
+  label: string;
+  count: number;
+  children: React.ReactNode;
+}) {
+  if (count === 0) return null;
+  return (
+    <div className="flex items-center gap-6.5 border-t border-rule bg-canvas py-3.5">
+      <div className="flex flex-none items-center gap-2.75 pl-gutter">
+        <span className="label whitespace-nowrap text-faint">{label}</span>
+        <span aria-hidden className="ml-1.5 block h-3.75 w-px bg-line" />
+      </div>
+      <div
+        className="bulletin-window flex-1"
+        style={{ "--bulletin-count": count } as React.CSSProperties}
+      >
+        {/* Rendered TWICE: the track slides left by half its width, so the
+            second copy is where the first started and the loop has no visible
+            jump. The duplicate is hidden from screen readers. */}
+        <div className="bulletin-track">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * One bulletin line.
+ *
+ * The note is OPTIONAL by design: with every note empty the strip runs bare
+ * authority names, which is what the client asked for before they had decided;
+ * filled in, it reads as a headline feed. Their answer changes the content,
+ * not this component.
+ */
+function BulletinEntry({ item }: { item: { authority: string; note: string; href: string } }) {
+  const body = (
+    <>
+      <strong className="font-semibold text-deep">{item.authority}</strong>
+      {item.note ? <span className="text-mid"> — {item.note}</span> : null}
+    </>
+  );
+
+  return item.href ? (
+    <Link href={item.href} className="transition-colors hover:text-accent">
+      {body}
+    </Link>
+  ) : (
+    body
   );
 }
