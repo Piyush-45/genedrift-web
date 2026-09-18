@@ -180,10 +180,10 @@ export function WorldMap({
                 The filter region has to be grown or the blur is clipped to the
                 shape's own bounding box and comes back with hard sides. */}
             <filter id="country-halo" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="8" />
+              <feGaussianBlur stdDeviation="7" />
             </filter>
             <filter id="country-core" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="2.4" />
+              <feGaussianBlur stdDeviation="1.8" />
             </filter>
           </defs>
 
@@ -200,7 +200,7 @@ export function WorldMap({
                 href={`#country-${m.slug}`}
                 className={cn(
                   "pointer-events-none fill-accent-soft transition-opacity duration-[260ms]",
-                  i === active ? "opacity-40" : "opacity-0",
+                  i === active ? "opacity-55" : "opacity-0",
                 )}
               />
             ))}
@@ -212,7 +212,7 @@ export function WorldMap({
                 href={`#country-${m.slug}`}
                 className={cn(
                   "pointer-events-none fill-accent transition-opacity duration-[260ms]",
-                  i === active ? "opacity-62" : "opacity-0",
+                  i === active ? "opacity-80" : "opacity-0",
                 )}
               />
             ))}

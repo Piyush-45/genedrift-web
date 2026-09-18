@@ -90,10 +90,10 @@ export function CountryHead({
                   <stop offset="1" stopColor="var(--color-accent)" stopOpacity="0" />
                 </radialGradient>
                 <filter id="locator-halo" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="8" />
+                  <feGaussianBlur stdDeviation="7" />
                 </filter>
                 <filter id="locator-core" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="2.4" />
+                  <feGaussianBlur stdDeviation="1.8" />
                 </filter>
               </defs>
 
@@ -106,13 +106,13 @@ export function CountryHead({
                   <path
                     d={COUNTRY_SHAPES[market.slug]}
                     fill="var(--color-accent-soft)"
-                    opacity="0.4"
+                    opacity="0.55"
                     filter="url(#locator-halo)"
                   />
                   <path
                     d={COUNTRY_SHAPES[market.slug]}
                     fill="var(--color-accent)"
-                    opacity="0.62"
+                    opacity="0.8"
                     filter="url(#locator-core)"
                   />
                 </>
