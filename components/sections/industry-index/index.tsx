@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { SectionHead } from "@/components/ui/section-head";
 import { IndustryGlyph } from "./icons";
@@ -121,14 +120,19 @@ export function IndustryIndex({
               ))}
             </div>
 
-            {current.href && (
-              <Link
-                href={current.href}
-                className="mt-6 inline-block text-sm font-semibold text-accent"
-              >
-                {current.title} regulatory support
-              </Link>
-            )}
+            {/* NO per-industry link is rendered.
+                The approved concept-B design has no links in it at all: the
+                section is a self-contained index and reading the product
+                types IS the interaction. A per-industry page was never
+                designed or specced, `/industries/*` is not a pillar, and the
+                CTA that used to sit here 404'd on the live site for every one
+                of the five.
+
+                It is removed HERE rather than in the fixture because the
+                published Creator record still carries the old hrefs, and the
+                CMS takes precedence over the built-in content — so a data-only
+                fix left the broken link on the live site. `href` stays in the
+                schema: restore this block once the pages exist. */}
           </div>
         </div>
       </div>
