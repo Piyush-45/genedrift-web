@@ -1,3 +1,4 @@
+import { COUNTRY_MARKERS } from "@/lib/map/countries";
 import { MARKETS, REGIONS, type CapabilityStatus, type Market } from "@/lib/map/markets";
 import { websiteCatalystBaseUrl } from "./website-pages";
 
@@ -100,9 +101,39 @@ function toMarket(value: unknown): Market | null {
   };
 }
 
+
+/**
+ * Puts a market's marker inside its own country.
+ *
+ * The x/y on a market record came from the approved artwork, and that artwork
+ * laid the markers out against a different projection from the landmass:
+ * measured against real geometry, 25 of the 46 sat outside their own borders —
+ * Sri Lanka on the Tamil Nadu coast, Chile in Argentina, Malaysia at sea.
+ * Nobody could see it while a marker was a lone dot; the moment the country
+ * lights up around it, it is the first thing you notice.
+ *
+ * So the generated interior point wins over the stored one wherever there is
+ * geometry to compute it from. Singapore and Hong Kong have no usable interior
+ * at this scale and keep the position their record carries.
+ *
+ * This is deliberately NOT a fix to the data in Creator. Correcting 46 rows
+ * there would overwrite whatever the client has since edited, and would have
+ * to be redone every time the map is regenerated. Position is derived from the
+ * map, so it belongs to the map.
+ */
+function onCountry(market: Market): Market {
+  const marker = COUNTRY_MARKERS[market.slug];
+  return marker ? { ...market, x: marker[0], y: marker[1] } : market;
+}
+
+const positioned = (c: MarketCollection): MarketCollection => ({
+  ...c,
+  markets: c.markets.map(onCountry),
+});
+
 export async function fetchMarkets(): Promise<MarketCollection> {
   const baseUrl = websiteCatalystBaseUrl();
-  if (!baseUrl) return BUILT_IN;
+  if (!baseUrl) return positioned(BUILT_IN);
 
   try {
     const res = await fetch(`${baseUrl}/v1/public/markets`, {
@@ -110,13 +141,13 @@ export async function fetchMarkets(): Promise<MarketCollection> {
       // page that renders one, which is most of the site.
       next: { tags: ["website-markets"], revalidate: 60 },
     });
-    if (!res.ok) return BUILT_IN;
+    if (!res.ok) return positioned(BUILT_IN);
 
     const body = (await res.json()) as {
       ok?: boolean;
       markets?: { markets?: unknown; regions?: unknown };
     };
-    if (!body?.ok) return BUILT_IN;
+    if (!body?.ok) return positioned(BUILT_IN);
 
     const rows = Array.isArray(body.markets?.markets) ? body.markets.markets : [];
     const markets = rows.map(toMarket).filter((m): m is Market => m !== null);
@@ -124,7 +155,7 @@ export async function fetchMarkets(): Promise<MarketCollection> {
     // An EMPTY collection is treated as no collection. Publishing zero markets
     // is far more likely to be an accident than an instruction to empty the
     // map, and the built-in copy is a better answer than a blank world.
-    if (markets.length === 0) return BUILT_IN;
+    if (markets.length === 0) return positioned(BUILT_IN);
 
     const published = Array.isArray(body.markets?.regions) ? body.markets.regions : [];
     const regions = published
@@ -138,12 +169,12 @@ export async function fetchMarkets(): Promise<MarketCollection> {
       .filter((r) => markets.some((m) => m.regionSlug === r.slug));
 
     return {
-      markets,
+      markets: markets.map(onCountry),
       regions: regions.length > 0 ? regions : regionsFrom(markets),
       source: "cms",
     };
   } catch {
-    return BUILT_IN;
+    return positioned(BUILT_IN);
   }
 }
 

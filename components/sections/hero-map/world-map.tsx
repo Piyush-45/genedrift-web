@@ -171,8 +171,19 @@ export function WorldMap({
 
                 The filter region has to be grown or the blur is clipped to the
                 shape's own bounding box and comes back with hard sides. */}
-            <filter id="country-blur" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="3" />
+            {/* TWO blurs, not one. A single flat wash reads as a smudge; a
+                wide soft halo under a tighter brighter core reads as light
+                coming off the country, which is what makes it look lit rather
+                than painted. The halo uses accent-soft so the pair has a
+                gradient without introducing a second colour.
+
+                The filter region has to be grown or the blur is clipped to the
+                shape's own bounding box and comes back with hard sides. */}
+            <filter id="country-halo" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" />
+            </filter>
+            <filter id="country-core" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.4" />
             </filter>
           </defs>
 
@@ -182,14 +193,26 @@ export function WorldMap({
               server put in <defs> — the client never holds the path data.
               Painted between the landmass and the markers so a lit country
               sits under its own dot. */}
-          <g filter="url(#country-blur)">
+          <g filter="url(#country-halo)">
+            {markets.map((m, i) => (
+              <use
+                key={m.slug}
+                href={`#country-${m.slug}`}
+                className={cn(
+                  "pointer-events-none fill-accent-soft transition-opacity duration-[260ms]",
+                  i === active ? "opacity-40" : "opacity-0",
+                )}
+              />
+            ))}
+          </g>
+          <g filter="url(#country-core)">
             {markets.map((m, i) => (
               <use
                 key={m.slug}
                 href={`#country-${m.slug}`}
                 className={cn(
                   "pointer-events-none fill-accent transition-opacity duration-[260ms]",
-                  i === active ? "opacity-50" : "opacity-0",
+                  i === active ? "opacity-62" : "opacity-0",
                 )}
               />
             ))}

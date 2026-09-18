@@ -60,3 +60,59 @@ export const COUNTRY_SHAPES: Readonly<Record<string, string>> = {
   "vietnam": "M933.3,243.3L933.3,240.7L931.3,238.6L931.5,237.3L928.4,234.5L928.2,233.2L924.9,230.2L923.5,227.9L920.6,225.2L917.2,223L918.1,221.2L919.1,221.7L920.1,219.5L917.8,218L918.3,217L916.2,215.7L915.3,217.1L913.3,216.1L912,214.2L912.1,213.1L908.4,209.5L909,207.9L911.2,209.3L911.8,207.8L914.3,208.9L916.5,207.2L917.6,205.3L919.9,207.3L921.9,207.2L923,208L922.6,209.4L923.5,211.2L926.2,213L928.4,213.5L926.6,214.4L926.3,215.9L924.6,215.5L925.3,216.7L925.2,218.9L923.6,219.9L923.3,224.3L925.5,227.4L926.8,228.2L928.1,231L933.2,236.3L934.3,236.6L936.9,240.3L938.4,243.2L939.8,247L939.9,249.1L941,251.3L940.3,252.5L941.1,256.5L940.5,258.2L937.8,260.2L935.3,262.6L933.5,261.2L933.8,263.6L933.1,266.3L930.1,268.2L928.9,270.4L927.7,269.6L927.6,265L925.9,262.4L927.2,261.9L927.5,260.2L929.9,259.7L931.4,260.9L930,258.5L930.3,256.4L931.8,256.8L932.5,255.5L934.9,253.8L934.3,250.8L934.4,248.5L933.1,245.9Z",
   "zimbabwe": "M661,389.1L665.7,390.3L666.8,389.8L669.4,385.6L672.6,383.7L673.2,381.4L675.1,380L678.3,379.6L678.3,381.2L681.1,381.3L683.1,383.1L686.5,384.2L686,385.4L686.5,387.2L686.3,391.5L685.1,396.5L685.7,399L683.9,401.3L683.3,404.5L679.3,409.3L676.2,409L674.5,408.1L673.1,408.4L672.2,406.7L669,405.7L668,403.6L668.3,401.1L666.9,401L666.8,399.3L665.3,398.5L663.4,396.6L662.9,394.1L660.8,389.7Z",
 };
+
+/**
+ * Where each market's marker belongs: the interior point furthest from any
+ * coastline, in the same projected space as the shapes above.
+ *
+ * This OVERRIDES the x/y held in the market record. Those came from the
+ * approved artwork, were laid out against a different projection, and put 25
+ * of the 46 markers outside their own country. A market with no entry here
+ * keeps whatever position its record carries.
+ */
+export const COUNTRY_MARKERS: Readonly<Record<string, readonly [number, number]>> = {
+  "azerbaijan": [718.2, 135.2],
+  "benin": [586.2, 262],
+  "brunei": [961.8, 289],
+  "burkina-faso": [574.3, 252.5],
+  "cambodia": [925.4, 252.3],
+  "cameroon": [618.7, 288.7],
+  "chad": [642.9, 230.8],
+  "chile": [355.8, 414.5],
+  "cote-divoire": [559.3, 276],
+  "dr-congo": [657.9, 309.8],
+  "el-salvador": [283, 247.1],
+  "ethiopia": [709.1, 274.3],
+  "ghana": [573.7, 279.5],
+  "guatemala": [278.9, 241.8],
+  "honduras": [290, 242.7],
+  "india": [836.8, 210.1],
+  "indonesia": [959.8, 313.4],
+  "kazakhstan": [779.9, 107.2],
+  "kenya": [704.5, 309.4],
+  "kyrgyzstan": [798, 130.2],
+  "laos": [913.1, 221.1],
+  "madagascar": [731.1, 389.9],
+  "malaysia": [959.1, 298.7],
+  "myanmar": [889.5, 212.5],
+  "nicaragua": [295.3, 252.8],
+  "nigeria": [604.7, 265.4],
+  "pakistan": [790.1, 186.3],
+  "peru": [337.9, 369.4],
+  "philippines": [977.1, 233.8],
+  "russia": [820.2, 65.6],
+  "saudi-arabia": [723.2, 206.3],
+  "senegal": [528.7, 241.4],
+  "south-africa": [650.5, 444.7],
+  "sri-lanka": [848.4, 277],
+  "taiwan": [967.2, 203.6],
+  "tanzania": [692.9, 335.2],
+  "thailand": [911.9, 239.7],
+  "togo": [581.5, 269.9],
+  "uganda": [685.5, 307.4],
+  "ukraine": [668.1, 102.8],
+  "united-arab-emirates": [753.5, 204.8],
+  "uzbekistan": [766.2, 129.6],
+  "vietnam": [918.6, 211.8],
+  "zimbabwe": [675.5, 394.4],
+};

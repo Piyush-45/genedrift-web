@@ -80,6 +80,77 @@ const SLUG_ISO3 = {
   "saudi-arabia": "SAU", "united-arab-emirates": "ARE",
 };
 
+
+/**
+ * A point guaranteed to sit INSIDE a country, for its map marker.
+ *
+ * Why this is generated rather than taken from the design: the 46 marker
+ * positions in the market data came from the approved artwork and were laid
+ * out against a different projection from the landmass. Measured against real
+ * geometry, 25 of the 46 sat outside their own country — equatorial markers
+ * consistently too far north, far-northern ones too far south, which is the
+ * signature of a different latitude mapping. Invisible while a marker was just
+ * a dot near a country; obvious the moment the country lights up around it.
+ *
+ * A centroid is not enough: Indonesia's centroid is in the Java Sea and
+ * Chile's is in Argentina. This is the standard pole-of-inaccessibility
+ * search — the interior point furthest from any edge — run on the country's
+ * largest polygon.
+ */
+function poleOfInaccessibility(ring, holes = []) {
+  const xs = ring.map((p) => p[0]);
+  const ys = ring.map((p) => p[1]);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+
+  const pointInRing = (x, y, r) => {
+    let inside = false;
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+      const [xi, yi] = r[i], [xj, yj] = r[j];
+      if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  };
+  const edgeDistance = (x, y, r) => {
+    let best = Infinity;
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+      const [xi, yi] = r[i], [xj, yj] = r[j];
+      const dx = xj - xi, dy = yj - yi;
+      const len = dx * dx + dy * dy;
+      let t = len ? ((x - xi) * dx + (y - yi) * dy) / len : 0;
+      t = Math.max(0, Math.min(1, t));
+      best = Math.min(best, Math.hypot(x - (xi + t * dx), y - (yi + t * dy)));
+    }
+    return best;
+  };
+  const score = (x, y) => {
+    if (!pointInRing(x, y, ring)) return -1;
+    for (const h of holes) if (pointInRing(x, y, h)) return -1;
+    let d = edgeDistance(x, y, ring);
+    for (const h of holes) d = Math.min(d, edgeDistance(x, y, h));
+    return d;
+  };
+
+  // Coarse grid, then refine around the winner. Cheap and deterministic.
+  let best = { x: (minX + maxX) / 2, y: (minY + maxY) / 2, d: -1 };
+  const scan = (x0, x1, y0, y1, steps) => {
+    const sx = (x1 - x0) / steps, sy = (y1 - y0) / steps;
+    for (let i = 0; i <= steps; i += 1) {
+      for (let j = 0; j <= steps; j += 1) {
+        const x = x0 + i * sx, y = y0 + j * sy;
+        const d = score(x, y);
+        if (d > best.d) best = { x, y, d };
+      }
+    }
+  };
+  scan(minX, maxX, minY, maxY, 40);
+  for (let pass = 0; pass < 4; pass += 1) {
+    const w = (maxX - minX) / 40 / 2 ** pass, h = (maxY - minY) / 40 / 2 ** pass;
+    scan(best.x - w, best.x + w, best.y - h, best.y + h, 10);
+  }
+  return best.d > 0 ? [Math.round(best.x * 10) / 10, Math.round(best.y * 10) / 10] : null;
+}
+
 const prefix = process.argv[2];
 if (!prefix) {
   console.error("usage: node scripts/build-countries.mjs <path/to/ne_10m_admin_0_countries_ind>");
@@ -125,6 +196,7 @@ const landPaths = merge(topo, topo.objects.countries.geometries)
   .map((poly) => round(path({ type: "Polygon", coordinates: poly })));
 
 const countries = {};
+const markers = {};
 for (const f of feature(topo, topo.objects.countries).features) {
   const slug = isoToSlug[f.properties.iso];
   if (!slug) continue;
@@ -134,6 +206,15 @@ for (const f of feature(topo, topo.objects.countries).features) {
   // polygon anyway: a market with no shape at all is worse than a small one.
   const use = kept.length ? kept : [polys.sort((a, b) => areaOf(b) - areaOf(a))[0]];
   countries[slug] = round(path({ type: "MultiPolygon", coordinates: use }));
+
+  const largest = [...use].sort((a, b) => areaOf(b) - areaOf(a))[0];
+  const projected = largest.map((ring) => ring.map((c) => projection(c)).filter(Boolean));
+  const marker = projected[0] && projected[0].length > 3
+    ? poleOfInaccessibility(projected[0], projected.slice(1))
+    : null;
+  // Singapore and Hong Kong have no usable interior at this scale; their
+  // existing marker is the only position they have, so leave them alone.
+  if (marker) markers[slug] = marker;
 }
 
 const header = (what) => `/**
@@ -166,6 +247,19 @@ writeFileSync(
   `${header("One filled shape per market, keyed by market slug.\n *\n * Rendered into <defs> by the hero and referenced with <use>, so the path data\n * is streamed once as HTML and never enters the JavaScript bundle. See\n * components/sections/hero-map/world-map.tsx.")}
 export const COUNTRY_SHAPES: Readonly<Record<string, string>> = {
 ${Object.keys(countries).sort().map((s) => `  "${s}": "${countries[s]}",`).join("\n")}
+};
+
+/**
+ * Where each market's marker belongs: the interior point furthest from any
+ * coastline, in the same projected space as the shapes above.
+ *
+ * This OVERRIDES the x/y held in the market record. Those came from the
+ * approved artwork, were laid out against a different projection, and put 25
+ * of the 46 markers outside their own country. A market with no entry here
+ * keeps whatever position its record carries.
+ */
+export const COUNTRY_MARKERS: Readonly<Record<string, readonly [number, number]>> = {
+${Object.keys(markers).sort().map((s) => `  "${s}": [${markers[s][0]}, ${markers[s][1]}],`).join("\n")}
 };
 `,
   "utf8",
