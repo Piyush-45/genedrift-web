@@ -24,6 +24,14 @@ single landmass; markets are points on it, and a highlighted market is a soft
 radial glow sized from that country's real bounding box — a glow, not a shape and
 not an outline.
 
+> ⚠️ **SUPERSEDED 2026-09-18.** The client asked for the whole country to
+> highlight, and sent a reference showing a feathered fill. The map now carries
+> real country geometry from the **India point-of-view** Natural Earth edition,
+> and the highlight is a blurred fill with no drawn edge. The reasoning below
+> about the default edition still holds and is exactly why the POV file is
+> mandatory. See `map-geometry.md` and the 2026-09-18 entry at the bottom of
+> this file.
+
 Why: Natural Earth ships the de-facto/LoC map of India. This was verified
 programmatically, not assumed — Aksai Chin, northern Gilgit-Baltistan and
 Arunachal (Tawang) all fall outside its India polygon. That is the version that
@@ -284,3 +292,90 @@ still two raw numbers, and markets are not in the editor widget.
 
 - **Global Presence page reuses the existing per-market capability model.** It is
   a search-and-filter view over data we already have, not a new content type.
+
+---
+
+## Map, hero and the authority strip — decided 2026-09-18 to 09-21
+
+**The country highlight is a feathered fill, and that is what resolves 1.3
+against 1.4.** The client asked for the whole country to light up (1.3) and for
+no prominent political boundaries (1.4). Those fight each other: a fill has an
+edge and that edge is a border. A *blurred* fill has no edge to read as a line,
+so it shows the extent without stating the boundary. The client's own reference
+image showed exactly this, which is how the tension got settled. Do not
+"tidy it up" by stroking the shape — the blur is the requirement, not a style.
+
+**Geometry comes from `ne_10m_admin_0_countries_ind`, the India
+point-of-view edition.** Natural Earth's default draws *de facto* boundaries;
+the POV editions draw *de jure* ones as prescribed by the home country's law.
+Substituting the default is the specific failure mode the 2026-09-12 decision
+above was written to avoid. `scripts/build-countries.mjs` refuses to run without
+the file and says why in its header.
+
+**The base landmass is regenerated from the same file in the same run.** Two
+datasets at two simplifications leave hairline cracks between neighbours. The
+coastline is therefore *close to* but not pixel-identical to the approved
+artwork, and the client was told before it shipped.
+
+**Marker positions are derived from the map, not from the record.** The 46 x/y
+values came from the approved artwork and were laid out against a different
+latitude mapping from the landmass: measured against real geometry, **25 of the
+46 markers sat outside their own country**. Sri Lanka's was on the Tamil Nadu
+coast, Chile's in Argentina, Malaysia's at sea. The generator now computes each
+country's pole of inaccessibility and `markets-source.ts` lets it win over the
+stored x/y. A centroid is not sufficient — Indonesia's is in the Java Sea.
+
+Deliberately NOT fixed by correcting 46 rows in Creator: that would overwrite
+the client's own edits and would have to be redone on every regeneration.
+Position is derived from the map, so it belongs to the map.
+
+**On a phone the map is an illustration, not a control.** 46 markers at 390px
+give every one a hit area smaller than a fingertip. Below `lg` the map is
+cropped to Africa/Middle East/South Asia in CSS (one SVG, no second copy of the
+path data) and a **"Find your market" search** is the way in. Usability research
+on mobile location finders is consistent that removing the map from the
+interactive path costs nothing provided the information stays reachable.
+
+**The health authority lives on the market record, not on the homepage.** The
+client asked for a second strip rotating authority names. It is derived from a
+`Health_Authority` field on Markets rather than typed into the hero, because an
+authority belongs to a market — a separate list would drift the first time a
+market was added. The country pages get the authority for free, which is
+information a visitor on a market page obviously wants.
+
+**Both strips run rather than step, and sit under the ticker at full width.**
+They shipped as one-line steppers inside the 420px status column. The client
+asked on 18 Sept for both to glide like the ticker; they now use the ticker's
+own duplicate-and-translate mechanism. Moving them to full-width bands also let
+the hero return to the approved design's 632px, which the bulletin had pushed to
+688.
+
+Worth recording for when it comes back: **stepping was better for reading.** An
+authority name is something you read, not something you watch slide past. The
+client chose motion over legibility with that trade named.
+
+**The second hero action keeps its outline at every width.** As bare text beside
+a filled button it read as a heading, and was being skipped on mobile before it
+got an outline there. Hover fills it rather than only recolouring the text.
+
+**The built-in market data carries no authorities, deliberately.** A regulator's
+name is a factual claim on a regulatory consultancy's own site. It comes from
+the client through Creator; the strip and the country pages stay silent until it
+does. Same rule as the capability data.
+
+---
+
+## Industries — clarified 2026-09-18
+
+**There are no per-industry pages, and that is correct.** The client's URL
+architecture lists `/industries/{industry-slug}`, but three other places in
+their own baseline treat industries as a taxonomy: it is not one of their nine
+IA pillars, it has no section in their sitemap, and under Expertise they write
+*"Industry/product categories are cross-cutting classifications, not primary
+capabilities."* Their baseline also says *"not every sitemap item should become
+a unique static page."*
+
+The approved concept-B design contains **no links at all**. A per-industry CTA
+was added beyond that design, pointed at routes that do not exist, and 404'd on
+the live site until it was removed on 18 Sept. `href` stays optional in the
+schema so the link can return if the pages ever do.

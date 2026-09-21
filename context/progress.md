@@ -5,6 +5,117 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Status as of 2026-09-21 — the map highlights countries, and the hero re-laid out
+
+The last open item from the client's September review is closed. Everything
+below shipped between 18 and 21 September.
+
+### The country highlight (client 1.3 and 1.5)
+
+The map carries real country geometry for the first time, from Natural Earth
+**`ne_10m_admin_0_countries_ind`** — the India point-of-view edition, de jure
+rather than de facto. `lib/map/land.ts` is regenerated from the same file in the
+same run so the base silhouette and the 46 market shapes cannot drift apart.
+Full detail in **`map-geometry.md`**; read that before touching `lib/map/`.
+
+**The highlight is a blurred fill, and the blur is the requirement.** 1.3 asks
+for the whole country and 1.4 forbids prominent boundaries — a fill has an edge
+and that edge is a border, but a feathered fill has no edge to read as a line.
+The client's own reference image showed this, which is how a tension we had
+flagged as unresolvable got resolved. Do not stroke the shape.
+
+Three layers: base landmass, a wide halo in accent-soft, and a core filled with
+a radial gradient whose source is the country's own interior point. That last
+part is what makes it read as lit from within rather than painted over.
+
+Shapes are rendered into `<defs>` by the server and referenced with `<use>`, so
+43KB of paths stream as HTML and never enter the client payload. `<use>` carries
+the hit area too, so the country is hoverable without the client holding any
+geometry.
+
+### 25 of the 46 markers were outside their own country
+
+Found because Piyush noticed Sri Lanka sitting on the Tamil Nadu coast. It was
+not alone: Chile's marker was in Argentina, Malaysia's at sea, South Africa's
+45px north of South Africa.
+
+The error is systematic — equatorial markers too far north, far-northern ones
+too far south — the signature of marker positions laid out against a different
+latitude mapping from the landmass. They came from the approved artwork, so it
+has been wrong from the beginning; a lone dot near a country looks fine, and
+only lighting the country up exposes it.
+
+Positions are now derived: the generator computes each country's pole of
+inaccessibility and `markets-source.ts` prefers it over the stored x/y, for both
+CMS and built-in data. **Map X / Map Y in Creator therefore have no visible
+effect** for any market with geometry, which needs saying at handover.
+
+### Mobile hero rebuilt
+
+Fitting the map into 390px rendered every marker at about 2px with
+sub-fingertip hit areas. Below `lg` it is now **cropped** in CSS — one SVG, no
+second copy of the path data — to the region carrying 37 of the 46 markets, and
+a **"Find your market"** search is the way in. Prefix matches rank first, so
+`ind` offers India before Indonesia; submitting navigates rather than filtering
+in place, which would push the page around mid-type.
+
+The second hero action gained an outline at every width. As bare text beside a
+filled button it read as a heading and was being skipped.
+
+### The authority strip, and a Catalyst bug worth remembering
+
+Markets gained a `Health_Authority` field end to end: Creator form → Deluge →
+Catalyst schema → reader → hero strip → country pages. Derived from the market
+record rather than typed into the homepage, because an authority belongs to a
+market and a second list would drift.
+
+**The bug:** the field was added to the Catalyst publish schema but not to the
+object `service.ts` builds from it. Validation accepted it and the mapper
+dropped it one line later. The publish returned a clean 200 and the only symptom
+was a key missing from the public JSON, with no error anywhere. The mapping is
+field-by-field on purpose so a spread cannot leak Creator's payload into the
+public API — the cost is that a new field must be added in two places.
+
+Second trap, same feature: publications are **immutable**. Publishing before the
+new Catalyst build was deployed froze a document without the field, and
+redeploying did not retroactively fix it. Field → Deluge → deploy → publish, in
+that order.
+
+### Both strips became full-width running bands
+
+They shipped as one-line steppers inside the 420px status column — the worst
+place on the page for something whose job is to run. The client asked for both
+to glide like the updates ticker; they now use the ticker's own
+duplicate-and-translate mechanism and sit under it as full-width bands.
+
+Worth knowing when someone asks why a name is hard to catch: **stepping was
+better for reading**, and the client chose motion with that trade named.
+
+Moving them out also let the hero return to the approved design's **632px**,
+which the bulletin had pushed to 688.
+
+### Also closed
+
+- `/industries/*` links removed. The approved concept-B design has no links in
+  it; a per-industry CTA had been added beyond the design and 404'd live. See
+  the 2026-09-18 entry in `decisions.md` — those pages are not a gap.
+- Section defaults regenerated. `npm run emit:schemas` runs as part of
+  `npm run build`; a few builds used `npx next build` and shipped stale
+  defaults, which reached a CMS page as an undefined label.
+
+### Documents added this week
+
+`handover.md` · `map-geometry.md` · `sitemap-gap-analysis.md` ·
+`map-highlight-options-note.md` · `uat-checklist.md`
+
+### Still open
+
+Unchanged, and all of it is content or decisions owed by the client.
+`handover.md` has the full picture; `sitemap-gap-analysis.md` has the scope
+comparison against their own sitemap.
+
+---
+
 ## Live — 2026-09-17
 
 The site is on the internet and the CMS loop is verified end to end: a line

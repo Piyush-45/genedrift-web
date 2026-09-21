@@ -14,9 +14,21 @@ Status key: ✅ done · 🔨 in progress · ⏳ waiting on someone
 |---|---|---|---|
 | 1.1 | Remove the black box that appears when a country dot is clicked | ✅ | Focus outline on an SVG `<g>` renders as a filled rectangle. Suppressed. |
 | 1.2 | Clicking a country goes to that country's page | ✅ | Each marker is a real link. Two targeting bugs found and fixed — see `progress.md`. |
-| 1.3 | Highlight the **entire country**, not just the dot | 🔨 | Needs real country geometry. |
-| 1.4 | **No prominent geographical / political boundaries** — minimise litigation and boundary-dispute exposure | 🔨 | Shapes are filled, never stroked. No border line is drawn anywhere. |
-| 1.5 | Highlight on hover / select | 🔨 | Same piece of work as 1.3. |
+| 1.3 | Highlight the **entire country**, not just the dot | ✅ | Done 2026-09-18. Real country geometry, India POV edition. See `map-geometry.md`. |
+| 1.4 | **No prominent geographical / political boundaries** — minimise litigation and boundary-dispute exposure | ✅ | The fill is BLURRED, so there is no edge to read as a line. Never stroke it. |
+| 1.5 | Highlight on hover / select | ✅ | Done 2026-09-18. The country itself is a hover target, not only the dot. |
+
+**RESOLVED 2026-09-18 — by the client's own reference image.** They sent a
+screenshot of a country lit with a soft, feathered fill. A blurred fill has no
+edge to read as a drawn line, so it shows the country's extent without stating
+the boundary. That is what satisfies 1.3 and 1.4 at the same time, and it is why
+the shape must never be stroked.
+
+The exposure did not disappear, and they were told: the market list contains
+India and Pakistan, Russia and Ukraine, Taiwan and Hong Kong, so giving countries
+individual shapes means the map depicts a boundary in each of those pairs. The
+India point-of-view Natural Earth edition is used for that reason. The options
+put to them are in `map-highlight-options-note.md`.
 
 **1.3 and 1.4 are in tension and the client was told so.** Highlighting a
 country requires that country's shape, and a shape encodes a border whether or

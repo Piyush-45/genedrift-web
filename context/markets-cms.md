@@ -42,9 +42,23 @@ themselves.
 | Market Name | Single Line — mandatory | What people see: `Kenya`, `UAE` |
 | Region | Dropdown — mandatory | Asia Pacific · Africa · Latin America · CIS · Middle East · Eastern Europe |
 | UTC Offset | Decimal | Hours from UTC. `5.5` for India — half-hour offsets are real |
-| Map X | Decimal | Position on the map, 0–1000 |
-| Map Y | Decimal | Position on the map, 0–500 |
+| Map X | Decimal | ⚠️ **No longer used for anything visible** — see below |
+| Map Y | Decimal | ⚠️ **No longer used for anything visible** — see below |
 | Active | Checkbox, **ticked by default** | Unticking takes the market off the site and keeps the record |
+| Health Authority | Single Line, link name **`Health_Authority`** | Added 2026-09-18. `CDSCO`, `NAFDAC`, `SFDA`. Optional |
+
+**Map X and Map Y are effectively dead fields.** Marker positions are derived
+from the country geometry — 25 of the 46 stored pairs put their marker outside
+its own country. See `map-geometry.md`. Editing them changes nothing for any
+market that has a shape, which is 44 of 46. Hide them on the form at handover
+rather than leaving an editor wondering why nothing moves.
+
+**Health Authority** feeds two things from one place: the rotating authority
+band on the homepage, and the regulator named on that market's country page. It
+is empty everywhere until the client fills it, and both render nothing while it
+is. The link name must be exactly `Health_Authority` — the publish function
+reads `marketRow.Health_Authority`, and Creator silently appends a number if the
+name was ever used before.
 
 The **region slug is not a field**. It is worked out from the region name, so a
 typed slug can never disagree with the region it belongs to.

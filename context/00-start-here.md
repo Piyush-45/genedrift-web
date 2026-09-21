@@ -1,6 +1,6 @@
 # Start here
 
-Last updated: 2026-09-16.
+Last updated: 2026-09-21.
 
 ## What this project is
 
@@ -19,7 +19,9 @@ production build of that design.
 
 | If you are... | Read |
 |---|---|
-| Picking the project up cold | this file, then `progress.md` |
+| Picking the project up cold | **`handover.md` first**, then this file, then `progress.md` |
+| Touching `lib/map/`, or a marker position | `map-geometry.md` |
+| Asked what is and is not built | `sitemap-gap-analysis.md` |
 | Building or changing a section | `design-spec.md`, then `architecture.md` §section contract |
 | Making a technical choice | `decisions.md` — check it is not already decided (or already rejected) |
 | Wondering why something is unfinished | `blocked-on-client.md` |
@@ -37,11 +39,15 @@ schema and a fixture. The schemas compose into one discriminated union, and
 `components/sections/registry.tsx` maps type to component. Content comes from
 fixtures today and from the Catalyst API later — that swap is one function.
 
-**Twenty-five section types are built and every template A–H exists.** The
-homepage, 46 country pages, 6 region pages, the hubs, Insights, Careers,
-Contact, Search and Global Presence all render from fixtures. What remains is
-the client's September feedback (see `client-feedback-2026-09-15.md`) and the
-Creator/Catalyst wiring in `BUILD-GUIDE.md`.
+**The site is live at www.genedrift.site and the client is reviewing it.**
+Twenty-five section types, every template A–H, the homepage, 46 country pages,
+6 region pages, the hubs, Insights, Careers, Contact, Search and Global
+Presence. Content comes from Creator through Catalyst, with the fixtures as the
+fallback when nothing is published for a path.
+
+Every item in the client's September feedback is closed. What remains is
+content and decisions owed by them, plus page families in their sitemap that
+were never designed — see `handover.md` and `sitemap-gap-analysis.md`.
 
 ## Where the design lives
 
