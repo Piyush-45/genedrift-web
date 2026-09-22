@@ -67,7 +67,7 @@ From our IA document, §"Recommended launch scope":
 | **6 to 10 priority country pages** | ✅ **46** |
 | 5–6 priority Explore journeys | ✅ 3 pages carrying the journeys |
 | **3–5 essential Company pages: About, Leadership, Operating Model, Quality & Compliance, Global Presence** | ✅ **all five** |
-| 3 approved case studies *"if the client can supply evidence"* | ❌ no evidence ever supplied |
+| 3 approved case studies *"if the client can supply evidence"* | ✅ **8**, built 22 September from their own live site |
 | Careers landing and Contact | ✅ both, plus 4 contact intents and 46 job routes |
 | Insights archive and published articles | ✅ |
 
@@ -89,23 +89,28 @@ is what exists. The eight Careers topics were never launch scope.
 
 Three things, and they are not equal.
 
-### 1 · Case studies — the real one
+### ~~1 · Case studies~~ — built 22 September
 
-- Page family **11** in our IA document: `/client-success/case-studies/{slug}`,
-  "repeatable proof record".
-- `Case_Studies` is collection **10** in the CMS blueprint.
-- `/client-success/case-studies/{case-slug}` is in the client's own URL list.
-- Named in the launch scope as *"3 approved case studies if the client can
-  supply evidence"*.
+Specified in three documents (page family **11** in our IA document, collection
+**10** in the CMS blueprint, `/client-success/case-studies/{case-slug}` in the
+client's own URL list) and conditional on *"3 approved case studies if the
+client can supply evidence"*.
 
-Specified in three documents, so this is a real page family that does not exist —
-in the site or in the CMS. **But it was conditional on evidence the client never
-supplied**, and their own blueprint lists "approved case studies, client names,
-outcomes and metrics" as content still owed by them.
+The evidence was already public. The client has **eight** case studies on
+genedrift.com, filed under two families they named themselves — Delivering
+Excellence and Strategic Filing — each written as Scenario, Solution, Result.
+All eight are now live in the build and editable in the CMS, in their own words.
 
-For a consultancy these are usually the most-read pages on the site, and
-`/client-success` is currently a hub leading nowhere. Worth raising — as a
-content dependency, not as a delivery failure.
+Two caveats that belong in front of the client, not buried:
+
+- **Transcribed is not approved.** Some of the copy reads as though it was
+  written several years ago.
+- Two of the eight (**API Vendor Review**, **Biosimilars**) have no narrative on
+  their own site either. They publish as summary cards with no detail page. We
+  did not write the missing halves.
+
+So the launch-scope line is over-delivered, not outstanding — but it still ends
+with a request to them.
 
 ### 2 · Regional regulatory guides — specified, never scheduled
 
@@ -182,11 +187,13 @@ Not a list of missing pages — that invites "so build them". Something closer t
 > Your baseline lists content topics under each section without specifying which
 > become pages, and notes that not every item should. The build follows the
 > launch scope in our 5 September architecture document, and exceeds it — 46
-> country pages against a recommended 6 to 10. Two things in that scope are
-> outstanding and both need you: case studies, which were conditional on
-> approved evidence, and the decision on which remaining topics become pages
-> versus sections. Your own question 1 from the baseline has never been
-> answered, and it governs the rest.
+> country pages against a recommended 6 to 10, and 8 case studies against a
+> recommended 3. The case studies carry your existing copy, unedited, so they
+> need a read-through rather than a rewrite; two of them have no narrative on
+> your current site and are published as summaries until you supply one. What
+> is still outstanding is the decision on which remaining topics become pages
+> versus sections — your own question 1 from the baseline, which has never been
+> answered and governs the rest.
 
 ---
 

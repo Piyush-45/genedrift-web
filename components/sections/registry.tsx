@@ -26,6 +26,9 @@ import { PillRow } from "./pill-row";
 import { ValueGrid } from "./value-grid";
 import { ProofBillboard } from "./proof-billboard";
 import { ContactSplit } from "./contact-split";
+import { CaseStudyIndex } from "./case-study-index";
+import { CaseStudyHead } from "./case-study-head";
+import { CaseStudyBody } from "./case-study-body";
 
 /**
  * type -> component. This map is the renderer. A page is a loop over an
@@ -57,6 +60,9 @@ const REGISTRY: { [K in SectionType]: ComponentType<Extract<Section, { type: K }
   "value-grid": ValueGrid,
   "proof-billboard": ProofBillboard,
   "contact-split": ContactSplit,
+  "case-study-index": CaseStudyIndex,
+  "case-study-head": CaseStudyHead,
+  "case-study-body": CaseStudyBody,
 };
 
 export async function RenderSections({ sections }: { sections: Section[] }) {

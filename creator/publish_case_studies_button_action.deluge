@@ -1,0 +1,22 @@
+/*
+ * The "Publish case studies" button on the Website_Case_Studies report.
+ *
+ * Creator path: Design > Website_Case_Studies Report > Actions > Action Item
+ *               "Publish case studies" > workflow "Publish_Case_Studies"
+ *
+ * Set the action item's execution to run ONCE for the report, not once per
+ * selected record — this publishes the whole collection, so clicking it with
+ * three rows selected must not fire three publishes.
+ *
+ * `info`, not `alert`: Creator restricts `alert` to on-load, on-validate and
+ * on-change FORM actions and rejects it in a report action item.
+ */
+outcome = thisapp.publish_case_studies();
+if(outcome.get("ok") == true)
+{
+	info "Case studies published. " + ifnull(outcome.get("caseStudyCount"),0) + " are live on the site.";
+}
+else
+{
+	info "Not published — " + ifnull(outcome.get("message"),"unknown error");
+}

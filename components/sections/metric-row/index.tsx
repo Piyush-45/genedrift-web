@@ -1,4 +1,12 @@
+import { cn } from "@/lib/cn";
 import type { MetricRowProps } from "./schema";
+
+const COLUMNS: Record<number, string> = {
+  1: "",
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-2 lg:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
+};
 
 export function MetricRow({ eyebrow, heading, items }: MetricRowProps) {
   if (items.length === 0) return null;
@@ -13,7 +21,12 @@ export function MetricRow({ eyebrow, heading, items }: MetricRowProps) {
           </div>
         )}
 
-        <dl className="grid gap-px border-y border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+        {/* The column count follows the ITEM count. The grid paints its gaps
+            with --color-line, so a fixed four-column track with two metrics in
+            it draws a half-width empty cell that reads as a missing number.
+            Written out rather than interpolated because Tailwind only sees
+            class names that appear literally in the source. */}
+        <dl className={cn("grid gap-px border-y border-line bg-line", COLUMNS[Math.min(items.length, 4)])}>
           {items.map((item) => (
             <div key={item.label} className="bg-canvas px-7 pt-7 pb-8">
               <dt className="sr-only">{item.label}</dt>

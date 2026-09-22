@@ -4,6 +4,8 @@ import { loadEnvironment } from "./config";
 import { publishRequestSchema, unpublishRequestSchema, pathSchema } from "./domain";
 import { AuthError, verifyRequestSignature } from "./security";
 import {
+  CaseStudiesService,
+  DuplicateCaseStudyError,
   DuplicateMarketError,
   DuplicateNavKeyError,
   EmptyNavigationError,
@@ -12,6 +14,7 @@ import {
   SiteService,
 } from "./service";
 import { marketsPublishRequestSchema } from "./markets";
+import { caseStudiesPublishRequestSchema } from "./case-studies";
 import { sitePublishRequestSchema } from "./site";
 import { Store, isTombstone } from "./store";
 import { createLocalBucket } from "./local-bucket";
@@ -209,6 +212,54 @@ app.post("/v1/website/markets/rollback", async (req, res) => {
   }
 });
 
+app.post("/v1/website/case-studies", async (req, res) => {
+  try {
+    requireSignature(req);
+    const parsed = caseStudiesPublishRequestSchema.safeParse(parseJsonBody(req));
+    if (!parsed.success) {
+      return res.status(422).json({
+        ok: false,
+        code: "CASE_STUDIES_INVALID",
+        issues: parsed.error.issues.slice(0, 20).map((i) => ({
+          path: i.path.join("."),
+          message: i.message,
+        })),
+      });
+    }
+
+    const doc = await new CaseStudiesService(storeFor(req)).publish(parsed.data, new Date());
+
+    return res.status(201).json({
+      ok: true,
+      publicationId: doc.publicationId,
+      contentHash: doc.contentHash,
+      publishedAt: doc.publishedAt,
+      caseStudyCount: doc.caseStudies.length,
+    });
+  } catch (error) {
+    return handleError(res, error);
+  }
+});
+
+app.post("/v1/website/case-studies/rollback", async (req, res) => {
+  try {
+    requireSignature(req);
+    const body = parseJsonBody(req) as { publicationId?: unknown };
+    if (typeof body.publicationId !== "string") {
+      return res.status(422).json({ ok: false, code: "REQUEST_INVALID" });
+    }
+    const doc = await new CaseStudiesService(storeFor(req)).rollback(body.publicationId);
+    if (!doc) return res.status(404).json({ ok: false, code: "PUBLICATION_NOT_FOUND" });
+    return res.json({
+      ok: true,
+      publicationId: doc.publicationId,
+      caseStudyCount: doc.caseStudies.length,
+    });
+  } catch (error) {
+    return handleError(res, error);
+  }
+});
+
 app.post("/v1/website/site", async (req, res) => {
   try {
     requireSignature(req);
@@ -302,6 +353,23 @@ app.get("/v1/public/markets", async (req, res) => {
   }
 });
 
+/**
+ * The whole Case Studies collection in one response.
+ *
+ * A 404 is NOT an error on the website's side: it means case studies have
+ * never been published, and the site renders its built-in copy.
+ */
+app.get("/v1/public/case-studies", async (req, res) => {
+  try {
+    const doc = await new CaseStudiesService(storeFor(req)).getLive();
+    if (!doc) return res.status(404).json({ ok: false, code: "CASE_STUDIES_NOT_PUBLISHED" });
+    res.setHeader("cache-control", "public, max-age=60, stale-while-revalidate=600");
+    return res.json({ ok: true, caseStudies: doc });
+  } catch (error) {
+    return handleError(res, error);
+  }
+});
+
 app.get(/^\/v1\/public\/pages\/(.*)$/, async (req, res) => {
   try {
     const path = pathFromRequest(req);
@@ -339,6 +407,13 @@ function handleError(res: express.Response, error: unknown): express.Response {
     return res.status(409).json({
       ok: false,
       code: "MARKET_SLUG_DUPLICATE",
+      message: error.message,
+    });
+  }
+  if (error instanceof DuplicateCaseStudyError) {
+    return res.status(409).json({
+      ok: false,
+      code: "CASE_STUDY_SLUG_DUPLICATE",
       message: error.message,
     });
   }

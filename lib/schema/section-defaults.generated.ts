@@ -102,5 +102,18 @@ export const SECTION_DEFAULTS: Record<string, Record<string, unknown>> = {
   "contact-split": {
     "fields": [],
     "routes": []
+  },
+  "case-study-index": {
+    "source": "all",
+    "readLabel": "Read the case study"
+  },
+  "case-study-head": {
+    "backLabel": "← All case studies"
+  },
+  "case-study-body": {
+    "scenarioLabel": "Scenario",
+    "solutionLabel": "Solution",
+    "resultLabel": "Result",
+    "pagerLabel": "Next case study"
   }
 };

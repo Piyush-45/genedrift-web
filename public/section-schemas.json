@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "generatedAt": "2026-09-18T14:13:26.680Z",
+  "generatedAt": "2026-09-22T19:00:02.179Z",
   "sectionTypes": [
     "hero-map",
     "page-head",
@@ -26,7 +26,10 @@
     "pill-row",
     "value-grid",
     "proof-billboard",
-    "contact-split"
+    "contact-split",
+    "case-study-index",
+    "case-study-head",
+    "case-study-body"
   ],
   "page": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1472,6 +1475,93 @@
                 "submitLabel",
                 "submitHref"
               ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "case-study-index"
+                },
+                "eyebrow": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "heading": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "standfirst": {
+                  "type": "string"
+                },
+                "source": {
+                  "default": "all",
+                  "type": "string"
+                },
+                "readLabel": {
+                  "default": "Read the case study",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "eyebrow",
+                "heading"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "case-study-head"
+                },
+                "caseSlug": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "backLabel": {
+                  "default": "← All case studies",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "caseSlug"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "case-study-body"
+                },
+                "caseSlug": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "scenarioLabel": {
+                  "default": "Scenario",
+                  "type": "string"
+                },
+                "solutionLabel": {
+                  "default": "Solution",
+                  "type": "string"
+                },
+                "resultLabel": {
+                  "default": "Result",
+                  "type": "string"
+                },
+                "pagerLabel": {
+                  "default": "Next case study",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "caseSlug"
+              ]
             }
           ]
         }
@@ -2901,6 +2991,93 @@
           "submitLabel",
           "submitHref"
         ]
+      },
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "case-study-index"
+          },
+          "eyebrow": {
+            "type": "string",
+            "minLength": 1
+          },
+          "heading": {
+            "type": "string",
+            "minLength": 1
+          },
+          "standfirst": {
+            "type": "string"
+          },
+          "source": {
+            "default": "all",
+            "type": "string"
+          },
+          "readLabel": {
+            "default": "Read the case study",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "eyebrow",
+          "heading"
+        ]
+      },
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "case-study-head"
+          },
+          "caseSlug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "backLabel": {
+            "default": "← All case studies",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "caseSlug"
+        ]
+      },
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "case-study-body"
+          },
+          "caseSlug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scenarioLabel": {
+            "default": "Scenario",
+            "type": "string"
+          },
+          "solutionLabel": {
+            "default": "Solution",
+            "type": "string"
+          },
+          "resultLabel": {
+            "default": "Result",
+            "type": "string"
+          },
+          "pagerLabel": {
+            "default": "Next case study",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "caseSlug"
+        ]
       }
     ]
   },
@@ -3001,6 +3178,19 @@
     "contact-split": {
       "fields": [],
       "routes": []
+    },
+    "case-study-index": {
+      "source": "all",
+      "readLabel": "Read the case study"
+    },
+    "case-study-head": {
+      "backLabel": "← All case studies"
+    },
+    "case-study-body": {
+      "scenarioLabel": "Scenario",
+      "solutionLabel": "Solution",
+      "resultLabel": "Result",
+      "pagerLabel": "Next case study"
     }
   }
 }

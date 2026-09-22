@@ -12,6 +12,11 @@ import {
   type MarketsPublishRequest,
   type PublishedMarkets,
 } from "./markets";
+import {
+  findDuplicateSlug as findDuplicateCaseStudySlug,
+  type CaseStudiesPublishRequest,
+  type PublishedCaseStudies,
+} from "./case-studies";
 import { deterministicId, sha256Hex, stableJson } from "./security";
 import type { Store } from "./store";
 
@@ -272,5 +277,87 @@ export class DuplicateNavKeyError extends Error {
 export class EmptyNavigationError extends Error {
   constructor() {
     super("Every navigation item is hidden. Publishing that would leave the site with no menu on any page.");
+  }
+}
+
+/**
+ * The Case Studies collection. Published whole, for the same reasons as
+ * markets: the listing and every detail page read the same rows, and a record
+ * deleted in Creator has to be expressible as "absent from the next publish".
+ */
+export class CaseStudiesService {
+  constructor(private readonly store: Store) {}
+
+  async publish(request: CaseStudiesPublishRequest, now: Date): Promise<PublishedCaseStudies> {
+    const duplicate = findDuplicateCaseStudySlug(request.caseStudies);
+    if (duplicate) throw new DuplicateCaseStudyError(duplicate);
+
+    const caseStudies = [...request.caseStudies]
+      .sort(
+        (a, b) =>
+          a.familySlug.localeCompare(b.familySlug) ||
+          a.displayOrder - b.displayOrder ||
+          a.title.localeCompare(b.title),
+      )
+      .map((c) => ({
+        // Field by field on purpose. A spread would let anything Creator sends
+        // reach the public API — and the inverse mistake, adding a field to
+        // the schema and forgetting it here, publishes a clean 200 with the
+        // key silently missing. That is exactly how `authority` was lost on
+        // markets. If you add a field above, add it here.
+        slug: c.slug,
+        title: c.title,
+        family: c.family,
+        familySlug: c.familySlug,
+        teaser: c.teaser,
+        scenario: c.scenario,
+        solution: c.solution,
+        result: c.result,
+        tags: [...c.tags],
+        // Derived here, never stored in Creator: a href typed by hand is a
+        // 404 waiting to happen.
+        href: `/client-success/case-studies/${c.slug}`,
+        order: c.displayOrder,
+        metrics: [...c.metrics]
+          .sort((a, b) => a.displayOrder - b.displayOrder)
+          .map((m) => ({ value: m.value, label: m.label })),
+      }));
+
+    const contentHash = sha256Hex(stableJson({ caseStudies }));
+    const publicationId = deterministicId("cpub", "case-studies", contentHash);
+
+    // Identical content is one version published twice — reuse the frozen
+    // object rather than re-freezing it under an immutable key.
+    const existing = await this.store.getCaseStudiesPublication(publicationId);
+    const doc: PublishedCaseStudies = existing ?? {
+      schemaVersion: 1,
+      publicationId,
+      contentHash,
+      publishedAt: now.toISOString(),
+      caseStudies,
+    };
+
+    if (!existing) await this.store.putCaseStudiesPublication(doc);
+    await this.store.setLiveCaseStudies(doc);
+    return doc;
+  }
+
+  async getLive(): Promise<PublishedCaseStudies | null> {
+    return this.store.getLiveCaseStudies();
+  }
+
+  async rollback(publicationId: string): Promise<PublishedCaseStudies | null> {
+    const doc = await this.store.getCaseStudiesPublication(publicationId);
+    if (!doc) return null;
+    await this.store.setLiveCaseStudies(doc);
+    return doc;
+  }
+}
+
+/** Refused, with the offending slug named — see findDuplicateSlug. */
+export class DuplicateCaseStudyError extends Error {
+  constructor(readonly slug: string) {
+    super(`Two case studies share the slug "${slug}"`);
+    this.name = "DuplicateCaseStudyError";
   }
 }

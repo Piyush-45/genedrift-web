@@ -26,6 +26,7 @@ import { metricRowFixture } from "@/components/sections/metric-row/fixture";
 import { faqAccordionFixture } from "@/components/sections/faq-accordion/fixture";
 import { jobListFixture } from "@/components/sections/job-list/fixture";
 import { jobDetailFixture } from "@/components/sections/job-detail/fixture";
+import { caseStudyIndexFixture } from "@/components/sections/case-study-index/fixture";
 
 /**
  * Stand-in for Catalyst while the CMS is being built. Same shape, same
@@ -103,17 +104,35 @@ function hubPage(pillar: Pillar): Omit<Page, "sections"> & { sections: Section[]
       headingTail: copy.tail,
       standfirst: undefined,
     },
-    {
+  ];
+
+  /**
+   * "In this section" earns its place only when there is a section to list.
+   *
+   * Client Success has exactly one child, and a heading reading "Everything
+   * under Client impact" above a single link is worse than no block at all —
+   * the link is already in the menu and the footer. The hub shows the case
+   * studies themselves instead, a few lines further down.
+   */
+  if (pillarChildren(pillar).length > 1) {
+    sections.push({
       ...subCapabilityGridFixture,
       eyebrow: "In this section",
       heading: `Everything under ${copy.eyebrow}.`,
       navSource: pillar,
       items: [],
-    },
-  ];
+    });
+  }
 
   if (pillar === "expertise") sections.push(capabilityPanelsFixture, processGridFixture, pillRowFixture);
-  if (pillar === "client-success") sections.push(metricRowFixture, proofBillboardFixture);
+  /**
+   * The proof billboard is deliberately NOT here any more. Its heading is the
+   * hub's own h1 word for word, and since 22 September the case studies do its
+   * job properly — eight records the client can edit, rather than three fixed
+   * stories. It still runs on the homepage, where it is the teaser rather than
+   * the destination.
+   */
+  if (pillar === "client-success") sections.push(metricRowFixture, caseStudyIndexFixture);
   if (pillar === "company") sections.push(valueGridFixture, processGridFixture, metricRowFixture);
   if (pillar === "explore") sections.push(exploreJourneysFixture, industryIndexFixture);
 
@@ -169,12 +188,22 @@ const HOME = {
 };
 
 /** Every detail route that exists, derived from the nav. */
+/**
+ * Paths that a pillar's nav lists but that have their OWN route file, so
+ * `[pillar]/[slug]` must not also claim them. A static segment already wins
+ * at request time; this keeps it from prerendering a second, dead copy of the
+ * same path and from inventing built-in content for it.
+ */
+const OWN_ROUTE = new Set(["client-success/case-studies"]);
+
 export function detailRoutes(): { pillar: Pillar; slug: string; label: string }[] {
   const out: { pillar: Pillar; slug: string; label: string }[] = [];
   for (const pillar of PILLARS) {
     for (const child of pillarChildren(pillar)) {
       const slug = child.href.split("/").filter(Boolean).slice(1).join("/");
-      if (slug && !slug.includes("/")) out.push({ pillar, slug, label: child.label });
+      if (!slug || slug.includes("/")) continue;
+      if (OWN_ROUTE.has(`${pillar}/${slug}`)) continue;
+      out.push({ pillar, slug, label: child.label });
     }
   }
   return out;

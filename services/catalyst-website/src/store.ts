@@ -1,5 +1,6 @@
 import type { LiveIndexEntry, PublishedPage } from "./domain";
 import type { PublishedMarkets } from "./markets";
+import type { PublishedCaseStudies } from "./case-studies";
 import type { PublishedSite } from "./site";
 import { sha256Hex } from "./security";
 
@@ -136,6 +137,23 @@ export class Store {
 
   async getLiveMarkets(): Promise<PublishedMarkets | null> {
     return this.getJson<PublishedMarkets>("collections/markets.json");
+  }
+
+  /** Freeze a Case Studies publication. Same immutability rule as a page. */
+  async putCaseStudiesPublication(doc: PublishedCaseStudies): Promise<void> {
+    await this.putJson(`publications/${doc.publicationId}.json`, doc, true);
+  }
+
+  async getCaseStudiesPublication(publicationId: string): Promise<PublishedCaseStudies | null> {
+    return this.getJson<PublishedCaseStudies>(`publications/${publicationId}.json`);
+  }
+
+  async setLiveCaseStudies(doc: PublishedCaseStudies): Promise<void> {
+    await this.putJson("collections/case-studies.json", doc, false);
+  }
+
+  async getLiveCaseStudies(): Promise<PublishedCaseStudies | null> {
+    return this.getJson<PublishedCaseStudies>("collections/case-studies.json");
   }
 
   async putSitePublication(doc: PublishedSite): Promise<void> {

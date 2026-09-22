@@ -1,0 +1,47 @@
+Market_Slug	Market_Name	Region	UTC_Offset	Map_X	Map_Y	Active
+benin	Benin	Africa	1	587.4	253.8	true
+burkina-faso	Burkina Faso	Africa	0	575.9	242.7	true
+cameroon	Cameroon	Africa	1	623.9	261.2	true
+chad	Chad	Africa	1	639.1	231.5	true
+cote-divoire	Côte d’Ivoire	Africa	0	561.5	260	true
+dr-congo	DR Congo	Africa	1	652.9	303	true
+ethiopia	Ethiopia	Africa	3	705.7	253.3	true
+ghana	Ghana	Africa	0	576.5	259	true
+kenya	Kenya	Africa	3	702.3	286.7	true
+madagascar	Madagascar	Africa	3	729.8	356.7	true
+nigeria	Nigeria	Africa	1	605.4	254.9	true
+senegal	Senegal	Africa	0	532.4	234.4	true
+south-africa	South Africa	Africa	2	662.2	392.7	true
+tanzania	Tanzania	Africa	3	691.1	310.8	true
+togo	Togo	Africa	0	583.6	256.5	true
+uganda	Uganda	Africa	3	686.1	282.8	true
+zimbabwe	Zimbabwe	Africa	2	674	358	true
+brunei	Brunei	Asia Pacific	8	954	270.5	true
+cambodia	Cambodia	Asia Pacific	7	919.7	240.4	true
+hong-kong	Hong Kong	Asia Pacific	8	944.1	205.5	true
+india	India	Asia Pacific	5.5	832.7	207.1	true
+indonesia	Indonesia	Asia Pacific	7	949.2	288.5	true
+laos	Laos	Asia Pacific	7	907.8	220.8	true
+malaysia	Malaysia	Asia Pacific	8	912.4	273.7	true
+myanmar	Myanmar	Asia Pacific	6.5	887.5	217.8	true
+pakistan	Pakistan	Asia Pacific	5	799.1	175.8	true
+philippines	Philippines	Asia Pacific	8	987	259.8	true
+singapore	Singapore	Asia Pacific	8	918.4	282.9	true
+sri-lanka	Sri Lanka	Asia Pacific	5.5	842.2	258.8	true
+taiwan	Taiwan	Asia Pacific	8	964.6	199.4	true
+thailand	Thailand	Asia Pacific	7	908.9	239.7	true
+vietnam	Vietnam	Asia Pacific	7	927.3	228.8	true
+azerbaijan	Azerbaijan	CIS	4	723.1	140.2	true
+kazakhstan	Kazakhstan	CIS	5	770.1	111	true
+kyrgyzstan	Kyrgyzstan	CIS	6	804.4	135.6	true
+uzbekistan	Uzbekistan	CIS	5	769.2	135.4	true
+russia	Russia	Eastern Europe	3	811.9	71.3	true
+ukraine	Ukraine	Eastern Europe	2	677	110.2	true
+chile	Chile	Latin America	-3	388.4	485.9	true
+el-salvador	El Salvador	Latin America	-6	292.6	236.9	true
+guatemala	Guatemala	Latin America	-6	288.8	229.6	true
+honduras	Honduras	Latin America	-6	298.3	234.4	true
+nicaragua	Nicaragua	Latin America	-6	303.1	240.3	true
+peru	Peru	Latin America	-5	333.7	322	true
+saudi-arabia	Saudi Arabia	Middle East	3	721.5	198.3	true
+united-arab-emirates	UAE	Middle East	4	754.7	198.3	true

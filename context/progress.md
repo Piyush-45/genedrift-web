@@ -5,6 +5,57 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Status as of 2026-09-22 — case studies, the last real page family
+
+`/client-success/case-studies` and `/client-success/case-studies/{slug}` are
+built and CMS-editable. This was page family 11 in the 5 September architecture
+document, collection 10 in the CMS blueprint, and in the client's own URL list —
+the one item the scope analysis called a genuine gap.
+
+**What unblocked it.** The launch scope said "3 approved case studies *if the
+client can supply evidence*", and the evidence never came. It turned out to be
+public: genedrift.com carries **eight** case studies, grouped into two families
+the client named themselves — Delivering Excellence and Strategic Filing — each
+written as Scenario, Solution, Result. The build carries all eight, in their own
+words, with nothing written for them.
+
+**The content model follows theirs**, not a richer one we invented and then
+asked them to fill. Three narrative fields, a teaser, tags and an optional list
+of figures — figures only where a number already appears in the narrative.
+
+**Two records have no detail page.** API Vendor Review and Biosimilars have a
+summary and nothing behind it on the client's own site. Their cards do not link
+anywhere and their URLs 404. Filling in the three fields in Creator creates the
+page; no code change.
+
+**Shipped in this pass**
+
+- `lib/content/case-study.ts` and `case-studies-source.ts` — the record and a
+  CMS-first reader with the built-in eight as the fallback, same contract as
+  markets
+- three sections: `case-study-index`, `case-study-head`, `case-study-body`,
+  resolved through `resolve.ts` so they can move onto a CMS page later without a
+  rewrite
+- `app/client-success/case-studies/` — a static segment, so it wins over
+  `[pillar]/[slug]`; that path is excluded from `detailRoutes()` so nothing
+  prerenders a dead second copy
+- Catalyst: `case-studies.ts`, `CaseStudiesService`, store methods, publish,
+  rollback and public-read routes, plus six smoke checks — **72/72 passing**
+- `creator/publish_case_studies.deluge` and its button action
+- `metric-row` now sizes its grid to the item count; two metrics no longer draw
+  a half-width empty cell
+- "Case Studies" added under Client Success in the nav, so the hub leads
+  somewhere
+
+**Setup instructions for Creator are in `case-studies-cms.md`.** Two forms,
+`Website_Case_Studies` and `Website_Case_Study_Metrics`, no new application
+variables.
+
+**Still owed by the client:** a read-through of the eight, since transcribed is
+not approved, and the narrative for the two summary-only records.
+
+---
+
 ## Status as of 2026-09-21 — the map highlights countries, and the hero re-laid out
 
 The last open item from the client's September review is closed. Everything

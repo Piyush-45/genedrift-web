@@ -95,6 +95,9 @@ ground truth; if it is not there, nothing on the front end will help.
   the page look finished — it is a regulatory obligation, not a form.
 - **Singapore, Hong Kong and Brunei** show no country shape. Too small at this
   map scale.
+- **Two case study cards do not link anywhere**, and their URLs 404. A record
+  with no Scenario, Solution and Result has no page, by design — see
+  `case-studies-cms.md`. Do not write the missing halves to "finish" them.
 
 ---
 
@@ -111,21 +114,24 @@ to 10, and exactly the five Company pages that scope names.
 
 So the Company and Careers topic lists are **not** outstanding work.
 
-Genuinely not built:
+**Case studies are now built** — 22 September. They were the one real gap. See
+`case-studies-cms.md`. The blocker was "3 approved case studies if the client
+can supply evidence" and the evidence turned out to be public: eight case
+studies on genedrift.com, in their own two families, with their own
+Scenario / Solution / Result shape. Those eight are carried, unedited. Two of
+them have no narrative on the client's own site and therefore have no detail
+page here — a card with nothing behind it, which is the honest state.
 
-- **Case studies** — a real page family (`/client-success/case-studies/{slug}`),
-  specified in three documents, absent from site and CMS. It was conditional on
-  "approved evidence" the client never supplied, so it is a content dependency
-  rather than a delivery failure. `/client-success` is currently a hub leading
-  nowhere, which is worth raising.
+Still genuinely not built:
+
 - **Regional regulatory guides** — named in their baseline, never in any launch
   scope. Future phase.
 - **Two contact intents** — Schedule Consultation, Media Enquiries, Location.
   Their own URL line says standalone intent pages exist "only where approved".
 
-Neither of the first two can be built without content and decisions from the
-client. Their own open question — *"which exact pages are required for the first
-launch versus future phases?"* — has never been answered and governs all of it.
+Neither can be built without content and decisions from the client. Their own
+open question — *"which exact pages are required for the first launch versus
+future phases?"* — has never been answered and governs all of it.
 
 `/markets/compare` is in their baseline and was **cancelled by them** on 15
 September. Correctly absent.
@@ -148,6 +154,9 @@ unconfirmed:
 - Their Middle East list names Qatar, Oman, Kuwait and Bahrain; the site carries
   Saudi Arabia and UAE.
 - All careers content was written by us as placeholder. It must not go live.
+- The eight case studies were **transcribed from genedrift.com**, not supplied.
+  Their own words, unedited — but some of it reads as though it was written
+  years ago, and nobody has re-approved it.
 
 **The rule that governs all of the above: never invent client content and
 present it as real.** Placeholder is fine and expected — but say so.
@@ -176,6 +185,7 @@ present it as real.** Placeholder is fine and expected — but say so.
 | `progress.md` | You want the history, newest first |
 | `decisions.md` | Before making a choice — it may be made, or rejected |
 | `map-geometry.md` | Anything touching `lib/map/` or marker positions |
+| `case-studies-cms.md` | Anything touching case studies — the forms and the rules |
 | `markets-cms.md` · `site-chrome-cms.md` | Changing what an editor can edit |
 | `integration.md` · `cms-architecture.md` | Anything CMS or API shaped |
 | `article-contract.md` | Insights — the real Creator model and payload |

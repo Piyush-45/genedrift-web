@@ -1,0 +1,285 @@
+/*
+ * GeneDrift Website — publish the whole Case Studies collection to Catalyst.
+ *
+ * Creator application: genedrift-website
+ * Trigger:            a "Publish case studies" button on the
+ *                     Website_Case_Studies_Report
+ * Catalyst endpoint:  POST <base>/v1/website/case-studies
+ *
+ * Forms this reads:
+ *   Website_Case_Studies            one row per case study
+ *   Website_Case_Study_Metrics      one row per figure, linked to a case study
+ *
+ * ── HOW TO PASTE THIS ────────────────────────────────────────────────────
+ *
+ * Copy from `map publish_case_studies()` down. This header is documentation
+ * and is NOT pasted into Creator.
+ *
+ * The body below is the text that Creator's editor actually accepts, saved
+ * verbatim after several rewrites were rejected with "Improper Statement" on
+ * the loop line. The cause was never identified — the same shapes parse fine
+ * in publish_markets.deluge — so the working text is kept EXACTLY as it saved,
+ * `//` comments and all. If you need to change it, change one thing at a time
+ * and save between each.
+ *
+ * ── WHAT MAY BE LEFT EMPTY ───────────────────────────────────────────────
+ *
+ * Scenario, Solution and Result are all optional. A record with a summary and
+ * no narrative publishes as a card on the listing and has no detail page,
+ * which is exactly how two of the existing case studies stand today. Never
+ * fill those fields in to make a record "complete" — an invented client
+ * outcome is a claim the client cannot defend.
+ *
+ * ── METRICS LINKING ──────────────────────────────────────────────────────
+ *
+ * The metrics loop reads the Case_Study LOOKUP when it is set and falls back
+ * to the Import_Case_Study_Slug helper column when it is not. So figures
+ * attach correctly whether or not link_metrics_to_case_studies has been run.
+ *
+ * Application variables required (namespace "Publishing") — the same ones the
+ * page publisher uses. Nothing new to configure.
+ */
+map publish_case_studies()
+{
+	result = Map();
+	result.put("ok",false);
+
+	// Fetch only active case studies
+	studies = Website_Case_Studies[Active == true];
+
+	if(studies.count() == 0)
+	{
+		result.put("message","No active case studies found, so there is nothing to publish.");
+		return result;
+	}
+
+	// Group metrics by case study slug
+	metricsBySlug = Map();
+
+	for each metricRow in Website_Case_Study_Metrics[ID != 0]
+	{
+		studyKey = "";
+
+		// Case_Study lookup is optional, so guard against empty values
+		if(ifnull(metricRow.Case_Study,"").toString() != "")
+		{
+			studyKey = ifnull(metricRow.Case_Study.Case_Study_Slug,"").trim().toLowerCase();
+		}
+		else
+		{
+			// Fallback for imported metrics that have not yet been linked
+			studyKey = ifnull(metricRow.Import_Case_Study_Slug,"").trim().toLowerCase();
+		}
+
+		if(studyKey != "")
+		{
+			metricItem = Map();
+			metricItem.put("value",ifnull(metricRow.Metric_Value,"").trim());
+			metricItem.put("label",ifnull(metricRow.Metric_Label,"").trim());
+			metricItem.put("displayOrder",ifnull(metricRow.Display_Order,0));
+
+			existingMetrics = ifnull(metricsBySlug.get(studyKey),List());
+			existingMetrics.add(metricItem);
+
+			metricsBySlug.put(studyKey,existingMetrics);
+		}
+	}
+
+	// Build case study payload
+	studyList = List();
+
+	for each studyRow in studies
+	{
+		studySlug = ifnull(studyRow.Case_Study_Slug,"").trim().toLowerCase();
+		familyName = ifnull(studyRow.Family,"").trim();
+
+		familySlug = familyName.toLowerCase().replaceAll(" ","-").replaceAll("&","and").replaceAll("--","-");
+
+		// Convert comma-separated tags into a List
+		tagList = List();
+		tagsText = ifnull(studyRow.Tags,"").toString().trim();
+
+		if(tagsText != "")
+		{
+			tagValues = tagsText.toList(",");
+
+			for each rawTag in tagValues
+			{
+				cleanTag = rawTag.trim();
+
+				if(cleanTag != "")
+				{
+					tagList.add(cleanTag);
+				}
+			}
+		}
+
+		studyItem = Map();
+		studyItem.put("slug",studySlug);
+		studyItem.put("title",ifnull(studyRow.Case_Study_Title,"").trim());
+		studyItem.put("family",familyName);
+		studyItem.put("familySlug",familySlug);
+		studyItem.put("teaser",ifnull(studyRow.Teaser,"").trim());
+		studyItem.put("scenario",ifnull(studyRow.Scenario,"").trim());
+		studyItem.put("solution",ifnull(studyRow.Solution,"").trim());
+		studyItem.put("result",ifnull(studyRow.Result,"").trim());
+		studyItem.put("tags",tagList);
+		studyItem.put("displayOrder",ifnull(studyRow.Display_Order,0));
+		studyItem.put("metrics",ifnull(metricsBySlug.get(studySlug),List()));
+
+		studyList.add(studyItem);
+	}
+
+	// Build request payload
+	payload = Map();
+	payload.put("caseStudies",studyList);
+	bodyText = payload.toString();
+
+	try
+	{
+		baseUrl = thisapp.variables.Publishing.Catalyst_Base_URL.toString().trim();
+		secret = thisapp.variables.Publishing.Signing_Secret.toString();
+
+		if(baseUrl == "" || secret == "")
+		{
+			result.put("message","Catalyst publishing variables are not configured.");
+			return result;
+		}
+
+		path = "/v1/website/case-studies";
+
+		timestampMillis = zoho.currenttime.toLong();
+		timestampSeconds = (timestampMillis / 1000).toLong().toString();
+
+		nonce = "creator-case-studies-" + timestampMillis;
+
+		bodyHash = zoho.encryption.sha256(bodyText);
+
+		signatureBase = "POST\n" + path + "\n" + timestampSeconds + "\n" + nonce + "\n" + bodyHash;
+
+		signature = zoho.encryption.hmacsha256(secret,signatureBase,"hex");
+
+		headers = Map();
+		headers.put("Content-Type","application/json");
+		headers.put("X-GeneDrift-Timestamp",timestampSeconds);
+		headers.put("X-GeneDrift-Nonce",nonce);
+		headers.put("X-GeneDrift-Signature",signature);
+
+		publishResponse = invokeurl
+		[
+			url :baseUrl + path
+			type :POST
+			body:bodyText
+			headers:headers
+		];
+
+		if(publishResponse.get("ok") != true)
+		{
+			rejection = ifnull(publishResponse.get("code"),"PUBLISH_REJECTED").toString();
+
+			detail = ifnull(
+				publishResponse.get("message"),
+				publishResponse.get("issues")
+			);
+
+			if(detail != null)
+			{
+				rejection = rejection + ": " + detail.toString();
+			}
+			else
+			{
+				rejection = rejection + " - Catalyst returned no error code. Raw response: " + publishResponse.toString();
+			}
+
+			result.put("message",rejection);
+			return result;
+		}
+
+		// Optional website cache revalidation
+		websiteBaseUrl = "";
+		revalidateSecret = "";
+
+		try
+		{
+			websiteBaseUrl = ifnull(
+				thisapp.variables.Publishing.Website_Base_URL,
+				""
+			).toString().trim();
+
+			revalidateSecret = ifnull(
+				thisapp.variables.Publishing.Revalidate_Secret,
+				""
+			).toString();
+		}
+		catch (missingVariable)
+		{
+			websiteBaseUrl = "";
+			revalidateSecret = "";
+		}
+
+		if(
+			websiteBaseUrl.startsWith("http")
+			&& revalidateSecret != ""
+			&& revalidateSecret != "none"
+		)
+		{
+			try
+			{
+				revalidateHeaders = Map();
+
+				revalidateHeaders.put(
+					"Content-Type",
+					"application/json"
+				);
+
+				revalidateHeaders.put(
+					"Authorization",
+					"Bearer " + revalidateSecret
+				);
+
+				revalidateBody = Map();
+
+				revalidateBody.put(
+					"collection",
+					"case-studies"
+				);
+
+				invokeurl
+				[
+					url :websiteBaseUrl + "/api/revalidate"
+					type :POST
+					body:revalidateBody.toString()
+					headers:revalidateHeaders
+				];
+			}
+			catch (revalidateError)
+			{
+				info "Case studies published, but the site cache could not be refreshed: " + revalidateError.toString();
+			}
+		}
+
+		result.put("ok",true);
+		result.put("message","Case studies published.");
+		result.put(
+			"publicationId",
+			publishResponse.get("publicationId")
+		);
+		result.put(
+			"caseStudyCount",
+			publishResponse.get("caseStudyCount")
+		);
+
+		return result;
+	}
+	catch (publishError)
+	{
+		result.put(
+			"message",
+			"Publish failed: " + publishError.toString()
+		);
+
+		return result;
+	}
+
+	return result;
+}

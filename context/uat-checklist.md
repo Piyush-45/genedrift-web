@@ -28,7 +28,8 @@ still placeholder. It is one setting to change when you are ready to launch.
 | 1.5 | Global presence — search a country, check the table | | |
 | 1.6 | A sample of country pages, at least one per region | | |
 | 1.7 | Knowledge Hub, and an article | | |
-| 1.8 | Client Success | | |
+| 1.8 | Client Success, and the case studies listing | | |
+| 1.8a | Open three case studies from different families | | |
 | 1.9 | Company, and its four pages | | |
 | 1.10 | Careers, and a job page | | |
 | 1.11 | Contact, and the enquiry, proposal and partnership routes | | |
@@ -75,6 +76,8 @@ something.
 | 4.5 | Add or edit an entry in the health authority bulletin | | |
 | 4.6 | Add a health authority to a market, publish, see it in the strip and on the country page | | |
 | 4.7 | Hide a menu item, publish, confirm it leaves the site | | |
+| 4.8 | Edit a case study's Result, publish, see it on its page | | |
+| 4.9 | Add a figure to a case study, publish, see it under "By the numbers" | | |
 
 **Publishing markets goes live immediately** — there is no draft stage for that
 collection, so please do not use test values there.
@@ -92,6 +95,7 @@ Please confirm you are content with each of these rather than testing them.
 | 5.5 | Several sections carry placeholder copy | Your content |
 | 5.6 | The footer legal links are hidden | Your privacy, terms and cookie text |
 | 5.7 | The country pages carry placeholder descriptions | Your content, or a decision to leave them structural |
+| 5.8 | **API Vendor Review** and **Biosimilars** are summary cards with no page of their own — they have no narrative on your current site either | The Scenario, Solution and Result for each |
 
 ## 6 · Content we need you to confirm
 
@@ -108,13 +112,14 @@ checked by someone who can vouch for them.
 | 6.5 | The registered address in the footer | |
 | 6.6 | Market count — the hero says 46 markets, other material says 30+ | |
 | 6.7 | Your Middle East list names Qatar, Oman, Kuwait and Bahrain; the site carries Saudi Arabia and UAE | |
+| 6.8 | The eight case studies were taken from your current site word for word. Please read them as current claims — several appear to have been written some years ago | |
 
 ## 7 · Decisions still open
 
 | # | Question |
 |---|---|
 | 7.1 | Hosting — which Zoho account and Catalyst subscription. This also decides whether the hero can show a different country based on where the visitor is |
-| 7.2 | Which pages are required for launch and which are a later phase. Case studies, the remaining Company pages, careers programme content and regional guides are in your sitemap and are not built |
+| 7.2 | Which pages are required for launch and which are a later phase. The remaining Company topics, careers programme content and regional regulatory guides are in your sitemap and are not built |
 | 7.3 | Article URLs — keep the current `/insights/<article>` or move to `/insights/<type>/<article>` with redirects |
 | 7.4 | Whether the Industries section should also have a page per industry, or stay as the index it is now |
 

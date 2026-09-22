@@ -84,7 +84,11 @@ export const NAV: readonly NavItem[] = [
       { label: "Authority News", href: "/insights?category=Authority+News" },
     ],
   },
-  { label: "Client Success", href: "/client-success" },
+  {
+    label: "Client Success",
+    href: "/client-success",
+    children: [{ label: "Case Studies", href: "/client-success/case-studies" }],
+  },
   {
     label: "Company",
     href: "/company",

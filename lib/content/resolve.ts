@@ -6,6 +6,8 @@ import { JOBS, findJob, type Job } from "@/lib/jobs";
 import { getArticle, fetchArticles } from "./articles-source";
 import { articleHref, articleKind } from "./article";
 import type { Article } from "./article";
+import { getCaseStudies } from "./case-studies-source";
+import { hasDetail, type CaseStudy } from "./case-study";
 
 /**
  * Relationship resolution — the seam between "what an editor stores" and
@@ -40,6 +42,10 @@ export interface ResolvedExtras {
   jobs?: Job[];
   job?: Job;
   article?: Article;
+  studies?: CaseStudy[];
+  caseStudy?: CaseStudy;
+  /** The next openable case study, for the detail-page pager. */
+  nextStudy?: CaseStudy;
 }
 
 export async function resolveSection(section: Section): Promise<Section & ResolvedExtras> {
@@ -103,6 +109,32 @@ export async function resolveSection(section: Section): Promise<Section & Resolv
     case "article-head":
     case "article-body":
       return { ...section, article: getArticle(section.articleSlug) };
+
+    /**
+     * Case studies resolve from the collection, never from the page — the
+     * same reason markets do. A record edited once in Creator updates the
+     * listing, both detail pages that reference it and anything that surfaces
+     * it later, without an editor touching three pages.
+     */
+    case "case-study-index": {
+      const studies = await getCaseStudies();
+      return {
+        ...section,
+        studies:
+          section.source === "all"
+            ? studies
+            : studies.filter((s) => s.familySlug === section.source),
+      };
+    }
+
+    case "case-study-head":
+      return { ...section, caseStudy: await findCaseStudy(section.caseSlug) };
+
+    case "case-study-body": {
+      const studies = await getCaseStudies();
+      const caseStudy = studies.find((s) => s.slug === section.caseSlug);
+      return { ...section, caseStudy, nextStudy: caseStudy ? nextAfter(studies, caseStudy) : undefined };
+    }
 
     case "job-list":
       return { ...section, jobs: [...JOBS] };
@@ -189,4 +221,24 @@ function toListItem(article: Article) {
     title: article.title,
     href: articleHref(article),
   };
+}
+
+/* ------------------------------------------------------- case studies --- */
+
+async function findCaseStudy(slug: string): Promise<CaseStudy | undefined> {
+  return (await getCaseStudies()).find((s) => s.slug === slug);
+}
+
+/**
+ * The next case study a reader can actually open — records with only a
+ * summary are skipped, because sending someone to a page that does not exist
+ * is worse than not offering a next step at all. Wraps around, so the last
+ * record points back at the first.
+ */
+function nextAfter(studies: CaseStudy[], current: CaseStudy): CaseStudy | undefined {
+  const openable = studies.filter(hasDetail);
+  if (openable.length < 2) return undefined;
+  const i = openable.findIndex((s) => s.slug === current.slug);
+  if (i === -1) return openable[0];
+  return openable[(i + 1) % openable.length];
 }

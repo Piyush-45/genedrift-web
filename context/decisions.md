@@ -379,3 +379,42 @@ The approved concept-B design contains **no links at all**. A per-industry CTA
 was added beyond that design, pointed at routes that do not exist, and 404'd on
 the live site until it was removed on 18 Sept. `href` stays optional in the
 schema so the link can return if the pages ever do.
+
+
+---
+
+## Case studies — 2026-09-22
+
+**The content model is the client's, not ours.** Every case study on
+genedrift.com is a Scenario, a Solution and a Result, filed under Delivering
+Excellence or Strategic Filing. We took that shape rather than designing a
+richer record and asking them to fill it, because the eight they already have
+then transfer without anyone writing anything new. A fourth narrative step would
+be a schema change in three places — the correct amount of friction for changing
+the shape of every case study at once.
+
+**A record with no narrative is a valid record, and has no page.** Two of the
+eight have a listing summary and nothing behind it on the client's own site.
+Their cards do not link and their URLs 404. The rejected alternatives were
+dropping them, shipping a page with two empty headings, or writing the missing
+halves — and an invented client outcome is a claim the client cannot defend.
+This is the same rule as the careers placeholder copy and the silent authority
+strip.
+
+**Figures come from the narrative they sit beside.** `metrics` is optional and
+must never be padded to make a page look fuller. "5,000 SKUs, 27 countries" is
+on the page because that sentence is on their page.
+
+**Case studies are a collection, not eight pages.** Same reasoning as markets:
+the listing, every detail page and any future featured-case-study block read the
+same rows, publishing whole is the only way deletion is expressible, and a
+record is edited once.
+
+**The route is a static segment.** `app/client-success/case-studies/` wins over
+`[pillar]/[slug]` at request time, and the path is excluded from `detailRoutes()`
+so `[pillar]/[slug]` does not also prerender a dead copy of it.
+
+**Client names stay withheld.** The listing says so in as many words. Their own
+case studies are written anonymously ("a global manufacturer of solid orals"),
+and naming a client is a permission question, not a copy question — the same
+rule already recorded for the proof billboard.

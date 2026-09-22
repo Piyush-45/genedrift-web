@@ -1,0 +1,38 @@
+Key	Label	Link	Parent_Key	Display_Order	Visible	Nav_Group
+explore	Explore	/explore		10	true	menu
+explore-business-needs	Business Needs	/explore/business-needs	explore	10	true	menu
+explore-guided-journeys	Guided Journeys	/explore/guided-journeys	explore	20	true	menu
+explore-questionnaire	Questionnaire	/explore/questionnaire	explore	30	true	menu
+expertise	Expertise	/expertise		20	true	menu
+expertise-regulatory-affairs	Regulatory Affairs	/expertise/regulatory-affairs	expertise	10	true	menu
+expertise-pharmacovigilance	Pharmacovigilance	/expertise/pharmacovigilance	expertise	20	true	menu
+expertise-mah-local-representation	MAH & Local Representation	/expertise/mah-local-representation	expertise	30	true	menu
+expertise-regulatory-intelligence	Regulatory Intelligence	/expertise/regulatory-intelligence	expertise	40	true	menu
+expertise-managed-services	Managed Services	/expertise/managed-services	expertise	50	true	menu
+expertise-dedicated-teams	Dedicated Teams	/expertise/dedicated-teams	expertise	60	true	menu
+markets	Markets	/markets		30	true	menu
+global-presence	Global presence	/global-presence	markets	10	true	menu
+markets-asia-pacific	Asia Pacific	/markets/asia-pacific	markets	20	true	menu
+markets-africa	Africa	/markets/africa	markets	30	true	menu
+markets-latin-america	Latin America	/markets/latin-america	markets	40	true	menu
+markets-cis	CIS	/markets/cis	markets	50	true	menu
+markets-middle-east	Middle East	/markets/middle-east	markets	60	true	menu
+markets-eastern-europe	Eastern Europe	/markets/eastern-europe	markets	70	true	menu
+insights	Knowledge Hub	/insights		40	true	menu
+insights	Insights	/insights	insights	10	true	menu
+insights?category=Regulatory+Updates	Regulatory Updates	/insights?category=Regulatory+Updates	insights	20	true	menu
+insights?category=Country+Intelligence	Country Intelligence	/insights?category=Country+Intelligence	insights	30	true	menu
+insights?category=Whitepapers	Whitepapers	/insights?category=Whitepapers	insights	40	true	menu
+insights?category=Expert+Opinions	Expert Opinions	/insights?category=Expert+Opinions	insights	50	true	menu
+insights?category=Authority+News	Authority News	/insights?category=Authority+News	insights	60	true	menu
+client-success	Client Success	/client-success		50	true	menu
+company	Company	/company		60	true	menu
+company-about	About	/company/about	company	10	true	menu
+company-leadership	Leadership	/company/leadership	company	20	true	menu
+company-operating-model	Operating Model	/company/operating-model	company	30	true	menu
+company-quality-compliance	Quality & Compliance	/company/quality-compliance	company	40	true	menu
+contact	Contact	/contact	company	50	true	menu
+careers	Careers	/careers		70	true	menu
+legal-privacy	Privacy Policy	/legal/privacy		10	true	legal
+legal-terms	Terms of Use	/legal/terms		20	true	legal
+legal-cookies	Cookie Settings	/legal/cookies		30	true	legal

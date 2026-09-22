@@ -12,7 +12,8 @@
     "check": "npm run typecheck && npm run lint && npm run build",
     "sync:catalyst-types": "node scripts/sync-catalyst-types.mjs",
     "emit:fields": "tsx scripts/emit-fields.ts",
-    "seed:creator": "tsx scripts/export-creator-seed.ts"
+    "seed:creator": "tsx scripts/export-creator-seed.ts",
+    "seed:case-studies": "tsx scripts/export-case-studies-seed.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

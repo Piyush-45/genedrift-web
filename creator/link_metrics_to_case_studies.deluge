@@ -1,0 +1,68 @@
+/*
+ * GeneDrift Website — one-time repair after importing case study metrics.
+ *
+ * Creator path: Settings > Functions > New > run once from the editor
+ *
+ * ## Why this exists
+ *
+ * `Website_Case_Study_Metrics.Case_Study` is a LOOKUP. A spreadsheet import
+ * has no record IDs in it, so the imported rows carry the case study's SLUG in
+ * the helper field `Import_Case_Study_Slug` and arrive with the lookup EMPTY.
+ *
+ * This function does the join once: for every metric row with no case study
+ * linked, it finds the case study with that slug and links it.
+ *
+ * It is SAFE TO RUN TWICE. Rows that already have a case study are skipped, so
+ * running it again after adding more rows only fills in the new ones.
+ *
+ * If Creator's importer did manage to match the lookup on its own, this
+ * reports "0 linked" and changes nothing — which is the answer you want, not
+ * an error.
+ */
+string link_metrics_to_case_studies()
+{
+	/* Slug -> record ID, read once. The alternative is a query per metric row,
+	   which is six queries to do six lookups of the same eight values. */
+	idBySlug = Map();
+	for each studyRow in Website_Case_Studies[ID != 0]
+	{
+		slugKey = ifnull(studyRow.Case_Study_Slug,"").trim().toLowerCase();
+		if(slugKey != "")
+		{
+			idBySlug.put(slugKey,studyRow.ID);
+		}
+	}
+
+	linked = 0;
+	unmatched = List();
+
+	for each metricRow in Website_Case_Study_Metrics[ID != 0]
+	{
+		/* Only touch rows that are NOT linked. A row someone has since fixed
+		   by hand must not be overwritten by whatever the import said. */
+		if(ifnull(metricRow.Case_Study,"").toString() == "")
+		{
+			wanted = ifnull(metricRow.Import_Case_Study_Slug,"").trim().toLowerCase();
+			studyId = idBySlug.get(wanted);
+			if(studyId != null)
+			{
+				metricRow.Case_Study = studyId;
+				linked = linked + 1;
+			}
+			else
+			{
+				/* Name the ones that failed. A count alone means hunting
+				   through the rows for the ones that did not take. */
+				unmatched.add(metricRow.ID + " (" + wanted + ")");
+			}
+		}
+	}
+
+	summary = linked + " metric rows linked to their case study.";
+	if(unmatched.size() > 0)
+	{
+		summary = summary + " " + unmatched.size() + " could not be matched — no case study has that slug: " + unmatched.toString();
+	}
+	info summary;
+	return summary;
+}

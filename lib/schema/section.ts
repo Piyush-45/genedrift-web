@@ -24,6 +24,9 @@ import { pillRowSchema } from "@/components/sections/pill-row/schema";
 import { valueGridSchema } from "@/components/sections/value-grid/schema";
 import { proofBillboardSchema } from "@/components/sections/proof-billboard/schema";
 import { contactSplitSchema } from "@/components/sections/contact-split/schema";
+import { caseStudyIndexSchema } from "@/components/sections/case-study-index/schema";
+import { caseStudyHeadSchema } from "@/components/sections/case-study-head/schema";
+import { caseStudyBodySchema } from "@/components/sections/case-study-body/schema";
 
 /**
  * Every section type the site can render. Adding one means: create the folder
@@ -63,6 +66,9 @@ export const SECTION_SCHEMAS = [
   proofBillboardSchema,
   insightFeedSchema,
   contactSplitSchema,
+  caseStudyIndexSchema,
+  caseStudyHeadSchema,
+  caseStudyBodySchema,
 ] as const;
 
 export const sectionSchema = z.discriminatedUnion("type", [...SECTION_SCHEMAS]);

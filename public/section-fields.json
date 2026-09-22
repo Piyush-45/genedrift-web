@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T14:13:27.355Z",
+  "generatedAt": "2026-09-22T19:00:02.947Z",
   "sections": {
     "hero-map": {
       "label": "Headline & world map",
@@ -1408,6 +1408,94 @@
         {
           "key": "generalEmail",
           "label": "General email",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "case-study-index": {
+      "label": "Case study index",
+      "fields": [
+        {
+          "key": "eyebrow",
+          "label": "Small label above the heading",
+          "kind": "text",
+          "required": true,
+          "help": "The small line above the heading."
+        },
+        {
+          "key": "heading",
+          "label": "Heading",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "standfirst",
+          "label": "Intro paragraph",
+          "kind": "longtext",
+          "required": false
+        },
+        {
+          "key": "source",
+          "label": "Source",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "readLabel",
+          "label": "Read label",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "case-study-head": {
+      "label": "Case study head",
+      "fields": [
+        {
+          "key": "caseSlug",
+          "label": "Case slug",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "backLabel",
+          "label": "Back label",
+          "kind": "text",
+          "required": false
+        }
+      ]
+    },
+    "case-study-body": {
+      "label": "Case study body",
+      "fields": [
+        {
+          "key": "caseSlug",
+          "label": "Case slug",
+          "kind": "text",
+          "required": true
+        },
+        {
+          "key": "scenarioLabel",
+          "label": "Scenario label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "solutionLabel",
+          "label": "Solution label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "resultLabel",
+          "label": "Result label",
+          "kind": "text",
+          "required": false
+        },
+        {
+          "key": "pagerLabel",
+          "label": "Pager label",
           "kind": "text",
           "required": false
         }

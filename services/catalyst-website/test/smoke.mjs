@@ -529,6 +529,134 @@ let sitePublicationId = null;
   );
 }
 
+/* -------------------------------------------------------- case studies --- */
+
+const CASE_STUDIES = {
+  caseStudies: [
+    {
+      slug: "label-artwork-management",
+      title: "Label / Artwork Management",
+      family: "Delivering Excellence",
+      familySlug: "delivering-excellence",
+      teaser: "Artwork for over 5,000 SKUs across 27 countries.",
+      scenario: "Multiple regulatory guidelines, 5,000 SKUs, 27 countries.",
+      solution: "Every guideline redrafted against the client's product basket.",
+      result: "Labels managed across all functional teams; non-compliances minimised.",
+      metrics: [
+        { value: "27", label: "Countries", displayOrder: 2 },
+        { value: "5,000+", label: "SKUs covered", displayOrder: 1 },
+      ],
+      tags: ["Labelling & artwork"],
+      displayOrder: 2,
+    },
+    {
+      slug: "api-vendor-review",
+      title: "API Vendor Review",
+      family: "Delivering Excellence",
+      familySlug: "delivering-excellence",
+      teaser: "Reviewing the entry of a new API manufacturer alongside variation filings.",
+      displayOrder: 3,
+    },
+  ],
+};
+
+let caseStudiesPublicationId = null;
+
+// 33 — an unsigned case-studies publish is rejected
+{
+  const res = await fetch(BASE + "/v1/website/case-studies", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(CASE_STUDIES),
+  });
+  check("unsigned case-studies publish is rejected 401", res.status === 401, `got ${res.status}`);
+}
+
+// 34 — a signed publish succeeds, derives the href and orders the metrics
+{
+  const { status, json } = await signedPost("/v1/website/case-studies", CASE_STUDIES);
+  caseStudiesPublicationId = json?.publicationId ?? null;
+  check("signed case-studies publish returns 201", status === 201, JSON.stringify(json));
+
+  const read = await fetch(BASE + "/v1/public/case-studies");
+  const body = await read.json();
+  const bySlug = Object.fromEntries(
+    (body?.caseStudies?.caseStudies ?? []).map((c) => [c.slug, c]),
+  );
+  check("case studies read back 200", read.status === 200, `got ${read.status}`);
+  check(
+    "href is derived from the slug",
+    bySlug["label-artwork-management"]?.href === "/client-success/case-studies/label-artwork-management",
+    bySlug["label-artwork-management"]?.href,
+  );
+  check(
+    "metrics are ordered by displayOrder",
+    bySlug["label-artwork-management"]?.metrics?.[0]?.value === "5,000+",
+    JSON.stringify(bySlug["label-artwork-management"]?.metrics),
+  );
+  // The regression this guards against is the `authority` bug on markets:
+  // validation accepted the field and the mapper silently dropped it.
+  check(
+    "every narrative field survives the mapper",
+    ["teaser", "scenario", "solution", "result"].every(
+      (k) => typeof bySlug["label-artwork-management"]?.[k] === "string",
+    ),
+    JSON.stringify(bySlug["label-artwork-management"]),
+  );
+  check(
+    "a summary-only record publishes with empty narrative fields",
+    bySlug["api-vendor-review"]?.scenario === "" && bySlug["api-vendor-review"]?.teaser !== "",
+    JSON.stringify(bySlug["api-vendor-review"]),
+  );
+}
+
+// 35 — two case studies on the same slug is refused with the slug named
+{
+  const bad = structuredClone(CASE_STUDIES);
+  bad.caseStudies.push(structuredClone(bad.caseStudies[0]));
+  const { status, json } = await signedPost("/v1/website/case-studies", bad);
+  check(
+    "duplicate case-study slug is rejected 409",
+    status === 409 && json?.code === "CASE_STUDY_SLUG_DUPLICATE",
+    JSON.stringify(json),
+  );
+}
+
+// 36 — republishing identical content reuses the publication
+{
+  const { json } = await signedPost("/v1/website/case-studies", CASE_STUDIES);
+  check(
+    "identical case-studies republish yields the same publication id",
+    json?.publicationId === caseStudiesPublicationId,
+    `${json?.publicationId} vs ${caseStudiesPublicationId}`,
+  );
+}
+
+// 37 — removing a record removes it from the live collection
+{
+  await signedPost("/v1/website/case-studies", { caseStudies: [CASE_STUDIES.caseStudies[0]] });
+  const json = await (await fetch(BASE + "/v1/public/case-studies")).json();
+  const slugs = (json?.caseStudies?.caseStudies ?? []).map((c) => c.slug);
+  check(
+    "a removed case study disappears from the live collection",
+    slugs.length === 1 && !slugs.includes("api-vendor-review"),
+    slugs.join(","),
+  );
+}
+
+// 38 — rollback restores the earlier collection
+{
+  const { status } = await signedPost("/v1/website/case-studies/rollback", {
+    publicationId: caseStudiesPublicationId,
+  });
+  const json = await (await fetch(BASE + "/v1/public/case-studies")).json();
+  check(
+    "case-studies rollback restores both records",
+    status === 200 && (json?.caseStudies?.caseStudies ?? []).length === 2,
+    `${status}`,
+  );
+}
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 process.exit(failed.length ? 1 : 0);
