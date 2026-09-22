@@ -1,131 +1,156 @@
-# Genedrift website — client sitemap vs. what is live
+# Client sitemap vs. what is live
 
-**18 September 2026.** Compared line by line against the client's own
-`Genedrift Final Sitemap Vendor Development Brief` baseline (5 September),
-not from memory.
-
-**Their own open question #1, never answered:**
-> "Which exact pages are required for the first launch versus future phases?"
-
-Everything below is that question, made concrete.
+**Rewritten 2026-09-22.** An earlier version of this file listed the Company and
+Careers topics as missing pages. That was wrong and overstated what is owed —
+see "What the earlier version got wrong" at the bottom. Check this against the
+sources before repeating any of it to the client.
 
 ---
 
-## The nine pillars
+## The three documents, and which one governs
 
-All nine top-level pillars from their IA exist and are reachable.
-Home · Explore · Expertise · Markets · Knowledge Hub · Client Success ·
-Company · Careers · Contact.
+| Document | Whose | What it actually is |
+|---|---|---|
+| `reference/PHASE_2_WEBSITE_REVAMP_CLIENT_BASELINE.md` | **theirs** (summarised from their docx/PDFs) | Nine IA pillars, topic lists per pillar, a URL pattern list |
+| `reference/PHASE_2_WEBSITE_INFORMATION_AND_EDITING_ARCHITECTURE_2026-09-05.md` | **ours** | Our architecture proposal, 14 page families, and a **recommended launch scope** |
+| `reference/PHASE_2_CMS_FORM_AND_COMPONENT_BLUEPRINT_V1.md` | **ours** | The CMS collections that follow from it |
 
-The gaps are all *depth*, not structure.
+This distinction matters commercially. The client's baseline is a wish list with
+patterns. Our IA document is a plan. **Neither is an approved scope**, because
+their own closing question — *"Which exact pages are required for the first
+launch versus future phases?"* — was never answered, and our own document's
+status line says *"launch scope and visual direction still require selection"*.
+
+So the honest framing is: **the build follows our documented recommendation, and
+the client never selected anything.** Not "they agreed", and not "we missed
+things".
 
 ---
 
-## Pillar by pillar
+## Their baseline is topic lists, not pages
 
-### Explore — complete enough
+Under each of the nine pillars they list content topics — 15 under Company, 8
+under Careers, 8 under Client Success, 15 under Knowledge Hub, 6 Contact
+intents. Their **URL architecture** does not mirror those lists. It gives
+generic patterns:
 
-Their baseline lists ten outcome-led journeys. Three pages exist
-(Business Needs, Guided Journeys, Questionnaire) and the journeys live as
-content inside them. Consistent with their instruction not to turn every
-sitemap item into a page.
+```
+/company/{page-slug}          <- one line, not fifteen
+/careers/{job-slug}
+/contact/{intent-slug}        "only where standalone pages are approved"
+```
 
-### Expertise — complete at the level built
+And immediately under that list they write:
 
-All six canonical capabilities have pages. Sub-capabilities (eCTD publishing,
-QPPV, PSUR/PBRER, and about twenty more) are named in the baseline as
-*"important sub-capabilities"*, and the URL line for them is qualified
-**"only when content depth warrants it"**. Not built; conditional by their
-own wording.
+> *"Not every sitemap item should become a unique static page. Preserve the IA
+> while avoiding page proliferation."*
 
-### Industries — not a gap
+Our IA document made the same point with a number: if every named item became a
+page it would be **about 96 pages**, "thin pages and a large content burden".
 
-Their baseline says plainly: *"Industry/product categories are cross-cutting
-classifications, not primary capabilities."* Industries is not one of the nine
-pillars and has no section in their sitemap. It is built as a section on the
-homepage, which matches that description. The `/industries/{slug}` line in
-their URL list is inconsistent with the rest of their own document.
+**Therefore: a topic in their bullet list is not a commitment to a page.**
+"Culture" and "Benefits" as sections on `/careers` is a legitimate reading of
+their brief, and is what is built.
 
-### Markets — built, but the market list is short
+---
 
-Regions, 46 country pages and the interactive coverage map are live.
+## Our recommended launch scope, and what was delivered against it
 
-Three things from their baseline are not:
+From our IA document, §"Recommended launch scope":
 
-| Item | Status |
+| Recommended | Delivered |
 |---|---|
-| Compare markets | **Cancelled by the client, 15 September.** Correctly absent |
-| Regional regulatory guides (`/markets/guides/{slug}`) | Not built, never discussed since |
-| Middle East: Qatar, Oman, Kuwait, Bahrain | **Not in the market data at all** |
+| All 9 top-level hub/landing destinations | ✅ all 9 |
+| All 6 primary Expertise pages | ✅ all 6 |
+| All 5 Industry pages *"if useful content exists"* | ⚠️ built as a homepage section — see below |
+| 4 regional Markets pages | ✅ **6** |
+| **6 to 10 priority country pages** | ✅ **46** |
+| 5–6 priority Explore journeys | ✅ 3 pages carrying the journeys |
+| **3–5 essential Company pages: About, Leadership, Operating Model, Quality & Compliance, Global Presence** | ✅ **all five** |
+| 3 approved case studies *"if the client can supply evidence"* | ❌ no evidence ever supplied |
+| Careers landing and Contact | ✅ both, plus 4 contact intents and 46 job routes |
+| Insights archive and published articles | ✅ |
 
-The last one matters. Their baseline names six Middle East markets; the site
-carries two (Saudi Arabia, UAE). Either four markets are missing from the data
-or the baseline overstates coverage. This is the same class of problem as the
-"46 markets vs 30+" discrepancy already raised.
+Estimated range in that document: **37–46 curated launch pages.** The build is
+comfortably above it, mostly because 46 country pages were built where 6 to 10
+were recommended.
 
-### Knowledge Hub — the article pipeline, not the full ecosystem
+**The Company list is not outstanding.** Our own launch scope names exactly the
+five that exist. The other ten topics — Our Story, Why Genedrift, Corporate
+Values, Governance, Technology Platform, Partners, Awards, News, CSR, Media
+Kit — were deprioritised in that same document, deliberately.
 
-Their baseline lists sixteen content types. Live: Insights with category
-filters for Regulatory Updates, Country Intelligence, Whitepapers, Expert
-Opinions and Authority News.
+Same for Careers: "Careers landing and Contact" is what was recommended, and it
+is what exists. The eight Careers topics were never launch scope.
 
-Not built: Regulatory Roadmaps, Market Entry Guides, Learning Centre,
-Webinars, Videos, Downloads, Regulatory Calendar, Newsletter. Their baseline
-already marks the AI Knowledge Assistant as a future feature.
+---
 
-Also open, and it is **their** question #2: whether article URLs stay at
-`/insights/{slug}` (Phase 1's shape, which is what is live) or migrate to
-`/insights/{content-type}/{slug}` with redirects. Migrating later costs
-redirects for every published article.
+## What is genuinely not built
 
-### Client Success — hub only
+Three things, and they are not equal.
 
-Their baseline lists a full "proof ecosystem": Case Studies, Client Stories,
-Industry Experience, Success Metrics, Delivery Models, Global Programs,
-Strategic Partnerships, Featured Projects.
+### 1 · Case studies — the real one
 
-Live: a hub page with no children. There is **no case-study record type
-anywhere in the system** — not in the site, not in the CMS.
+- Page family **11** in our IA document: `/client-success/case-studies/{slug}`,
+  "repeatable proof record".
+- `Case_Studies` is collection **10** in the CMS blueprint.
+- `/client-success/case-studies/{case-slug}` is in the client's own URL list.
+- Named in the launch scope as *"3 approved case studies if the client can
+  supply evidence"*.
 
-This is the largest genuine gap. For a consultancy, case studies are usually
-the most-read pages on the site, and they cannot be invented: they are client
-work, with client permissions attached.
+Specified in three documents, so this is a real page family that does not exist —
+in the site or in the CMS. **But it was conditional on evidence the client never
+supplied**, and their own blueprint lists "approved case studies, client names,
+outcomes and metrics" as content still owed by them.
 
-### Company — four of fifteen
+For a consultancy these are usually the most-read pages on the site, and
+`/client-success` is currently a hub leading nowhere. Worth raising — as a
+content dependency, not as a delivery failure.
 
-Live: About, Leadership, Operating Model, Quality & Compliance.
+### 2 · Regional regulatory guides — specified, never scheduled
 
-In their baseline and not built: Our Story, Why GeneDrift, Corporate Values,
-Corporate Governance, Technology Platform, Partners, Awards, News, CSR,
-Media Kit. (Global Presence is built, at `/global-presence`.)
+`/markets/guides/{guide-slug}` in their URL list, and under Markets they write
+"market features include compare markets, regional regulatory guides and an
+interactive coverage map". Named twice, but **not in the recommended launch
+scope**, and our IA document counts market guides among the things added *after*
+the launch package. Future phase unless they say otherwise.
 
-Each is a short page. None can be written without their words.
+### 3 · Contact routes — two of six
 
-### Careers — page built, programme content not
+They name six intents: Request Proposal, Schedule Consultation, Partnership
+Enquiry, Location, Media Enquiries, General Contact. Built: general enquiry,
+proposal, partnership, plus the adverse-event route (their September request,
+deliberately disabled). Missing: Schedule Consultation, Media Enquiries,
+Location.
 
-Live: the careers page and job detail pages.
+Their own URL line says standalone intent pages exist *"only where approved"*,
+so this is a decision rather than a gap.
 
-In their baseline: Life at GeneDrift, Culture, Benefits, Graduate Program,
-Experienced Professionals, Recruitment Process, Talent Community. Current
-Openings is built but not connected — it still needs the report URL and
-credentials.
+---
 
-**All careers content currently on the site is placeholder and was written by
-us.** It must not go live as-is.
+## Where the build deliberately differs, with the reasoning
 
-### Contact — four of six routes
+**Industries.** Our IA document proposed page family 5, "repeatable industry
+record", and the launch scope said "all 5 Industry pages **if useful content
+exists**". It never did. Meanwhile the client's own baseline says *"Industry/
+product categories are cross-cutting classifications, not primary
+capabilities"*, industries is not one of their nine pillars, and it has no
+section in their sitemap. So it is built as a homepage section. Defensible, but
+it is a deviation from our own plan and should be named rather than buried.
 
-| Their route | Status |
-|---|---|
-| General Contact | ✅ `/contact/enquiry` |
-| Request Proposal | ✅ `/contact/proposal` |
-| Partnership Enquiry | ✅ `/contact/partnership` |
-| Adverse event / safety | ✅ built, **deliberately disabled** pending routing and accountable owner |
-| Schedule Consultation | ❌ |
-| Media Enquiries | ❌ |
-| Location | ❌ |
+**Sub-capability pages.** Their URL line is qualified "only when content depth
+warrants it", and our page family 4 says sub-capabilities "start as sections".
+Built as sections. Consistent with both documents.
 
-And the form itself delivers nowhere until the Creator endpoint is supplied.
+**Article URLs.** Built as `/insights/{slug}` — Phase 1's shape, which our page
+family 10 explicitly allows ("current `/insights/{slug}`, later optional typed
+routes"). Their open question 2 asks whether to migrate to
+`/insights/{content-type}/{slug}` with redirects. Unanswered. Migrating later
+costs a redirect for every published article, so it is worth forcing an answer.
+
+**Market comparison.** `/markets/compare` is in their URL list and is page family
+8, "scope must be approved". They explicitly **cancelled** it on 15 September.
+Correctly absent.
 
 ---
 
@@ -134,44 +159,48 @@ And the form itself delivers nowhere until the Creator endpoint is supplied.
 - `/global-presence` — requested 15 September, approved, newer than the baseline.
 - `/search` — ours.
 - `/legal/privacy`, `/legal/terms`, `/legal/cookies` — **ours**. No legal URLs
-  appear anywhere in their baseline, though it does list legal, privacy, cookie
-  and accessibility copy as content still owed. Currently 404 and hidden.
+  appear in their baseline, though it does list legal, privacy, cookie and
+  accessibility copy as content still owed. The links are currently hidden in
+  Creator because the pages do not exist.
 
 ---
 
-## Summary
+## Data gaps, which are separate from page gaps
 
-**Structural gaps, in order of commercial weight**
-
-1. **Case studies** — a whole content type, absent from site and CMS.
-2. **Company pages** — ten short pages, all needing their words.
-3. **Careers programme content** — seven pages, plus the live openings feed.
-4. **Regional regulatory guides** — a content type, never discussed since the baseline.
-5. **Contact routes** — Schedule Consultation, Media Enquiries, Location.
-6. **Knowledge Hub content types** — eight beyond the article pipeline.
-
-**Data gaps**
-
-- Four Middle East markets named in their baseline and absent from the site.
-- Capability data unverified across all 46 markets.
-
-**Decisions owed by them**
-
-- Which of the above is launch scope and which is a later phase (their question 1).
-- Article URL shape: keep `/insights/{slug}` or migrate (their question 2).
-
-**Not gaps**
-
-- Industries — correctly built as a cross-cutting section, per their own wording.
-- Compare markets — they cancelled it.
-- Expertise sub-capability pages — conditional in their own baseline.
+- Their Middle East list names **Qatar, Oman, Kuwait and Bahrain**; the site
+  carries Saudi Arabia and UAE. Either four markets are missing from the data or
+  the baseline overstates coverage.
+- 46 markets in the hero versus "30+" in other client material.
+- Capability data across all 46 markets is unconfirmed.
 
 ---
 
-## Note on scope
+## What to actually say to the client
 
-The baseline document sets Phase 2 as *"three sample templates/design
-concepts... not full production implementation"*, with the production build to
-follow once a direction was chosen. What is live is already well beyond that.
-Worth establishing in writing which of the above was ever in the current
-engagement before it is assumed to be.
+Not a list of missing pages — that invites "so build them". Something closer to:
+
+> Your baseline lists content topics under each section without specifying which
+> become pages, and notes that not every item should. The build follows the
+> launch scope in our 5 September architecture document, and exceeds it — 46
+> country pages against a recommended 6 to 10. Two things in that scope are
+> outstanding and both need you: case studies, which were conditional on
+> approved evidence, and the decision on which remaining topics become pages
+> versus sections. Your own question 1 from the baseline has never been
+> answered, and it governs the rest.
+
+---
+
+## What the earlier version of this file got wrong
+
+Recorded so the same mistake is not repeated.
+
+It listed the ten remaining **Company** topics and the eight **Careers** topics
+as missing pages. They are not: our own recommended launch scope names exactly
+the five Company pages that exist and deprioritises the rest, and specifies
+"Careers landing and Contact", which exist.
+
+The error came from reading the client's topic lists as a page manifest and not
+cross-checking against the launch scope in our own architecture document. The
+client's baseline says explicitly that not every item becomes a page; our
+document put a number on the alternative. Read both before answering a scope
+question.

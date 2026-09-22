@@ -1,6 +1,6 @@
 # Handover
 
-**21 September 2026.** For whoever picks this up next — a new developer, or a
+**22 September 2026.** For whoever picks this up next — a new developer, or a
 new session with none of the conversation that built it. Read this, then
 `00-start-here.md`.
 
@@ -100,19 +100,30 @@ ground truth; if it is not there, nothing on the front end will help.
 
 ## What is NOT built, and why
 
-The client's own sitemap contains page families that were never designed and
-never built. Full comparison in `sitemap-gap-analysis.md`. The short list:
+**Read `sitemap-gap-analysis.md` before answering any scope question.** The
+short version, because it is easy to get wrong:
 
-- **Case studies** under Client Success — a whole content type, absent from the
-  site and the CMS. The largest gap.
-- **Ten Company pages** — Our Story, Why Genedrift, Corporate Values,
-  Governance, Technology Platform, Partners, Awards, News, CSR, Media Kit.
-- **Careers programme content** — Life at Genedrift, Culture, Benefits,
-  Graduate Programme, Recruitment Process, Talent Community.
-- **Regional regulatory guides** (`/markets/guides/…`).
-- **Three contact routes** — Schedule Consultation, Media Enquiries, Location.
+The client's baseline lists content *topics* under each pillar, not pages, and
+says explicitly that not every item should become a page. Our own 5 September
+architecture document proposed a **recommended launch scope of 37–46 pages**.
+The build follows it and exceeds it — 46 country pages against a recommended 6
+to 10, and exactly the five Company pages that scope names.
 
-None of these can be built without content and structure decisions from the
+So the Company and Careers topic lists are **not** outstanding work.
+
+Genuinely not built:
+
+- **Case studies** — a real page family (`/client-success/case-studies/{slug}`),
+  specified in three documents, absent from site and CMS. It was conditional on
+  "approved evidence" the client never supplied, so it is a content dependency
+  rather than a delivery failure. `/client-success` is currently a hub leading
+  nowhere, which is worth raising.
+- **Regional regulatory guides** — named in their baseline, never in any launch
+  scope. Future phase.
+- **Two contact intents** — Schedule Consultation, Media Enquiries, Location.
+  Their own URL line says standalone intent pages exist "only where approved".
+
+Neither of the first two can be built without content and decisions from the
 client. Their own open question — *"which exact pages are required for the first
 launch versus future phases?"* — has never been answered and governs all of it.
 
