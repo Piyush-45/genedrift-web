@@ -1,7 +1,7 @@
 import type { Page, Section } from "@/lib/schema/section";
 import { guardPage } from "./guard";
 import { NAV } from "@/lib/nav";
-import { JOBS, findJob } from "@/lib/jobs";
+import { getJob, getJobs } from "./jobs-source";
 import { getMarket, getMarkets, getMarketsInRegion, getRegion, getRegions } from "./markets-source";
 import { fetchWebsitePage } from "./website-pages";
 
@@ -459,8 +459,8 @@ export function careersPage() {
   };
 }
 
-export function jobPage(slug: string) {
-  const job = findJob(slug);
+export async function jobPage(slug: string) {
+  const job = await getJob(slug);
   if (!job) return null;
 
   return {
@@ -477,6 +477,6 @@ export function jobPage(slug: string) {
   };
 }
 
-export function jobRoutes() {
-  return JOBS.map((j) => ({ job: j.slug }));
+export async function jobRoutes() {
+  return (await getJobs()).map((j) => ({ job: j.slug }));
 }

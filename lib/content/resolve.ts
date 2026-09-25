@@ -2,7 +2,8 @@ import type { Section } from "@/lib/schema/section";
 import type { Market } from "@/lib/map/markets";
 import { getMarket, getMarkets, getMarketsInRegion } from "./markets-source";
 import { NAV } from "@/lib/nav";
-import { JOBS, findJob, type Job } from "@/lib/jobs";
+import type { Job } from "@/lib/jobs";
+import { fetchJobs } from "./jobs-source";
 import { getArticle, fetchArticles } from "./articles-source";
 import { articleHref, articleKind } from "./article";
 import type { Article } from "./article";
@@ -46,6 +47,12 @@ export interface ResolvedExtras {
   caseStudy?: CaseStudy;
   /** The next openable case study, for the detail-page pager. */
   nextStudy?: CaseStudy;
+  /**
+   * Where the openings came from. The "sample content" warning on a job advert
+   * is driven by this, never hardcoded: it must appear on invented placeholder
+   * roles and must NOT appear on the client's own live vacancies.
+   */
+  jobSource?: "zoho" | "built-in";
 }
 
 export async function resolveSection(section: Section): Promise<Section & ResolvedExtras> {
@@ -136,11 +143,23 @@ export async function resolveSection(section: Section): Promise<Section & Resolv
       return { ...section, caseStudy, nextStudy: caseStudy ? nextAfter(studies, caseStudy) : undefined };
     }
 
-    case "job-list":
-      return { ...section, jobs: [...JOBS] };
+    /**
+     * Openings come from the client's own Creator app, not from a collection
+     * in this CMS — see lib/content/jobs-source.ts.
+     */
+    case "job-list": {
+      const { jobs, source } = await fetchJobs();
+      return { ...section, jobs, jobSource: source };
+    }
 
-    case "job-detail":
-      return { ...section, job: findJob(section.jobSlug) };
+    case "job-detail": {
+      const { jobs, source } = await fetchJobs();
+      return {
+        ...section,
+        job: jobs.find((j) => j.slug === section.jobSlug),
+        jobSource: source,
+      };
+    }
 
     case "country-head":
     case "capability-status":

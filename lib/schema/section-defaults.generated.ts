@@ -46,7 +46,8 @@ export const SECTION_DEFAULTS: Record<string, Record<string, unknown>> = {
   "job-detail": {
     "applyLabel": "Apply for this role",
     "responsibilitiesLabel": "What you will do",
-    "requirementsLabel": "What you will bring"
+    "requirementsLabel": "What you will bring",
+    "emptyMessage": "The full description for this role is being finalised. Please get in touch and we will send it to you."
   },
   "article-grid": {
     "showFilters": true,

@@ -4,9 +4,14 @@ import { jobPage, jobRoutes } from "@/lib/content/pages";
 import { RenderSections } from "@/components/sections/registry";
 
 /** Template G — one page per opening, generated from the Openings records. */
-export const dynamicParams = false;
+/**
+ * TRUE, not false. Openings live in the client's own Creator app and are
+ * published by their HR team, not by a deploy. With dynamicParams false, a
+ * role added after the last build would 404 until someone redeployed the site.
+ */
+export const dynamicParams = true;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return jobRoutes();
 }
 
@@ -16,7 +21,7 @@ export async function generateMetadata({
   params: Promise<{ job: string }>;
 }): Promise<Metadata> {
   const { job } = await params;
-  const page = jobPage(job);
+  const page = await jobPage(job);
   return page?.seo
     ? { title: page.seo.title, description: page.seo.description }
     : { title: "Careers — Genedrift" };
@@ -24,7 +29,7 @@ export async function generateMetadata({
 
 export default async function JobPage({ params }: { params: Promise<{ job: string }> }) {
   const { job } = await params;
-  const page = jobPage(job);
+  const page = await jobPage(job);
   if (!page) notFound();
 
   return (

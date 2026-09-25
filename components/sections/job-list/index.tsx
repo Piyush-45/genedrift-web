@@ -42,8 +42,13 @@ export function JobList({
                     <span className="mt-2.5 block text-h4 font-bold group-hover:text-accent">
                       {job.title}
                     </span>
+                    {/* Joined here rather than inline: the client's Openings
+                        form has no experience field, and interpolating an
+                        empty one leaves a trailing separator. */}
                     <span className="mt-2 block text-sm text-muted">
-                      {job.location} · {job.employmentType} · {job.experience}
+                      {[job.location, job.employmentType, job.experience]
+                        .filter((part) => (part ?? "").trim() !== "")
+                        .join(" · ")}
                     </span>
                   </div>
                   <span className="text-sm font-semibold whitespace-nowrap text-accent">

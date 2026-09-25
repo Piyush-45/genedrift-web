@@ -35,14 +35,20 @@ export interface Job {
   /** Market slug, when the role maps to one — links the job to its country page. */
   marketSlug?: string;
   employmentType: string;
-  experience: string;
+  /** Optional: not a field on the client's Openings form. */
+  experience?: string;
   qualification?: string;
   summary: string;
   responsibilities: string[];
   requirements: string[];
-  postedOn: string;
+  /** Optional: not a field on the client's Openings form. */
+  postedOn?: string;
   /** The Creator form the application goes to. */
   applyHref: string;
+  /** The client's own opening reference, e.g. RV98. Optional: not on the built-in records. */
+  reference?: string;
+  /** "Immediate", or "Within 30 days". From their Preferred_Date_for_Joining. */
+  preferredJoining?: string;
 }
 
 export const JOB_FUNCTIONS = [

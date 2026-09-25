@@ -18,6 +18,16 @@ export const jobDetailSchema = z.object({
    * feature, not decoration — see context/blocked-on-client.md.
    */
   unverifiedNotice: z.string().optional(),
+  /**
+   * Shown when an opening has no description and no candidate profile — which
+   * happens in the client's own data. Editable, because "get in touch" is
+   * their voice to choose, not ours.
+   */
+  emptyMessage: z
+    .string()
+    .default(
+      "The full description for this role is being finalised. Please get in touch and we will send it to you.",
+    ),
 });
 
 export type JobDetailProps = z.infer<typeof jobDetailSchema>;
