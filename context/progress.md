@@ -5,6 +5,73 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Status as of 2026-09-25 — careers reads the client's live openings
+
+**Careers is connected to real data.** `/careers` and every job page now read
+the Openings report in the client's own Creator app, `proton`, through the
+Publish API with the report's privatelink. No OAuth credentials. New openings
+appear within five minutes. Full detail in **`careers-cms.md`**.
+
+**Shipped** — commit `8bd531d`, pushed:
+
+- `lib/content/jobs-source.ts` — the reader, field mapping and fallback
+- `lib/content/sanitize.ts` — `decodeEntities`, `sentencesOf`,
+  `richTextToLines`, `plainTextToLines`, for their uneven data
+- job detail page rebuilt to survive it: numbered ruled sections, a readable
+  measure, empty state, facts panel with reference / preferred joining /
+  qualification / posted date
+- sample-content notice now shows only on placeholder roles
+- Apply button always visible, inert until a destination is configured
+- `/careers/[job]` is `dynamicParams = true` — openings are published by their
+  HR team, not by a deploy
+
+**Environment:** `ZOHO_OPENINGS_URL` set in `.env.local` and needed in Vercel
+(Production). Must include `&field_config=all`.
+
+**Waiting on the client** (emailed 25 Sept):
+
+- application form permalink + the field that holds the job reference
+- confirmation the Openings report contains only open roles
+- **contact form destination** — a published Creator form or an email address
+
+### Contact — scope settled in writing
+
+Ashish, after discussing with Akshay: **one contact form and one generic email
+address displayed. No bot, no chat.** That is what is built; only the
+destination is missing. Their earlier baseline listed six enquiry types with
+per-enquiry routing — superseded by that instruction. Keep the email; it is the
+record if the six types come back.
+
+Zoho CRM was mentioned on a call and then not in writing. It is the only
+contact destination that would need OAuth credentials. Not offered.
+
+### Milestone 2 invoice
+
+The client said M2 was not met because Contact and Careers were not ready. The
+Work Order defines M2 as a complete working website demonstrated live,
+including the end-to-end Zoho Creator → Catalyst → website flow — which is
+delivered. Two mails sent 24 Sept: the justification to the whole thread, then
+the unchanged invoice to Akshay and Amit on the same thread.
+
+⚠️ **The M2 wording was taken from a summary, not the signed PDF.** Verify
+against the Work Order itself before relying on it again.
+
+### Also 22–24 September
+
+- Case studies built and CMS-backed — see the 22 Sept entry below. Pushed as
+  `ac56c48`.
+- Catalyst **v0.1.9** deployed: case-studies endpoints, plus `section-types.ts`
+  regenerated (it did not know the three new section types, so a CMS page using
+  one would have been refused at publish).
+- Creator: `Website_Case_Studies` and `Website_Case_Study_Metrics` built,
+  seeded from `creator-seed/`, published. The publish function body in
+  `creator/publish_case_studies.deluge` is the text Creator actually accepted —
+  keep it verbatim.
+- `/client-success` hub shows the case studies directly; the one-item "In this
+  section" grid and the duplicate proof billboard were removed.
+
+---
+
 ## Status as of 2026-09-22 — case studies, the last real page family
 
 `/client-success/case-studies` and `/client-success/case-studies/{slug}` are

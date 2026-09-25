@@ -1,5 +1,7 @@
 # Blocked on the client
 
+> **Updated 2026-09-25** — careers credentials resolved without OAuth; contact destination added as item 10.
+>
 > **Updated 2026-09-13.** Piyush ruled that responsive behaviour and any page the
 > client has not yet seen are his call, and that the build should not wait. Four
 > of the five questions below are now closed by decision rather than by answer —
@@ -13,7 +15,8 @@
 | 4 | **PV / safety contact** — routing, mandatory fields, accountable owner | An adverse-event channel is a regulatory obligation with a named owner at the client. The page can be built; its destination cannot be invented. Build the page, leave routing as a CMS field, ship it disabled until the client names the owner. **Raised again in the 2026-09-15 review and still unanswered.** |
 | 6 | **PV contact list** — country, email, phone per market | Genedrift's own contact details. The page is built with placeholders the client fills through Creator. |
 | 7 | **Rolling Health Authority Bulletin** — authority names only, or real headlines? | Changes nothing structural; the strip is built either way. Asked so the client is not surprised by what they have to maintain. |
-| 8 | **Careers openings report** — the report URL, and OAuth credentials | The report is **private**, so it cannot be read without credentials. They come from the client's own Zoho API console once the app is on their account. Driven entirely by environment variables, so no code changes when they arrive. |
+| 8 | ~~**Careers openings report** — the report URL, and OAuth credentials~~ **Resolved 25 Sept** | Read through the Publish API with the report's privatelink — **no credentials needed**. Live. See `careers-cms.md`. Still open: the **application form permalink**, the **reference field** on it, and **whether the report holds only open roles**. |
+| 10 | **Contact form destination** | Scope confirmed in writing: one form, one displayed email, no bot. Only the destination is missing — a published Creator form (permalink) or an email address. Asked 25 Sept. |
 | 9 | **Hosting** — which Zoho account; does Catalyst need a paid plan | Decides whether geo-IP for the hero is free (Vercel header) or needs an external lookup, and it is the client's own account either way. |
 
 > Items 6–9 came out of the 2026-09-15 review. Full context:

@@ -418,3 +418,79 @@ so `[pillar]/[slug]` does not also prerender a dead copy of it.
 case studies are written anonymously ("a global manufacturer of solid orals"),
 and naming a client is a permission question, not a copy question — the same
 rule already recorded for the proof billboard.
+
+---
+
+## The Client Success hub, rebuilt around the case studies — 2026-09-22
+
+**"In this section" only renders when there is more than one child.** Adding
+Case Studies to the nav gave Client Success exactly one child, and the section
+grid drew it in a fixed three-column track — one card and two thirds of a row
+painted in `--color-line`, which reads as a broken layout rather than as a list
+with one entry. Two fixes, and both are the same bug:
+
+- `sub-capability-grid` now sizes its columns to the item count, as
+  `metric-row` does since the same day.
+- The hub skips the block entirely below two children. A heading reading
+  "Everything under Client impact" above a single link earns nothing; that link
+  is already in the menu and the footer.
+
+**The hub shows the case studies instead of linking to them.** Client Success
+has one thing under it, so the hub is the place to show it. The listing page
+keeps its own h1 and its own framing.
+
+**The proof billboard came off this hub.** Its heading was the hub's own h1
+word for word, and the case studies now do its job with eight client-editable
+records rather than three fixed stories. It still runs on the homepage, where
+it is the teaser rather than the destination.
+
+⚠️ If `/client-success` has been published in Creator, the CMS wins and the live
+page keeps whatever section list was published. Republishing it is what picks
+this up — the same trap as the industry-index links on 18 September.
+
+
+---
+
+## Careers — 2026-09-25
+
+**Openings are read from the client's own app, not a website collection.** Their
+HR team already maintains the Openings form in `proton`. A parallel Jobs
+collection in the website CMS would drift from it within a month.
+
+**The Publish API, not OAuth.** Reading a published report needs only its
+privatelink. OAuth would mean the client generating and handing over API
+credentials for no functional gain today. Kept on the list for handover only.
+
+**`field_config=all`, always.** The default returns the report's displayed
+columns only, and that is six fields.
+
+**The reader normalises; the component trusts it.** Their records are
+formatted inconsistently and will stay that way — the next opening will be
+written by someone else in a different editor. Entities, styles, run-on prose
+and zero-width spaces are dealt with in `sanitize.ts`, once, so every component
+downstream receives clean lines.
+
+**Their copy is never rewritten.** "Astt Manager" stays "Astt Manager". The
+department code is stripped because it is an internal identifier, not copy.
+Run-on text is split into sentences, not reworded.
+
+**Applications go to their form, not through ours.** Linking to their published
+application form means no CVs, photos or personal data pass through the
+website, and no credentials are needed.
+
+**The Apply button is visible but inert without a destination.** Asked for so
+the page reads as designed. A button that looks live and 404s would tell a
+candidate they had applied.
+
+**The sample-content notice is driven by the data source.** It must appear on
+invented roles and must not appear on real ones.
+
+**Only what was asked for.** The approved careers design includes benefits, a
+graduate programme and a hiring process. All of that copy is ours. It is not
+built, because next to real vacancies it would read as commitments.
+
+## Contact — 2026-09-25
+
+**One form, one displayed email, no bot** — the client's written instruction,
+after Ashish discussed it with Akshay. Supersedes the six enquiry types in their
+baseline. Quoted back to them in the 25 Sept email so the record is theirs.

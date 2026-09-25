@@ -89,7 +89,11 @@ ground truth; if it is not there, nothing on the front end will help.
   derived from the country geometry — see `map-geometry.md`.
 - The **footer legal links are hidden** in Creator because the pages do not
   exist. The client owes the policy text.
-- The **contact form delivers nowhere**. No `CREATOR_CONTACT_ENDPOINT` is set.
+- The **contact form delivers nowhere**. No destination is set. The client has
+  confirmed the scope in writing (one form, one displayed email, no bot) and
+  owes the destination — a published Creator form or an email address.
+- The **Apply button on job pages is inert**. Visible, not clickable, until
+  `ZOHO_APPLY_URL` is set. See `careers-cms.md`.
 - The **adverse-event route is deliberately disabled** until the client names
   mandatory fields, routing and an accountable owner. Do not enable it to make
   the page look finished — it is a regulatory obligation, not a form.
@@ -153,7 +157,12 @@ unconfirmed:
 - 46 markets in the hero versus "30+" in other client material.
 - Their Middle East list names Qatar, Oman, Kuwait and Bahrain; the site carries
   Saudi Arabia and UAE.
-- All careers content was written by us as placeholder. It must not go live.
+- **Job openings are real** — read live from the client's `proton` app. The
+  rest of the careers page (value grid, FAQ) is borrowed or placeholder. The
+  approved design's benefits, graduate programme and hiring process are **ours
+  and invented**, and deliberately not built.
+- JP56's candidate profile states **"Female candidates preferred"** and publishes
+  verbatim. Not yet raised with the client.
 - The eight case studies were **transcribed from genedrift.com**, not supplied.
   Their own words, unedited — but some of it reads as though it was written
   years ago, and nobody has re-approved it.
@@ -167,6 +176,8 @@ present it as real.** Placeholder is fine and expected — but say so.
 
 - Rotate both signing secrets before handover. The editorial one is in plaintext
   in every `.ds` export.
+- `ZOHO_OPENINGS_URL` carries a privatelink that reads the Openings report.
+  Server-only, never `NEXT_PUBLIC_`. At handover, consider OAuth instead.
 - The platform repo (Catalyst, Creator, the editor widget) still has **no git
   remote**. The website repo does.
 - `SITE_INDEXABLE` is off. Only the exact string `"true"` makes the site
@@ -186,6 +197,7 @@ present it as real.** Placeholder is fine and expected — but say so.
 | `decisions.md` | Before making a choice — it may be made, or rejected |
 | `map-geometry.md` | Anything touching `lib/map/` or marker positions |
 | `case-studies-cms.md` | Anything touching case studies — the forms and the rules |
+| `careers-cms.md` | Careers — the Zoho Publish API feed, the fields, the data quirks |
 | `markets-cms.md` · `site-chrome-cms.md` | Changing what an editor can edit |
 | `integration.md` · `cms-architecture.md` | Anything CMS or API shaped |
 | `article-contract.md` | Insights — the real Creator model and payload |
