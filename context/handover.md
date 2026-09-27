@@ -201,6 +201,7 @@ present it as real.** Placeholder is fine and expected — but say so.
 | `markets-cms.md` · `site-chrome-cms.md` | Changing what an editor can edit |
 | `integration.md` · `cms-architecture.md` | Anything CMS or API shaped |
 | `article-contract.md` | Insights — the real Creator model and payload |
+| `cutover-runbook.md` | Moving the site onto the client's own accounts (Milestone 3) — step by step |
 | `blocked-on-client.md` | Wondering why something is unfinished |
 | `client-feedback-2026-09-15.md` | Anything the client said in the September review |
 | `sitemap-gap-analysis.md` | Scope questions: what is and is not built |
