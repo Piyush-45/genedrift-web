@@ -4,11 +4,10 @@ import { z } from "zod";
  * The closing contact block: an enquiry panel on the accent ground, with
  * routing cards beside it.
  *
- * ⚠️ The enquiry panel is presentational only for now. The fields render so
- * the section reads as designed, but nothing is submitted — the CTA links
- * through to /contact. Real capture lands with template H (contact/[intent]),
- * which owns the Zod schema, react-hook-form wiring and the server action.
- * Both will then share one schema. Do not ship this section live before that.
+ * The enquiry panel renders the real form (EnquiryForm, shared with
+ * /contact/[intent]) and submits in place. `fields` and `submitHref` are no
+ * longer used for rendering; they stay in the schema so records already
+ * published through the CMS keep validating.
  *
  * The PV / safety route is deliberately a separate card with its own copy:
  * adverse-event reporting is a regulatory obligation and must not be funnelled

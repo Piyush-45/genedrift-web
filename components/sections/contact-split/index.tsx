@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { EnquiryForm } from "@/components/sections/contact-form";
 import type { ContactSplitProps } from "./schema";
 
 export function ContactSplit({
   eyebrow,
   heading,
-  fields,
   submitLabel,
-  submitHref,
   routes,
   generalLabel,
   generalEmail,
@@ -19,30 +18,17 @@ export function ContactSplit({
           <p className="label text-on-accent-muted">{eyebrow}</p>
           <h2 className="mt-4 max-w-[32ch] text-h2 leading-[1.18]">{heading}</h2>
 
-          {/* Presentational until template H lands — see schema.ts */}
-          {fields.length > 0 && (
-            <div className="mt-7.5 grid max-w-[40rem] gap-3 sm:grid-cols-2">
-              {fields.map((field) => (
-                <div
-                  key={field.label}
-                  aria-hidden
-                  className={cn(
-                    "rounded-control bg-canvas px-4 py-3.5 text-md text-placeholder",
-                    field.wide && "sm:col-span-2 sm:min-h-23",
-                  )}
-                >
-                  {field.label}
-                </div>
-              ))}
-            </div>
-          )}
-
-          <Link
-            href={submitHref}
-            className="mt-3.5 inline-block rounded-control bg-deep px-7.5 py-3.5 text-body font-semibold text-on-deep transition-colors hover:bg-deep/85"
-          >
-            {submitLabel}
-          </Link>
+          {/* The real enquiry form, submitting in place. It used to be
+              drawn boxes plus a link to /contact, which read as a broken
+              form: visitors clicked into fields that could not be typed in.
+              `fields` and `submitHref` in the schema are no longer used for
+              rendering; kept so existing CMS records still validate. */}
+          <EnquiryForm
+            intent="enquiry"
+            idPrefix="split"
+            submitLabel={submitLabel}
+            className="mt-7.5"
+          />
         </div>
 
         <div className="flex shrink-0 flex-col gap-3 lg:w-100">
