@@ -129,26 +129,32 @@ function splitDescription(raw: string): { summary: string; responsibilities: str
 }
 
 /**
- * Build the apply link. ZOHO_APPLY_URL is their published application form; the
- * opening's reference is passed as a query parameter so the application arrives
- * already tagged to the role rather than the applicant retyping it.
+ * Build the apply link. ZOHO_APPLY_URL is their published application form
+ * (the Candidates form). The opening is passed as a query parameter so the
+ * application arrives already linked to the role rather than the applicant
+ * retyping it.
  *
- * ZOHO_APPLY_REF_FIELD is the link name of the field on that form which holds
- * the reference. Unset means no prefill — the link still works, the applicant
- * types it.
+ * ZOHO_APPLY_REF_FIELD is the link name of the field that receives it. On their
+ * Candidates form that is `OpeningsMFLUDropDown`, a hidden lookup to Openings,
+ * which takes the opening's RECORD ID (row.ID), not the Ref_No. Checked
+ * 28 Sept: `?OpeningsMFLUDropDown=<ID>` fills the lookup and it resolves to the
+ * right reference (RV98). This is what the client asked for in writing.
  *
- * No form configured → empty string, and the component hides the button rather
- * than offering an "Apply" that goes nowhere.
+ * Unset field, or a row without an ID → the plain form link. It still works;
+ * the application just is not pre-linked.
+ *
+ * No form configured → empty string, and the component shows the button inert
+ * rather than offering an "Apply" that goes nowhere.
  */
-function applyHref(refNo: string): string {
+function applyHref(recordId: string): string {
   const base = process.env.ZOHO_APPLY_URL?.trim();
   if (!base) return "";
 
   const field = process.env.ZOHO_APPLY_REF_FIELD?.trim();
-  if (!field || !refNo) return base;
+  if (!field || !recordId) return base;
 
   const separator = base.includes("?") ? "&" : "?";
-  return `${base}${separator}${encodeURIComponent(field)}=${encodeURIComponent(refNo)}`;
+  return `${base}${separator}${encodeURIComponent(field)}=${encodeURIComponent(recordId)}`;
 }
 
 /**
@@ -173,6 +179,9 @@ function toJob(value: unknown): Job | null {
   if (!designation) return null;
 
   const refNo = str(row.Ref_No);
+  // Creator's own record id for the opening. What the application form's
+  // lookup expects — see applyHref.
+  const recordId = str(row.ID);
   const department = departmentName(str(opening.DepartmentText));
   const country = str(row.Country);
   const workLocation = str(row.Location_of_Work);
@@ -229,7 +238,7 @@ function toJob(value: unknown): Job | null {
     responsibilities,
     requirements,
     postedOn: publishedDate(str(row.Date_Publish)),
-    applyHref: applyHref(refNo),
+    applyHref: applyHref(recordId),
     reference: refNo || undefined,
     preferredJoining: joiningTime(str(row.Preferred_Date_for_Joining)),
   };
