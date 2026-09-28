@@ -142,8 +142,10 @@ export const FOOTER_CERTIFICATIONS = [
   "SOC 2 Type II",
 ];
 
-export const FOOTER_LEGAL = [
-  { label: "Privacy Policy", href: "/legal/privacy" },
-  { label: "Terms of Use", href: "/legal/terms" },
-  { label: "Cookie Settings", href: "/legal/cookies" },
-];
+/**
+ * Empty on purpose. Privacy, Terms and Cookie links were ours, not the
+ * client's, and the pages were never built, so the links 404'd. Removed until
+ * the client supplies legal text. Add a link here (or in the Creator footer
+ * record) only once its page exists.
+ */
+export const FOOTER_LEGAL: { label: string; href: string }[] = [];

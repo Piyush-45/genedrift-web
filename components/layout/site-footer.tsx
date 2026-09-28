@@ -68,6 +68,7 @@ export async function SiteFooter() {
             ))}
           </ul>
 
+          {legal.length > 0 && (
           <ul className="flex flex-wrap gap-x-6.5 gap-y-2">
             {legal.map((l) => (
               <li key={l.href}>
@@ -77,6 +78,7 @@ export async function SiteFooter() {
               </li>
             ))}
           </ul>
+          )}
         </div>
       </div>
     </footer>
