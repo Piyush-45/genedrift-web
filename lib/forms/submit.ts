@@ -135,6 +135,7 @@ export async function submitContact(
 
   return {
     status: "success",
-    message: "Thank you — your enquiry has reached the team. We respond within one working day.",
+    // No response-time promise: the client has not given one.
+    message: "Thank you. Your enquiry has reached the team.",
   };
 }

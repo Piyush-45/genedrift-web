@@ -45,7 +45,7 @@ function Field({
           defaultValue={defaultValue}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className="rounded-control bg-canvas px-4 py-3.5 text-md text-ink outline-none"
+          className="rounded-control bg-canvas px-4 py-3.5 text-md text-ink outline-none aria-invalid:ring-2 aria-invalid:ring-on-accent aria-invalid:ring-offset-2 aria-invalid:ring-offset-accent"
         />
       ) : (
         <input
@@ -56,7 +56,7 @@ function Field({
           defaultValue={defaultValue}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className="rounded-control bg-canvas px-4 py-3.5 text-md text-ink outline-none"
+          className="rounded-control bg-canvas px-4 py-3.5 text-md text-ink outline-none aria-invalid:ring-2 aria-invalid:ring-on-accent aria-invalid:ring-offset-2 aria-invalid:ring-offset-accent"
         />
       )}
 

@@ -38,9 +38,15 @@ export function JobList({
                   className="group grid gap-x-8 gap-y-3 py-7 transition-colors hover:bg-lavender lg:grid-cols-[1fr_auto] lg:items-center lg:px-6"
                 >
                   <div>
-                    <span className="label text-accent">{job.function}</span>
-                    <span className="mt-2.5 block text-h4 font-bold group-hover:text-accent">
-                      {job.title}
+                    {/* "Astt Manager – Pharmacovigilance": role and department
+                        on one line, as the client asked in their September review, instead of
+                        the department as a small label above. "Genedrift" is
+                        the reader's fallback when a record has no department,
+                        so it is not appended. */}
+                    <span className="block text-h4 font-bold group-hover:text-accent">
+                      {job.function && job.function !== "Genedrift"
+                        ? `${job.title} – ${job.function}`
+                        : job.title}
                     </span>
                     {/* Joined here rather than inline: the client's Openings
                         form has no experience field, and interpolating an

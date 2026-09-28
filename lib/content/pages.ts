@@ -451,8 +451,11 @@ export function careersPage() {
         headingTail: "In-country specialists, not a remote processing desk.",
         standfirst: undefined,
       },
-      valueGridFixture,
+      // Openings straight after the intro. The client asked (Sept review): the full-width
+      // "Why Genedrift" band filled the viewport at 100% zoom and read as the
+      // end of the page, so visitors missed the roles below it.
       jobListFixture,
+      valueGridFixture,
       faqAccordionFixture,
       contactSplitFixture,
     ] as Section[],

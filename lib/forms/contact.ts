@@ -104,7 +104,10 @@ export const contactSubmissionSchema = z.object({
   company: z.string().trim().min(1, "Please enter your company.").max(200),
   country: z.string().trim().max(120).optional().or(z.literal("")),
   phone: z.string().trim().max(60).optional().or(z.literal("")),
-  message: z.string().trim().min(10, "Please tell us a little more.").max(4000),
+  // Required, but no minimum length: a one-word enquiry is a real enquiry
+  // (client request, September review). The ceiling is only there to stop abuse; it is far
+  // above anything a person writes into a contact form.
+  message: z.string().trim().min(1, "Please enter your purpose or remarks.").max(20000),
   /** Honeypot. Bots fill it; humans never see it. Must arrive empty. */
   website: z.string().max(0).optional().or(z.literal("")),
 });
