@@ -148,12 +148,15 @@ tagged to the role.
 
 ---
 
-## Open with the client (asked 25 September)
+## Apply, wired 28 September
 
-1. Application form permalink
-2. Link name of the reference field on it
-3. **Does the Openings report contain only open roles?** No status field is
-   visible. Do not launch careers publicly until confirmed.
+Their Candidates form (form-embed link, in `ZOHO_APPLY_URL`) has a hidden
+lookup, `OpeningsMFLUDropDown`, that takes the opening's **record ID**.
+`applyHref()` appends `?OpeningsMFLUDropDown=<row.ID>`. Verified by loading the
+form with a real ID: the lookup filled and resolved to RV98. `Ref_No` also
+exists on the form as plain text but is not what they asked for.
+
+The client confirmed the Openings report holds **only open roles**.
 
 ## Content observations, not raised with the client
 

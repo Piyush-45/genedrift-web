@@ -5,6 +5,111 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Status as of 2026-09-29 — build complete except contact; handover underway
+
+**The build is done apart from the contact form's destination.** Everything
+else in scope is live on the preview site, www.genedrift.site. The project is
+now in Milestone 3: moving onto the client's accounts and handing over.
+
+**Shipped, all pushed (`main` == `origin/main` at `58edf44`):**
+
+| Commit | What |
+|---|---|
+| `41bc3e6` | `context/cutover-runbook.md`, the step-by-step move to their systems |
+| `9b09452` | Apply links to their Candidates form, pre-linked to the opening |
+| `ad3933c` | Client review: openings first, "Role – Department" titles, no minimum on Remarks, no response-time promise |
+| `59f2bcb` | The contact block at the bottom of every page is now the real form |
+| `58edf44` | Footer legal links removed; the pages never existed |
+
+### Careers: Apply is live
+
+Their Candidates form has a hidden lookup, `OpeningsMFLUDropDown`, that takes
+the opening's **record ID** (`row.ID` from the Publish API), not `Ref_No`.
+Verified 28 Sept by loading the form with `?OpeningsMFLUDropDown=<ID>`: the
+lookup filled and resolved to the right reference. Vercel (Production) and
+`.env.local` both carry:
+
+```
+ZOHO_APPLY_URL=<their Candidates form-embed link>
+ZOHO_APPLY_REF_FIELD=OpeningsMFLUDropDown
+```
+
+Client confirmed the Openings report holds **only open roles**.
+
+### Client review, 28–29 Sept (Ashish)
+
+1. "Why Genedrift" band filled the viewport and hid the openings. **Moved below
+   the job list.**
+2. Role and department on one line: "Astt Manager – Pharmacovigilance". **Done.**
+   Titles stay exactly as typed in Creator.
+3. "Please tell us a little more" on a short Remarks. **Minimum removed**;
+   ceiling raised to 20,000 characters as an abuse guard.
+4. "We could not submit your enquiry" on longer text. **Not a length problem**:
+   `CREATOR_CONTACT_ENDPOINT` is unset because they have not sent the contact
+   form. The fallback message is deliberate. Explained to them in plain terms.
+
+Found during our own review, fixed, and not mentioned to the client: the
+closing contact block (`contact-split`) was drawn boxes plus a link to
+/contact. It now renders `EnquiryForm`, shared with `/contact/[intent]`, and
+submits in place. Invalid fields now get a visible outline. The success message
+no longer promises "within one working day", which the client never committed to.
+
+### Their answers on the move (email, 28 Sept)
+
+- **Hosting: Hostinger.** They asked what plan is needed. We said a plan that
+  runs Node.js web apps: Business Web Hosting or Cloud, not Single or Premium.
+  **Vercel is out for production.** Nothing in the code is Vercel-specific.
+- **DNS:** only their person has Cloudflare access. Call **Fri 2 Oct after
+  lunch** (or Sat 3 Oct late evening). Everything else to be done before it.
+- **Catalyst:** told them pay-as-you-go, monthly free allowance, no
+  subscription, payment method needed for production, same account and region
+  as their Creator app. The editorial platform will share that allowance.
+- **Content transfer:** Akshay asked whether content must be re-entered. No.
+  We offered to add the website forms into their **existing Creator app**
+  (`proton`, US data centre) and import the content. This differs from the
+  runbook, which assumed importing our whole app. Confirm which before starting.
+- **Contact:** Creator form with an AI review step that sorts leads from
+  applicants. Link promised "shortly". Still not received.
+
+### Handover pack
+
+- **Editor's guide**, 18 pages, Word: `Claude outputs/Genedrift-Editors-Guide.docx`.
+  Chapters 00–10: the routine, pages, markets, case studies, menu/footer/certs,
+  careers/contact/articles, **placeholder replacement**, rules, troubleshooting,
+  FAQ, help and glossary. Every form, field and button name checked against the
+  real app export on 29 Sept. **One yellow line** (contact destination) to fill.
+  Send it after the move, not before.
+- Still to write: accounts & ownership sheet, technical overview, handover
+  summary, walkthrough call.
+
+### Creator cleanup owed before handover (found in the 29 Sept export)
+
+1. Single click on a row **publishes** in the Website_Pages and
+   Website_Case_Studies reports. Change on-click to View Record.
+2. System fields visible: Key, Link, Parent_Key (nav), CTA_Link (footer),
+   Map_X, Map_Y, Import_Market_Slug, Import_Case_Study_Slug. Hide them.
+3. Case_Study lookup on metrics displays `[ID]`. Show Case_Study_Title.
+4. Labels with underscores: case study fields, Health_Authority, menu entries
+   Website_Workspace, Website_Case_Studies, Website_Case_Study_Metrics.
+5. Hide Website_Sections from editors (raw JSON). Keep Website_Pages for SEO.
+
+Also: the market and certification publish actions run "for each record".
+
+### Security note
+
+The app export (.ds) was pasted into a chat on 29 Sept. It contains
+`Publishing.Signing_Secret`. **Rotate it during the move**, in Catalyst and
+Creator together. Delete the .ds from disk.
+
+### Other
+
+- Client progress tracker (private claude.ai page) logs every email, promise
+  and delivery with waiting counters.
+- Vercel logs: `/wp-admin/install.php` 404s are bots, harmless. The
+  `/legal/*` 404s were our footer links; now removed.
+
+---
+
 ## Status as of 2026-09-25 — careers reads the client's live openings
 
 **Careers is connected to real data.** `/careers` and every job page now read

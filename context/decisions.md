@@ -494,3 +494,40 @@ built, because next to real vacancies it would read as commitments.
 **One form, one displayed email, no bot** — the client's written instruction,
 after Ashish discussed it with Akshay. Supersedes the six enquiry types in their
 baseline. Quoted back to them in the 25 Sept email so the record is theirs.
+
+## Careers, contact and handover — 2026-09-28 / 29
+
+**Apply passes the opening's record ID, not its reference.** Their Candidates
+form links applications through a hidden lookup, `OpeningsMFLUDropDown`, which
+expects the record ID. Ashish specified this; verified by loading the form.
+
+**Openings come before "Why Genedrift" on Careers.** Client request: the full
+band read as the end of the page.
+
+**Job titles read "Role – Department"** and the department label above is gone.
+Client request. Their title text is still never rewritten.
+
+**No minimum length on the contact message.** A one-word enquiry is an
+enquiry. 20,000-character ceiling kept only as an abuse guard.
+
+**No response-time promise on the thank-you message.** The client has not
+committed to one.
+
+**The closing contact block on every page is the real form**, not a picture of
+one. One component (`EnquiryForm`), one server action, one schema.
+
+**Footer legal links removed** (Privacy, Terms, Cookie Settings). They were
+ours, not requested, and the pages never existed. Their current genedrift.com
+has a privacy policy at `/privacy`; porting it verbatim was offered and not
+chosen. Add links back only when a page exists.
+
+**Production hosting is the client's Hostinger**, on a plan that runs Node.js
+apps. Vercel was the preview host only.
+
+**Content moves into their existing Creator app** (offered 28 Sept, awaiting
+confirmation) rather than a copy of ours. Either way nothing is retyped.
+
+**The editor's guide describes what exists, not what we wish existed.** Every
+name in it was checked against the real app export. Things an editor cannot
+change (country page body copy, region intros, images, new pages, new menu
+items) are stated as such, with who does them.

@@ -1,5 +1,13 @@
 # Cutover runbook — moving the website onto Genedrift's own systems
 
+> **Updated 29 September.** Two answers change this plan. (1) Production
+> hosting is the client's **Hostinger** (a plan that runs Node.js apps), not a
+> Vercel Pro account. Phase 5 becomes "deploy to Hostinger and verify on its
+> temporary address". (2) We offered to add the website forms into their
+> **existing Creator app** (`proton`, US data centre) instead of importing ours.
+> Confirm which before Phase 2. DNS call: Fri 2 Oct after lunch. Rotate the
+> signing secret: it was exposed in a chat on 29 Sept.
+
 **27 September 2026.** This is Milestone 3: *"Website deployed on
 Genedrift-controlled production setup/domain and remains live/functioning for
 7 consecutive calendar days."* Milestone 4 is day 31 after go-live.
