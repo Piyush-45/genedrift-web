@@ -9,6 +9,7 @@
  *   Website_Nav_Items       the menu and the legal links
  *   Website_Footer          one record — tagline, contact details, header CTA
  *   Website_Certifications  the compliance row, each with an expiry
+ *   Website_Offices         offices on the Contact page (added 30 Sept)
  *
  * WHY ONE PUBLISH FOR THREE FORMS. All three render on EVERY page, and the
  * footer's link columns are derived from the menu. Publishing them separately
@@ -94,6 +95,26 @@ map publish_site()
 	payload.put("nav",navList);
 	payload.put("footer",footerMap);
 	payload.put("certifications",certList);
+	// Offices for the Contact page. Unticked rows are sent too; Catalyst drops
+	// them, so the rule "Published off means off the site" lives in one place.
+	officeList = List();
+	for each officeRow in Website_Offices[ID != 0]
+	{
+		officeItem = Map();
+		officeItem.put("name",ifnull(officeRow.Office_Name,"").trim());
+		officeItem.put("address",ifnull(officeRow.Address,"").trim());
+		officeItem.put("city",ifnull(officeRow.City,"").trim());
+		officeItem.put("country",ifnull(officeRow.Country,"").trim());
+		officeItem.put("postalCode",ifnull(officeRow.Postal_Code,"").trim());
+		officeItem.put("phone",ifnull(officeRow.Phone,"").trim());
+		officeItem.put("email",ifnull(officeRow.Email,"").trim());
+		officeItem.put("mapUrl",ifnull(officeRow.Map_Link,"").trim());
+		officeItem.put("hours",ifnull(officeRow.Office_Hours,"").trim());
+		officeItem.put("displayOrder",ifnull(officeRow.Display_Order,0));
+		officeItem.put("published",officeRow.Published);
+		officeList.add(officeItem);
+	}
+	payload.put("offices",officeList);
 	bodyText = payload.toString();
 
 	try

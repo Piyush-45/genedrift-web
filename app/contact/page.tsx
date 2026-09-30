@@ -2,13 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHead } from "@/components/sections/page-head";
 import { CONTACT_INTENTS, INTENTS } from "@/lib/forms/contact";
+import { OfficeList } from "@/components/contact/office-list";
+import { fetchSiteChrome } from "@/lib/content/site-source";
 
 export const metadata: Metadata = {
   title: "Contact — Genedrift",
   description: "Speak to a regulatory lead, request a proposal, or report a safety concern.",
 };
 
-export default function ContactHub() {
+export default async function ContactHub() {
+  // Offices come with the site bundle (menu, footer, certifications), so this
+  // is the same memoised request the header and footer already make.
+  const { offices } = await fetchSiteChrome();
+
   return (
     <main className="pb-section">
       <PageHead
@@ -42,6 +48,8 @@ export default function ContactHub() {
           })}
         </div>
       </section>
+
+      <OfficeList offices={offices} />
     </main>
   );
 }

@@ -233,9 +233,26 @@ export class SiteService {
         certificateNumber: c.certificateNumber,
       }));
 
+    // Field by field, never a spread: whatever Creator sends beyond these
+    // keys must not reach the public API. Unpublished offices are dropped.
+    const offices = [...request.offices]
+      .filter((o) => o.published)
+      .sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name))
+      .map((o) => ({
+        name: o.name,
+        address: o.address,
+        city: o.city,
+        country: o.country,
+        postalCode: o.postalCode,
+        phone: o.phone,
+        email: o.email,
+        mapUrl: o.mapUrl,
+        hours: o.hours,
+      }));
+
     const legal = legalLinks(request.nav);
     const contentHash = sha256Hex(
-      stableJson({ nav, legal, footer: request.footer, certifications }),
+      stableJson({ nav, legal, footer: request.footer, certifications, offices }),
     );
     const publicationId = deterministicId("spub", "site", contentHash);
 
@@ -249,6 +266,7 @@ export class SiteService {
       legal,
       footer: request.footer,
       certifications,
+      offices,
     };
 
     if (!existing) await this.store.putSitePublication(doc);

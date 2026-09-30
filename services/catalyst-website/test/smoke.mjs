@@ -529,6 +529,31 @@ let sitePublicationId = null;
   );
 }
 
+// 32a — offices: only published ones go out, in order, field by field
+{
+  const withOffices = structuredClone(SITE);
+  withOffices.offices = [
+    { name: "Manila", city: "Manila", country: "Philippines", displayOrder: 20, published: true, mapUrl: "https://maps.example.com/manila", internalNote: "must not leak" },
+    { name: "Hyderabad", city: "Hyderabad", country: "India", displayOrder: 10, published: "true" },
+    { name: "Closed office", displayOrder: 5, published: "false" },
+  ];
+  const { status } = await signedPost("/v1/website/site", withOffices);
+  check("site publish with offices returns 201", status === 201, `got ${status}`);
+  const json = await (await fetch(BASE + "/v1/public/site")).json();
+  const offices = json?.site?.offices ?? [];
+  check("unpublished offices are not published", offices.length === 2, JSON.stringify(offices));
+  check("offices are ordered by displayOrder", offices[0]?.name === "Hyderabad", offices.map((o) => o.name).join(","));
+  check("unknown office fields do not reach the public API", !("internalNote" in (offices[1] ?? {})), JSON.stringify(offices[1]));
+}
+
+// 32b — a map link that is not https is refused
+{
+  const bad = structuredClone(SITE);
+  bad.offices = [{ name: "Bad", mapUrl: "javascript:alert(1)" }];
+  const { status } = await signedPost("/v1/website/site", bad);
+  check("a non-https office map link is rejected 422", status === 422, `got ${status}`);
+}
+
 /* -------------------------------------------------------- case studies --- */
 
 const CASE_STUDIES = {

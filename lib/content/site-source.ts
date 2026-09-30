@@ -34,11 +34,29 @@ export interface SiteFooterBrand {
   address: string;
 }
 
+/**
+ * An office on the Contact page. Work Order 1(i). Managed in Creator
+ * (Website_Offices) and published with the rest of the site bundle.
+ */
+export interface Office {
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  postalCode: string;
+  phone: string;
+  email: string;
+  mapUrl: string;
+  hours: string;
+}
+
 export interface SiteChrome {
   nav: NavItem[];
   legal: SiteLink[];
   footer: SiteFooterBrand;
   certifications: string[];
+  /** Empty until offices are published. The Contact page hides the list then. */
+  offices: Office[];
   headerCta: SiteLink;
   source: "cms" | "built-in";
 }
@@ -48,12 +66,36 @@ const BUILT_IN: SiteChrome = {
   legal: FOOTER_LEGAL.map((l) => ({ ...l })),
   footer: { ...FOOTER_BRAND },
   certifications: [...FOOTER_CERTIFICATIONS],
+  // No built-in offices. Inventing addresses for a regulated business is the
+  // one thing the fallback must never do.
+  offices: [],
   headerCta: { ...HEADER_CTA },
   source: "built-in",
 };
 
 function str(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function toOffice(value: unknown): Office | null {
+  if (!value || typeof value !== "object") return null;
+  const row = value as Record<string, unknown>;
+  const name = str(row.name);
+  if (!name) return null;
+  const mapUrl = str(row.mapUrl);
+  return {
+    name,
+    address: str(row.address),
+    city: str(row.city),
+    country: str(row.country),
+    postalCode: str(row.postalCode),
+    phone: str(row.phone),
+    email: str(row.email),
+    // Catalyst already refuses anything else; checked again because this
+    // value ends up in an href.
+    mapUrl: mapUrl.startsWith("https://") ? mapUrl : "",
+    hours: str(row.hours),
+  };
 }
 
 function toLink(value: unknown): SiteLink | null {
@@ -146,6 +188,9 @@ export async function fetchSiteChrome(): Promise<SiteChrome> {
         .filter((l): l is SiteLink => l !== null),
       footer,
       certifications,
+      offices: (Array.isArray(body.site.offices) ? body.site.offices : [])
+        .map(toOffice)
+        .filter((o): o is Office => o !== null),
       headerCta: ctaLabel && ctaHref ? { label: ctaLabel, href: ctaHref } : { ...HEADER_CTA },
       source: "cms",
     };

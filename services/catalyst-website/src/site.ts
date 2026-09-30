@@ -96,10 +96,56 @@ export const certificationSchema = z.object({
   displayOrder: z.coerce.number().int().default(0),
 });
 
+/**
+ * An office or location, shown on the Contact page. Work Order 1(i): the
+ * client adds, amends, publishes, unpublishes and reorders offices in Creator
+ * without a code change.
+ *
+ * Part of the site bundle rather than its own collection: it is contact
+ * detail, edited alongside the footer's email and address, and one publish
+ * button keeping them in step is the same reasoning as nav + footer.
+ *
+ * The map link is https-only. A `javascript:` URL behind a "View on map"
+ * button is an attack, not a typo.
+ */
+const optionalText = (max: number) => z.string().trim().max(max).default("");
+const boolish = z
+  .union([z.boolean(), z.string(), z.number(), z.null(), z.undefined()])
+  .transform((value) => {
+    if (typeof value === "boolean") return value;
+    if (typeof value === "number") return value !== 0;
+    if (value === null || value === undefined) return true;
+    return ["true", "yes", "1", "on", "checked"].includes(value.trim().toLowerCase());
+  });
+
+export const officeSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  address: optionalText(400),
+  city: optionalText(120),
+  country: optionalText(120),
+  postalCode: optionalText(40),
+  phone: optionalText(80),
+  email: optionalText(200),
+  mapUrl: z
+    .string()
+    .trim()
+    .max(1000)
+    .default("")
+    .refine((v) => v === "" || v.startsWith("https://"), {
+      message: "Map link must start with https://, or be left empty",
+    }),
+  hours: optionalText(200),
+  displayOrder: z.coerce.number().int().default(0),
+  published: boolish,
+});
+
+export type PublishedOffice = Omit<z.infer<typeof officeSchema>, "published" | "displayOrder">;
+
 export const sitePublishRequestSchema = z.object({
   nav: z.array(navItemSchema).min(1).max(200),
   footer: footerSchema,
   certifications: z.array(certificationSchema).max(50).default([]),
+  offices: z.array(officeSchema).max(100).default([]),
 });
 
 export type SitePublishRequest = z.infer<typeof sitePublishRequestSchema>;
@@ -120,6 +166,8 @@ export interface PublishedSite {
   legal: Array<{ key: string; label: string; href: string }>;
   footer: z.infer<typeof footerSchema>;
   certifications: Array<{ name: string; expiresOn: string; certificateNumber: string }>;
+  /** Published offices only, in display order. Absent on publications made before offices existed. */
+  offices?: PublishedOffice[];
 }
 
 /**
