@@ -1,5 +1,7 @@
 # Blocked on the client
 
+> **Updated 2026-09-30** — contact destination received (sent 28 Sept inline) and live. Our Catalyst trial expired: their Catalyst is now the top blocker.
+>
 > **Updated 2026-09-29** — application form received and wired; open-roles confirmed; hosting answered (Hostinger).
 >
 > **Updated 2026-09-25** — careers credentials resolved without OAuth; contact destination added as item 10.
@@ -19,7 +21,7 @@
 | 6 | **PV contact list** — country, email, phone per market | Genedrift's own contact details. The page is built with placeholders the client fills through Creator. |
 | 7 | **Rolling Health Authority Bulletin** — authority names only, or real headlines? | Changes nothing structural; the strip is built either way. Asked so the client is not surprised by what they have to maintain. |
 | 8 | ~~**Careers openings report** — the report URL, and OAuth credentials~~ **Resolved 25 Sept** | Read through the Publish API with the report's privatelink — **no credentials needed**. Live. See `careers-cms.md`. Application form and reference field **received 28 Sept and live**; report holds only open roles, **confirmed**. |
-| 10 | **Contact form destination** | Scope confirmed in writing: one form, one displayed email, no bot. Only the destination is missing. 28 Sept: they will route it through a Creator form with AI review and send the link "shortly". Asked again 29 Sept, with email to cs@ offered as the alternative. |
+| 10 | ~~**Contact form destination**~~ **Resolved 30 Sept, live** | Scope confirmed in writing: one form, one displayed email, no bot. Only the destination is missing. 28 Sept: they will route it through a Creator form with AI review and send the link "shortly". Asked again 29 Sept, with email to cs@ offered as the alternative. |
 | 9 | **Hosting** — answered in part 28 Sept: **Hostinger** for the site (plan to confirm: must run Node.js apps). Still open: which Zoho account and region; Catalyst payment method; confirm forms go into their existing `proton` app. DNS call Fri 2 Oct | Decides whether geo-IP for the hero is free (Vercel header) or needs an external lookup, and it is the client's own account either way. |
 
 > Items 6–9 came out of the 2026-09-15 review. Full context:

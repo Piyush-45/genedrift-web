@@ -1,5 +1,7 @@
 # Cutover runbook — moving the website onto Genedrift's own systems
 
+> **Updated 30 September.** Our Catalyst trial has expired: Phase 3 (their Catalyst) is now first, and deploys **v0.2.0** (offices). Add `CREATOR_CONTACT_ENDPOINT` to the production environment in Phase 5. Hostinger plan recommended: Cloud Startup.
+>
 > **Updated 29 September.** Two answers change this plan. (1) Production
 > hosting is the client's **Hostinger** (a plan that runs Node.js apps), not a
 > Vercel Pro account. Phase 5 becomes "deploy to Hostinger and verify on its

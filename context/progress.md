@@ -5,6 +5,70 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Status as of 2026-09-30 — contact form live; offices built; move blocked on their Catalyst
+
+**Contact form: live in production.** Enquiries go into the client's
+`Website_Contact` form (Creator app `proton`) through the Publish API, key
+from their form permalink. `CREATOR_CONTACT_ENDPOINT` set in `.env.local` and
+Vercel Production. Tested on localhost and on the live preview (two test
+records: "TEST please ignore", "test prod"; client asked to confirm and
+delete). Commit `6ca0b34`, Safari select fix `83…` (see git log).
+
+Their field link names (read from the published form, 30 Sept):
+`Name.first_name`, `Name.last_name`, `Email`, `Company`, `CountryLookUp`
+(lookup, stores a record ID, e.g. India = 3667846000000404460), `Phone_Number`,
+`Inquiry_Type` (Services or Business inquiry / Careers or Job Application /
+Partnership or Vendor Inquiry / General Question / Press / Other), `Message`,
+`Source` (radio, value "Website - Contact Us"). Internal: Classification,
+Routing_Status, Assigned_To, AssignedToText, Country, RefNo, Received_On,
+Last_Updated_On.
+
+Mapping in `lib/forms/submit.ts` → `toCreatorRecord`. Name split on the last
+word. **Country is sent as the first line of Message** ("Country: India")
+because we do not hold their country ID list. To fill `CountryLookUp`
+properly, ask for a published report of their Countries form. Our form gained
+a required "How can we help?" select with their six options, preselected per
+intent.
+
+The link had been sent 28 Sept, inline inside our own quoted email; missed
+because the mail app collapses quoted text. Acknowledged in the 30 Sept email.
+
+**Offices (Work Order 1(i)): built, not yet live.** `Website_Offices` in
+Creator → site bundle → Catalyst v0.2.0 → "Where to find us" on `/contact`.
+77/77 smoke tests. Setup in `offices-cms.md`. Needs Catalyst deployed, which
+is blocked (below). Commit `d238e3c`.
+
+**Our Catalyst trial has expired.** The dev project may no longer serve
+content; if so the preview falls back to built-in content (Careers and the
+contact form are unaffected, they talk to their Zoho directly). Decision: do
+not open a second personal trial; deploy v0.2.0 straight onto **their**
+Catalyst as part of the move. Asked them for it as the priority.
+
+**Contract read in full** (MSA + Work Order + SOW). Summary and the M2
+correction in **`contract-terms.md`**. Remaining payments: ₹35,000 after 7
+days live on genedrift.com, ₹35,000 on day 31.
+
+**Country service pages** (Ashish, 30 Sept: e.g. Drug Product Registration,
+Philippines): not in the sitemap, Work Order or SOW. Replied as change control
+under SOW section 09, proposal after launch.
+
+**Hosting recommendation sent:** Hostinger **Cloud Startup** (4 cores, 4 GB,
+dedicated, 10 web apps; ₹599/mo on 48 months, ₹28,752 upfront, renews ₹1,599;
+ex GST) over **Unlimited** (formerly Business; shared, 2 cores, 3 GB, 5 apps;
+₹249/mo, ₹11,952 upfront, renews ₹649), justified by the Work Order's 100,000
+views/day and blog volume. They already have a Hostinger account for
+genedrift.com; add the plan there. Prices from hostinger.com/in on 30 Sept.
+
+**Editor's guide** sent to the client as PDF, "Version 1" (18 pages). Final
+version at handover: fill the contact section, add offices, reflect the
+Creator cleanup.
+
+**Still owed by the client:** Catalyst project (priority), Creator developer
+access, Hostinger plan + access, content sign-off, PV/safety owner,
+confirmation of the two test enquiries. DNS call proposed Fri 2 Oct.
+
+---
+
 ## Status as of 2026-09-29 — build complete except contact; handover underway
 
 **The build is done apart from the contact form's destination.** Everything

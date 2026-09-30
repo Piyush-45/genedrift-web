@@ -531,3 +531,24 @@ confirmation) rather than a copy of ours. Either way nothing is retyped.
 name in it was checked against the real app export. Things an editor cannot
 change (country page body copy, region intros, images, new pages, new menu
 items) are stated as such, with who does them.
+
+## Contact, offices and hosting — 2026-09-30
+
+**Our own form, not their embed.** Their Website_Contact form is Zoho-styled;
+our form matches the site and writes into theirs through the Publish API. The
+client asked for the embed's UI to be tweaked; this answers it better.
+
+**Country goes in the message for now.** `CountryLookUp` needs record IDs we
+do not have. Better a readable line than a wrong ID or a refused submission.
+
+**Offices built rather than argued.** Work Order 1(i) and milestone (b) both
+name it; Ashish's "one form, one email" instruction was about the form, not
+locations. Part of the site bundle, published with the menu and footer.
+
+**No built-in offices.** Inventing addresses for a regulated business is not a
+fallback.
+
+**No second personal Catalyst trial.** Deploy once, onto the client's account.
+
+**Hostinger Cloud Startup recommended** against the Work Order's 100,000
+views/day; Unlimited offered as the lower-cost option with its trade-off stated.

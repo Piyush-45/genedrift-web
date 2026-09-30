@@ -1,6 +1,6 @@
 # Handover
 
-**22 September 2026, updated 29 September.** For whoever picks this up next — a new developer, or a
+**22 September 2026, updated 30 September.** For whoever picks this up next — a new developer, or a
 new session with none of the conversation that built it. Read this, then
 `00-start-here.md`.
 
@@ -89,9 +89,9 @@ ground truth; if it is not there, nothing on the front end will help.
   derived from the country geometry — see `map-geometry.md`.
 - There are **no footer legal links**. Removed 28 Sept: the pages never
   existed. Add a link only once its page exists.
-- The **contact form delivers nowhere**. No destination is set. The client has
-  confirmed the scope in writing (one form, one displayed email, no bot) and
-  owes the destination — a published Creator form or an email address.
+- The **contact form is live**: it posts into their `Website_Contact` form via
+  the Publish API. Country travels inside the message (no country ID list
+  yet). See `progress.md`, 30 Sept.
 - The **Apply button is live**: it opens their Candidates form with
   `?OpeningsMFLUDropDown=<opening record ID>`. See `careers-cms.md`.
 - The **adverse-event route is deliberately disabled** until the client names
@@ -202,6 +202,8 @@ present it as real.** Placeholder is fine and expected — but say so.
 | `integration.md` · `cms-architecture.md` | Anything CMS or API shaped |
 | `article-contract.md` | Insights — the real Creator model and payload |
 | `../Claude outputs/Genedrift-Editors-Guide.docx` | The client-facing editor's guide. Keep it in step with any Creator rename |
+| `contract-terms.md` | Before any scope, payment or milestone conversation |
+| `offices-cms.md` | Offices on the Contact page (Work Order 1(i)) |
 | `cutover-runbook.md` | Moving the site onto the client's own accounts (Milestone 3) — step by step |
 | `blocked-on-client.md` | Wondering why something is unfinished |
 | `client-feedback-2026-09-15.md` | Anything the client said in the September review |
