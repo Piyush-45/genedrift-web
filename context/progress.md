@@ -5,9 +5,39 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## Status as of 2026-09-30, evening — call with Ashish; waiting for his change list
+
+**Call with Ashish, 30 Sept 2:30 pm.** Contact form demoed live; he tested it
+himself and his enquiry arrived. Piyush apologised on the call for the missed
+inline replies, so that is closed (not repeated in email).
+
+**Ashish wants more changes.** He will send images and infographics. He said
+the contract "supports 1,000+ pages", reading it as room to add pages to the
+sitemap. Piyush's position, now in writing: that is **capacity** (Work Order
+clause 2: at least 200 pages, growing beyond 20,000 without redesign), not
+**scope**. More pages of the existing types (articles, markets, case studies,
+jobs) are theirs to add in Creator. A new page type is SOW section 09 change
+control, agreed in writing first.
+
+**Decision: no new development until his written list arrives.** Every item
+gets sorted into (1) content in an existing template, (2) defect or gap
+against the approved design/sitemap, (3) new page type / feature = change
+request. The goodwill free offer on country service pages is **withdrawn /
+on hold**; do not mention the build to the client.
+
+**Follow-up email sent (30 Sept, evening):** Contact and Careers live and
+tested on production, build complete; remaining steps are the move and the
+domain switch. Hosting recommendation (Cloud Startup vs Unlimited, figures
+below). Access needed: Catalyst (priority), Creator developer, Hostinger,
+Cloudflare. Page capacity vs new page types, quoting SOW 09. Asked for the
+full list with images. No long dashes, no apology line, no mention of the
+country pages build.
+
+---
+
 ## Status as of 2026-09-30 — contact form live; offices built; move blocked on their Catalyst
 
-**Country service pages: built (goodwill, not charged).** Ashish asked 29 Sept
+**Country service pages: built, now ON HOLD (see evening entry above).** Ashish asked 29 Sept
 for pages like *Drug Registration, Philippines*. New scope (SOW section 09);
 Piyush is doing it free, boundaries to be put in writing. Template, Creator
 form `Website_Country_Services`, Catalyst collection and publish button are

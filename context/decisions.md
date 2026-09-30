@@ -247,6 +247,25 @@ still two raw numbers, and markets are not in the editor widget.
 
 ---
 
+## Capacity is not scope — decided 2026-09-30
+
+Ashish read the Work Order's scale targets ("1,000+ pages") as room to change
+the sitemap. They are **capacity**: clause 2, at least 200 pages, extensible
+beyond 20,000 without redesign, 100,000 views/day. The client adds as many
+pages as they like of the **existing types** through Creator. A **new page,
+template or section type** is SOW section 09 change control, "discussed
+before the additional work begins", agreed in writing.
+
+Every requested change is sorted into: content in an existing template (theirs,
+free) / defect or gap against the approved design and sitemap (ours, free) /
+new type or feature (change request, quoted or goodwill, in writing either
+way). Collect the whole list before agreeing to any single item.
+
+Country service pages: built 30 Sept as goodwill, then put on hold the same
+evening. Nothing goes to the client until the requirement is written down.
+
+---
+
 ## Explicitly rejected — do not re-propose without a reason
 
 - **Any component library with its own design opinions** — MUI, Chakra, wholesale

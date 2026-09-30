@@ -1,5 +1,12 @@
 # Country service pages
 
+> **ON HOLD, 30 Sept evening.** Piyush withdrew the free goodwill offer after
+> the call with Ashish. Do not mention this build to the client or set it up
+> in Creator until there is a written, agreed requirement (SOW 09). The code
+> is in the repo and harmless: with no `Website_Country_Services` form and
+> nothing published, the country pages show no services list and every
+> service address is a 404. v0.2.1 zip contains it; v0.2.0 does not.
+
 **30 September 2026.** Pages such as *Drug Registration, Philippines*, at
 `/markets/{region}/{country}/{service}`. Asked for by Ashish on 29 Sept. Not in
 the Work Order, the SOW or the sitemap: new scope under SOW section 09. Piyush

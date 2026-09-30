@@ -1,6 +1,6 @@
 # Blocked on the client
 
-> **Updated 2026-09-30 (later)** — country service pages built; they need `Website_Country_Services` created in Creator and v0.2.1 deployed on their Catalyst, then real content per country.
+> **Updated 2026-09-30 (evening)** — call with Ashish. Waiting for his **written list of changes with images/infographics**. No development until it arrives. Country service pages on hold (new page type, SOW 09). Still owed: Catalyst project (priority), Creator developer access, Hostinger plan + access, Cloudflare access, content sign-off, PV owner.
 >
 > **Updated 2026-09-30** — contact destination received (sent 28 Sept inline) and live. Our Catalyst trial expired: their Catalyst is now the top blocker.
 >
