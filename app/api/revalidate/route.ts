@@ -10,6 +10,7 @@ import { timingSafeEqual } from "node:crypto";
  *   { "path": "/company/about" }        one page
  *   { "collection": "markets" }         every page that renders a market
  *   { "collection": "case-studies" }    the case studies listing and details
+ *   { "collection": "country-services" } country service pages and lists
  *   { "collection": "site" }            the menu and footer, i.e. every page
  *   Authorization: Bearer <REVALIDATE_SECRET>
  *
@@ -73,6 +74,11 @@ export async function POST(request: Request) {
   if (collection === "site") {
     revalidateTag("website-site", { expire: 0 });
     return NextResponse.json({ ok: true, collection: "site" });
+  }
+
+  if (collection === "country-services") {
+    revalidateTag("website-country-services", { expire: 0 });
+    return NextResponse.json({ ok: true, collection: "country-services" });
   }
 
   if (collection === "case-studies") {

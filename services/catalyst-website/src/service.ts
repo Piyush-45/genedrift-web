@@ -17,6 +17,11 @@ import {
   type CaseStudiesPublishRequest,
   type PublishedCaseStudies,
 } from "./case-studies";
+import {
+  findDuplicateService,
+  type CountryServicesPublishRequest,
+  type PublishedCountryServices,
+} from "./country-services";
 import { deterministicId, sha256Hex, stableJson } from "./security";
 import type { Store } from "./store";
 
@@ -377,5 +382,81 @@ export class DuplicateCaseStudyError extends Error {
   constructor(readonly slug: string) {
     super(`Two case studies share the slug "${slug}"`);
     this.name = "DuplicateCaseStudyError";
+  }
+}
+
+/**
+ * Country service pages. Published whole, like case studies.
+ */
+export class CountryServicesService {
+  constructor(private readonly store: Store) {}
+
+  async publish(request: CountryServicesPublishRequest, now: Date): Promise<PublishedCountryServices> {
+    const duplicate = findDuplicateService(request.countryServices);
+    if (duplicate) throw new DuplicateCountryServiceError(duplicate);
+
+    const countryServices = [...request.countryServices]
+      .sort(
+        (a, b) =>
+          a.marketSlug.localeCompare(b.marketSlug) ||
+          a.displayOrder - b.displayOrder ||
+          a.serviceName.localeCompare(b.serviceName),
+      )
+      .map((c) => ({
+        // Field by field, never a spread. If you add a field to the schema,
+        // add it here too, or it publishes a clean 200 with the key missing.
+        marketSlug: c.marketSlug,
+        regionSlug: c.regionSlug,
+        marketName: c.marketName,
+        serviceSlug: c.serviceSlug,
+        serviceName: c.serviceName,
+        summary: c.summary,
+        regulator: c.regulator,
+        covers: c.covers,
+        timeline: c.timeline,
+        validity: c.validity,
+        process: c.process,
+        documents: c.documents,
+        downloadUrl: c.downloadUrl,
+        downloadLabel: c.downloadLabel,
+        seoTitle: c.seoTitle,
+        seoDescription: c.seoDescription,
+        // Derived, never typed: a hand-typed href is a 404 waiting to happen.
+        href: `/markets/${c.regionSlug}/${c.marketSlug}/${c.serviceSlug}`,
+        order: c.displayOrder,
+      }));
+
+    const contentHash = sha256Hex(stableJson({ countryServices }));
+    const publicationId = deterministicId("xpub", "country-services", contentHash);
+
+    const existing = await this.store.getCountryServicesPublication(publicationId);
+    const doc: PublishedCountryServices = existing ?? {
+      schemaVersion: 1,
+      publicationId,
+      contentHash,
+      publishedAt: now.toISOString(),
+      countryServices,
+    };
+
+    if (!existing) await this.store.putCountryServicesPublication(doc);
+    await this.store.setLiveCountryServices(doc);
+    return doc;
+  }
+
+  async getLive(): Promise<PublishedCountryServices | null> {
+    return this.store.getLiveCountryServices();
+  }
+
+  async rollback(publicationId: string): Promise<PublishedCountryServices | null> {
+    const doc = await this.store.getCountryServicesPublication(publicationId);
+    if (!doc) return null;
+    await this.store.setLiveCountryServices(doc);
+    return doc;
+  }
+}
+
+export class DuplicateCountryServiceError extends Error {
+  constructor(readonly key: string) {
+    super(`Two service pages share the address "${key}". Give one of them a different Service Slug.`);
   }
 }

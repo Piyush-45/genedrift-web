@@ -1,6 +1,7 @@
 import type { LiveIndexEntry, PublishedPage } from "./domain";
 import type { PublishedMarkets } from "./markets";
 import type { PublishedCaseStudies } from "./case-studies";
+import type { PublishedCountryServices } from "./country-services";
 import type { PublishedSite } from "./site";
 import { sha256Hex } from "./security";
 
@@ -154,6 +155,23 @@ export class Store {
 
   async getLiveCaseStudies(): Promise<PublishedCaseStudies | null> {
     return this.getJson<PublishedCaseStudies>("collections/case-studies.json");
+  }
+
+  /** Freeze a Country Services publication. Same immutability rule as a page. */
+  async putCountryServicesPublication(doc: PublishedCountryServices): Promise<void> {
+    await this.putJson(`publications/${doc.publicationId}.json`, doc, true);
+  }
+
+  async getCountryServicesPublication(publicationId: string): Promise<PublishedCountryServices | null> {
+    return this.getJson<PublishedCountryServices>(`publications/${publicationId}.json`);
+  }
+
+  async setLiveCountryServices(doc: PublishedCountryServices): Promise<void> {
+    await this.putJson("collections/country-services.json", doc, false);
+  }
+
+  async getLiveCountryServices(): Promise<PublishedCountryServices | null> {
+    return this.getJson<PublishedCountryServices>("collections/country-services.json");
   }
 
   async putSitePublication(doc: PublishedSite): Promise<void> {

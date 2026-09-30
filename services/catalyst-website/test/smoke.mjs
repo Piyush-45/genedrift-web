@@ -682,6 +682,78 @@ let caseStudiesPublicationId = null;
   );
 }
 
+/* ----------------------------------------------------- country services --- */
+
+const SERVICES = {
+  countryServices: [
+    {
+      marketSlug: "philippines", regionSlug: "asia-pacific", marketName: "Philippines",
+      serviceSlug: "drug-registration", serviceName: "Drug Registration",
+      summary: "Sample summary.", regulator: "FDA Philippines", timeline: "24 to 36 months",
+      process: "First paragraph.\n\nSecond paragraph.", documents: "Dossier\nGMP certificate",
+      displayOrder: 20, internalNote: "must not leak",
+    },
+    {
+      marketSlug: "philippines", regionSlug: "asia-pacific", marketName: "Philippines",
+      serviceSlug: "medical-device-registration", serviceName: "Medical Device Registration",
+      displayOrder: 10,
+    },
+  ],
+};
+
+// 39 — unsigned publish is refused
+{
+  const res = await fetch(BASE + "/v1/website/country-services", {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(SERVICES),
+  });
+  check("unsigned country-services publish is rejected 401", res.status === 401, `got ${res.status}`);
+}
+
+let servicesPublicationId = null;
+// 40 — publish, read back, href derived, order respected, no leak
+{
+  const { status, json } = await signedPost("/v1/website/country-services", SERVICES);
+  servicesPublicationId = json?.publicationId ?? null;
+  check("signed country-services publish returns 201", status === 201, JSON.stringify(json));
+  const read = await (await fetch(BASE + "/v1/public/country-services")).json();
+  const rows = read?.countryServices?.countryServices ?? [];
+  check("country services read back", rows.length === 2, `${rows.length}`);
+  check("services are ordered by displayOrder", rows[0]?.serviceSlug === "medical-device-registration", rows.map((r) => r.serviceSlug).join(","));
+  check("href is derived from region, market and service", rows[1]?.href === "/markets/asia-pacific/philippines/drug-registration", rows[1]?.href);
+  check("unknown fields do not reach the public API", !("internalNote" in (rows[1] ?? {})), JSON.stringify(rows[1]));
+  check("empty optional fields publish as empty strings", rows[0]?.regulator === "", JSON.stringify(rows[0]));
+}
+
+// 41 — the same service twice in one country is refused, named
+{
+  const dup = structuredClone(SERVICES);
+  dup.countryServices[1].serviceSlug = "drug-registration";
+  const { status, json } = await signedPost("/v1/website/country-services", dup);
+  check("duplicate country service is rejected 409", status === 409, `got ${status}`);
+  check("the duplicate is named", String(json?.message ?? "").includes("philippines/drug-registration"), json?.message);
+}
+
+// 42 — a bad slug and a non-https download are refused
+{
+  const bad = structuredClone(SERVICES);
+  bad.countryServices[0].serviceSlug = "Drug Registration";
+  const { status } = await signedPost("/v1/website/country-services", bad);
+  check("a service slug with spaces is rejected 422", status === 422, `got ${status}`);
+  const bad2 = structuredClone(SERVICES);
+  bad2.countryServices[0].downloadUrl = "http://example.com/x.pdf";
+  const r2 = await signedPost("/v1/website/country-services", bad2);
+  check("a non-https download link is rejected 422", r2.status === 422, `got ${r2.status}`);
+}
+
+// 43 — removing every service is allowed (unlike an empty map), and rollback restores
+{
+  const { status } = await signedPost("/v1/website/country-services", { countryServices: [] });
+  check("publishing zero country services is allowed", status === 201, `got ${status}`);
+  const rb = await signedPost("/v1/website/country-services/rollback", { publicationId: servicesPublicationId });
+  const read = await (await fetch(BASE + "/v1/public/country-services")).json();
+  check("country-services rollback restores both", rb.status === 200 && (read?.countryServices?.countryServices ?? []).length === 2, `${rb.status}`);
+}
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 process.exit(failed.length ? 1 : 0);

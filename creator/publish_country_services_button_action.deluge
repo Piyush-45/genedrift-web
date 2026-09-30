@@ -1,0 +1,14 @@
+/*
+ * The "Publish service pages" button on the Website_Country_Services report.
+ * Set the action to run ONCE for the report, not per selected record.
+ * `info`, not `alert`: Creator rejects `alert` in a report action item.
+ */
+outcome = thisapp.publish_country_services();
+if(outcome.get("ok") == true)
+{
+	info "Service pages published. " + ifnull(outcome.get("serviceCount"),0) + " are live on the site.";
+}
+else
+{
+	info "Not published: " + ifnull(outcome.get("message"),"unknown error");
+}

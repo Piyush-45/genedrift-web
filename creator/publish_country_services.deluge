@@ -1,0 +1,147 @@
+/*
+ * GeneDrift Website — publish every country service page to Catalyst.
+ *
+ * Creator form:       Website_Country_Services
+ * Trigger:            "Publish service pages" on the Website_Country_Services report
+ * Catalyst endpoint:  POST <base>/v1/website/country-services
+ *
+ * Written in the same shape as publish_case_studies, the version Creator
+ * accepted. Paste from "map publish_country_services()" down.
+ *
+ * Only ACTIVE rows go out. The country and region come from the linked
+ * market, so a page can never claim a country that does not exist.
+ */
+map publish_country_services()
+{
+	result = Map();
+	result.put("ok",false);
+	// Fetch only active service pages
+	rows = Website_Country_Services[Active == true];
+	serviceList = List();
+	for each  serviceRow in rows
+	{
+		marketSlug = "";
+		marketName = "";
+		regionName = "";
+		if(ifnull(serviceRow.Market,"").toString() != "")
+		{
+			marketSlug = ifnull(serviceRow.Market.Market_Slug,"").trim().toLowerCase();
+			marketName = ifnull(serviceRow.Market.Market_Name,"").trim();
+			regionName = ifnull(serviceRow.Market.Region,"").trim();
+		}
+		// Same derivation as publish_markets, so the region part of the address always matches
+		regionSlug = regionName.toLowerCase().replaceAll(" ","-").replaceAll("&","and").replaceAll("--","-");
+		serviceItem = Map();
+		serviceItem.put("marketSlug",marketSlug);
+		serviceItem.put("regionSlug",regionSlug);
+		serviceItem.put("marketName",marketName);
+		serviceItem.put("serviceSlug",ifnull(serviceRow.Service_Slug,"").trim().toLowerCase());
+		serviceItem.put("serviceName",ifnull(serviceRow.Service_Name,"").trim());
+		serviceItem.put("summary",ifnull(serviceRow.Summary,"").trim());
+		serviceItem.put("regulator",ifnull(serviceRow.Regulator,"").trim());
+		serviceItem.put("covers",ifnull(serviceRow.Covers,"").trim());
+		serviceItem.put("timeline",ifnull(serviceRow.Typical_Timeline,"").trim());
+		serviceItem.put("validity",ifnull(serviceRow.Validity,"").trim());
+		serviceItem.put("process",ifnull(serviceRow.Process,"").trim());
+		serviceItem.put("documents",ifnull(serviceRow.Documents,"").trim());
+		serviceItem.put("downloadUrl",ifnull(serviceRow.Download_Link,"").trim());
+		serviceItem.put("downloadLabel",ifnull(serviceRow.Download_Label,"").trim());
+		serviceItem.put("seoTitle",ifnull(serviceRow.SEO_Title,"").trim());
+		serviceItem.put("seoDescription",ifnull(serviceRow.SEO_Description,"").trim());
+		serviceItem.put("displayOrder",ifnull(serviceRow.Display_Order,0));
+		serviceList.add(serviceItem);
+	}
+	payload = Map();
+	payload.put("countryServices",serviceList);
+	bodyText = payload.toString();
+	try
+	{
+		baseUrl = thisapp.variables.Publishing.Catalyst_Base_URL.toString().trim();
+		secret = thisapp.variables.Publishing.Signing_Secret.toString();
+		if(baseUrl == "" || secret == "")
+		{
+			result.put("message","Catalyst publishing variables are not configured.");
+			return result;
+		}
+		path = "/v1/website/country-services";
+		timestampMillis = zoho.currenttime.toLong();
+		timestampSeconds = (timestampMillis / 1000).toLong().toString();
+		nonce = "creator-country-services-" + timestampMillis;
+		bodyHash = zoho.encryption.sha256(bodyText);
+		signatureBase = "POST\n" + path + "\n" + timestampSeconds + "\n" + nonce + "\n" + bodyHash;
+		signature = zoho.encryption.hmacsha256(secret,signatureBase,"hex");
+		headers = Map();
+		headers.put("Content-Type","application/json");
+		headers.put("X-GeneDrift-Timestamp",timestampSeconds);
+		headers.put("X-GeneDrift-Nonce",nonce);
+		headers.put("X-GeneDrift-Signature",signature);
+		publishResponse = invokeurl
+		[
+			url :baseUrl + path
+			type :POST
+			body:bodyText
+			headers:headers
+		];
+		if(publishResponse.get("ok") != true)
+		{
+			rejection = ifnull(publishResponse.get("code"),"PUBLISH_REJECTED").toString();
+			detail = ifnull(publishResponse.get("message"),publishResponse.get("issues"));
+			if(detail != null)
+			{
+				rejection = rejection + ": " + detail.toString();
+			}
+			else
+			{
+				rejection = rejection + " - Catalyst returned no error code. Raw response: " + publishResponse.toString();
+			}
+			result.put("message",rejection);
+			return result;
+		}
+		// Optional website cache refresh, same as the other publishers
+		websiteBaseUrl = "";
+		revalidateSecret = "";
+		try
+		{
+			websiteBaseUrl = ifnull(thisapp.variables.Publishing.Website_Base_URL,"").toString().trim();
+			revalidateSecret = ifnull(thisapp.variables.Publishing.Revalidate_Secret,"").toString();
+		}
+		catch (missingVariable)
+		{
+			websiteBaseUrl = "";
+			revalidateSecret = "";
+		}
+		if(websiteBaseUrl.startsWith("http") && revalidateSecret != "" && revalidateSecret != "none")
+		{
+			try
+			{
+				revalidateHeaders = Map();
+				revalidateHeaders.put("Content-Type","application/json");
+				revalidateHeaders.put("Authorization","Bearer " + revalidateSecret);
+				revalidateBody = Map();
+				revalidateBody.put("collection","country-services");
+				invokeurl
+				[
+					url :websiteBaseUrl + "/api/revalidate"
+					type :POST
+					body:revalidateBody.toString()
+					headers:revalidateHeaders
+				]
+			}
+			catch (revalidateError)
+			{
+				info "Service pages published, but the site cache could not be refreshed: " + revalidateError.toString();
+			}
+		}
+		result.put("ok",true);
+		result.put("message","Service pages published.");
+		result.put("publicationId",publishResponse.get("publicationId"));
+		result.put("serviceCount",publishResponse.get("serviceCount"));
+		return result;
+	}
+	catch (publishError)
+	{
+		result.put("message","Publish failed: " + publishError.toString());
+		return result;
+	}
+	return result;
+}

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { countryPage, marketRoutes } from "@/lib/content/pages";
 import { RenderSections } from "@/components/sections/registry";
+import { ServiceList } from "@/components/country-service/service-list";
+import { getServicesForMarket } from "@/lib/content/country-services-source";
+import { getMarket } from "@/lib/content/markets-source";
 
 /**
  * Template D — one page per market. 46 routes from one file, generated from
@@ -46,9 +49,22 @@ export default async function CountryPage({
   const page = await countryPage(region, country);
   if (!page) notFound();
 
+  const [services, market] = await Promise.all([
+    getServicesForMarket(region, country),
+    getMarket(region, country),
+  ]);
+  const marketName = market?.name ?? country;
+
+  // The services list sits straight after the capability panel: "what we
+  // carry here", then "the services in detail". Found by type rather than by
+  // position, so reordering the sections does not silently move it.
+  const split = page.sections.findIndex((s) => s.type === "capability-status") + 1 || 1;
+
   return (
     <main className="pb-section">
-      <RenderSections sections={page.sections} />
+      <RenderSections sections={page.sections.slice(0, split)} />
+      <ServiceList marketName={marketName} services={services} />
+      <RenderSections sections={page.sections.slice(split)} />
     </main>
   );
 }
