@@ -96,6 +96,28 @@ export function isContactIntent(value: string): value is ContactIntent {
   return (CONTACT_INTENTS as readonly string[]).includes(value);
 }
 
+/**
+ * "How can we help?" — the exact options on the client's Website_Contact form
+ * in Creator (field `Inquiry_Type`). Their AI review routes on it, so the
+ * wording must match theirs character for character.
+ */
+export const INQUIRY_TYPES = [
+  "Services or Business inquiry",
+  "Careers or Job Application",
+  "Partnership or Vendor Inquiry",
+  "General Question",
+  "Press",
+  "Other",
+] as const;
+
+/** Preselected per intent page, so the proposal page arrives pre-sorted. */
+export const DEFAULT_INQUIRY: Record<ContactIntent, (typeof INQUIRY_TYPES)[number]> = {
+  enquiry: "Services or Business inquiry",
+  proposal: "Services or Business inquiry",
+  partnership: "Partnership or Vendor Inquiry",
+  safety: "Other",
+};
+
 /** Untrusted input. Validated at runtime, on the server, every time. */
 export const contactSubmissionSchema = z.object({
   intent: z.enum(CONTACT_INTENTS),
@@ -104,6 +126,7 @@ export const contactSubmissionSchema = z.object({
   company: z.string().trim().min(1, "Please enter your company.").max(200),
   country: z.string().trim().max(120).optional().or(z.literal("")),
   phone: z.string().trim().max(60).optional().or(z.literal("")),
+  inquiryType: z.enum(INQUIRY_TYPES, { message: "Please choose how we can help." }),
   // Required, but no minimum length: a one-word enquiry is a real enquiry
   // (client request, September review). The ceiling is only there to stop abuse; it is far
   // above anything a person writes into a contact form.

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { cn } from "@/lib/cn";
-import { INTENTS, type ContactIntent } from "@/lib/forms/contact";
+import { DEFAULT_INQUIRY, INQUIRY_TYPES, INTENTS, type ContactIntent } from "@/lib/forms/contact";
 import { submitContact, type ContactState } from "@/lib/forms/submit";
 
 const INITIAL: ContactState = { status: "idle" };
@@ -159,7 +159,28 @@ export function EnquiryForm({
         <Field {...f("company")} label="Company" required />
         <Field {...f("country")} label="Country" />
         <Field {...f("phone")} label="Contact number" />
-        <span className="hidden sm:block" />
+        <p className="flex flex-col gap-2">
+          <label htmlFor={`${idPrefix}-inquiryType`} className="label text-on-accent-muted">
+            How can we help?<span aria-hidden> *</span>
+          </label>
+          <select
+            id={`${idPrefix}-inquiryType`}
+            name="inquiryType"
+            required
+            defaultValue={kept.inquiryType ?? DEFAULT_INQUIRY[intent]}
+            aria-invalid={state.fieldErrors?.inquiryType ? true : undefined}
+            className="rounded-control bg-canvas px-4 py-3.5 text-md text-ink outline-none aria-invalid:ring-2 aria-invalid:ring-on-accent aria-invalid:ring-offset-2 aria-invalid:ring-offset-accent"
+          >
+            {INQUIRY_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+          {state.fieldErrors?.inquiryType && (
+            <span className="text-sm font-medium text-on-accent">{state.fieldErrors.inquiryType}</span>
+          )}
+        </p>
         <Field {...f("message")} label="Purpose / remarks" rows={5} wide required />
       </div>
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { INTENTS, contactSubmissionSchema, isContactIntent } from "./contact";
+import { INTENTS, contactSubmissionSchema, isContactIntent, type ContactSubmission } from "./contact";
 
 /**
  * Contact submission — server action.
@@ -8,8 +8,8 @@ import { INTENTS, contactSubmissionSchema, isContactIntent } from "./contact";
  * The client confirmed every enquiry goes back into Zoho Creator, so this
  * POSTs to a Creator endpoint. Two things are configured, never hardcoded:
  *
- *   CREATOR_CONTACT_ENDPOINT   the Creator form/API URL
- *   CREATOR_CONTACT_TOKEN      optional auth header value
+ *   CREATOR_CONTACT_ENDPOINT   the Publish API form URL, including
+ *                              ?privatelink=<key from their form permalink>
  *
  * ## The rule this file follows: never pretend an enquiry was received.
  *
@@ -19,10 +19,36 @@ import { INTENTS, contactSubmissionSchema, isContactIntent } from "./contact";
  * believes they have been heard, and nobody ever finds out. On a site where
  * one of the intents is adverse-event adjacent, that matters more than usual.
  *
- * FIELD NAMES: the payload below uses our names. Creator's Openings-style
- * forms use their own (`Name`, `Work_Email`, …). Map them here once the target
- * form is known — one object, one place.
+ * FIELD NAMES: mapped once, in toCreatorRecord below.
  */
+
+/**
+ * Our fields → the client's Website_Contact form (Creator, app `proton`).
+ * Field link names read from the published form on 30 Sept.
+ *
+ * - Name is one box on our form and first/last on theirs. The last word is
+ *   the last name; a single word goes to first name.
+ * - Country: theirs is a lookup (`CountryLookUp`) that stores a record ID per
+ *   country, and we do not hold that list. Until we do, the country travels
+ *   as the first line of the message so their team still sees it.
+ * - Source marks where the enquiry came from; it is a radio on their form.
+ */
+function toCreatorRecord(data: ContactSubmission): Record<string, unknown> {
+  const words = data.name.split(/\s+/).filter(Boolean);
+  const last = words.length > 1 ? words[words.length - 1] : "";
+  const first = words.length > 1 ? words.slice(0, -1).join(" ") : data.name;
+  const message = data.country ? `Country: ${data.country}\n\n${data.message}` : data.message;
+
+  return {
+    Name: { first_name: first, last_name: last },
+    Email: data.email,
+    Company: data.company,
+    ...(data.phone ? { Phone_Number: data.phone } : {}),
+    Inquiry_Type: data.inquiryType,
+    Message: message,
+    Source: "Website - Contact Us",
+  };
+}
 
 export interface ContactState {
   status: "idle" | "success" | "error";
@@ -94,28 +120,22 @@ export async function submitContact(
   try {
     const response = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.CREATOR_CONTACT_TOKEN
-          ? { Authorization: process.env.CREATOR_CONTACT_TOKEN }
-          : {}),
-      },
-      body: JSON.stringify({
-        intent: parsed.data.intent,
-        name: parsed.data.name,
-        email: parsed.data.email,
-        company: parsed.data.company,
-        country: parsed.data.country || null,
-        phone: parsed.data.phone || null,
-        message: parsed.data.message,
-        submittedAt: new Date().toISOString(),
-        source: "genedrift.com",
-      }),
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ data: toCreatorRecord(parsed.data) }),
       cache: "no-store",
     });
 
-    if (!response.ok) {
-      console.error(`[contact] Creator rejected submission: ${response.status}`);
+    // Zoho answers 200 with its own code in the body; 3000 is success.
+    // Anything else (a missing mandatory field, an unknown option) is a
+    // refusal, and its message is logged so the cause is visible in Vercel.
+    const result = (await response.json().catch(() => null)) as
+      | { code?: number; message?: unknown; error?: unknown }
+      | null;
+    if (!response.ok || result?.code !== 3000) {
+      console.error(
+        `[contact] Creator refused the enquiry: HTTP ${response.status}`,
+        JSON.stringify(result),
+      );
       return {
         status: "error",
         message:
