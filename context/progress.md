@@ -12,7 +12,7 @@ chat reads after `00-start-here.md`.
 from their form permalink. `CREATOR_CONTACT_ENDPOINT` set in `.env.local` and
 Vercel Production. Tested on localhost and on the live preview (two test
 records: "TEST please ignore", "test prod"; client asked to confirm and
-delete). Commit `6ca0b34`, Safari select fix `83…` (see git log).
+delete). Commits `6ca0b34` (form) and `c75252e` (Safari select).
 
 Their field link names (read from the published form, 30 Sept):
 `Name.first_name`, `Name.last_name`, `Email`, `Company`, `CountryLookUp`
