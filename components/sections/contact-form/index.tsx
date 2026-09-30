@@ -163,13 +163,16 @@ export function EnquiryForm({
           <label htmlFor={`${idPrefix}-inquiryType`} className="label text-on-accent-muted">
             How can we help?<span aria-hidden> *</span>
           </label>
+          {/* appearance-none: Safari otherwise draws its own short, grey
+              select that matches nothing else on the form. */}
+          <span className="relative block">
           <select
             id={`${idPrefix}-inquiryType`}
             name="inquiryType"
             required
             defaultValue={kept.inquiryType ?? DEFAULT_INQUIRY[intent]}
             aria-invalid={state.fieldErrors?.inquiryType ? true : undefined}
-            className="rounded-control bg-canvas px-4 py-3.5 text-md text-ink outline-none aria-invalid:ring-2 aria-invalid:ring-on-accent aria-invalid:ring-offset-2 aria-invalid:ring-offset-accent"
+            className="w-full appearance-none rounded-control bg-canvas py-3.5 pr-11 pl-4 text-md text-ink outline-none aria-invalid:ring-2 aria-invalid:ring-on-accent aria-invalid:ring-offset-2 aria-invalid:ring-offset-accent"
           >
             {INQUIRY_TYPES.map((t) => (
               <option key={t} value={t}>
@@ -177,6 +180,14 @@ export function EnquiryForm({
               </option>
             ))}
           </select>
+          <svg
+            aria-hidden
+            viewBox="0 0 12 8"
+            className="pointer-events-none absolute top-1/2 right-4 h-2 w-3 -translate-y-1/2 text-ink"
+          >
+            <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          </svg>
+          </span>
           {state.fieldErrors?.inquiryType && (
             <span className="text-sm font-medium text-on-accent">{state.fieldErrors.inquiryType}</span>
           )}
