@@ -1,5 +1,7 @@
 # Blocked on the client
 
+> **Updated 2026-09-30 (later)** — country service pages built; they need `Website_Country_Services` created in Creator and v0.2.1 deployed on their Catalyst, then real content per country.
+>
 > **Updated 2026-09-30** — contact destination received (sent 28 Sept inline) and live. Our Catalyst trial expired: their Catalyst is now the top blocker.
 >
 > **Updated 2026-09-29** — application form received and wired; open-roles confirmed; hosting answered (Hostinger).

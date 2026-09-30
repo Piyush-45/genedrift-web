@@ -7,6 +7,17 @@ chat reads after `00-start-here.md`.
 
 ## Status as of 2026-09-30 — contact form live; offices built; move blocked on their Catalyst
 
+**Country service pages: built (goodwill, not charged).** Ashish asked 29 Sept
+for pages like *Drug Registration, Philippines*. New scope (SOW section 09);
+Piyush is doing it free, boundaries to be put in writing. Template, Creator
+form `Website_Country_Services`, Catalyst collection and publish button are
+done; content per country is theirs. Tested locally with [SAMPLE] rows: list
+on the country page, full page, sparse page, unknown service and wrong region
+404, mobile. Catalyst smoke tests 90/90. Package
+`genedrift-website-appsail-dev-v0.2.1.zip` (offices + country services).
+Commit `684c023`. Setup: `country-services-cms.md`. Redirects from the 24 old
+genedrift.com country URLs are in scope (SOW 07) and still to do.
+
 **Contact form: live in production.** Enquiries go into the client's
 `Website_Contact` form (Creator app `proton`) through the Publish API, key
 from their form permalink. `CREATOR_CONTACT_ENDPOINT` set in `.env.local` and
