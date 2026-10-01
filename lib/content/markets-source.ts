@@ -139,7 +139,7 @@ export async function fetchMarkets(): Promise<MarketCollection> {
     const res = await fetch(`${baseUrl}/v1/public/markets`, {
       // One tag for the whole collection: publishing markets invalidates every
       // page that renders one, which is most of the site.
-      next: { tags: ["website-markets"], revalidate: 60 },
+      next: { tags: ["website-markets"], revalidate: 3600 },
     });
     if (!res.ok) return positioned(BUILT_IN);
 

@@ -5,6 +5,30 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## 2026-10-01 — preview paused by Vercel; cache fix
+
+**www.genedrift.site is paused** (`402 DEPLOYMENT_DISABLED`). Vercel Hobby
+fair-use limit exceeded: **ISR Writes 224K / 200K**. Everything else was well
+inside (Fast Origin Transfer 3.19/10 GB, Active CPU 35m/4h, ISR Reads
+138K/1M). While paused, nothing can be deployed. Options: Vercel Pro for a
+month, wait for the monthly reset, or move to Hostinger sooner.
+
+**Cause was ours:** every CMS fetch had `revalidate: 60`, and the menu/footer
+fetch is on every page, so every visited page (bots included) re-rendered and
+wrote to the ISR cache about once a minute. **Fix:** CMS fetches now
+`revalidate: 3600` (site, markets, case studies, website pages, country
+services). Careers stays 300 (Zoho Openings has no publish hook); Insights
+default 300. Publishing from Creator calls `/api/revalidate`, so edits still
+appear immediately. **Production requirement:** Creator `Website_Base_URL` and
+`Revalidate_Secret` must be set, matching Vercel/host `REVALIDATE_SECRET`,
+otherwise edits take up to an hour. Build verified in the container.
+
+Test report for the client (security headers, SSL, links, accessibility,
+Lighthouse, smoke tests; load test later on Hostinger) is on hold until the
+site is back up. Keep it light.
+
+---
+
 ## Status as of 2026-09-30, evening — call with Ashish; waiting for his change list
 
 **Call with Ashish, 30 Sept 2:30 pm.** Contact form demoed live; he tested it

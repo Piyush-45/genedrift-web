@@ -89,7 +89,7 @@ export async function fetchCountryServices(): Promise<CountryService[]> {
   if (!baseUrl) return [];
   try {
     const res = await fetch(`${baseUrl}/v1/public/country-services`, {
-      next: { tags: ["website-country-services"], revalidate: 60 },
+      next: { tags: ["website-country-services"], revalidate: 3600 },
     });
     if (!res.ok) return [];
     const body = (await res.json()) as {

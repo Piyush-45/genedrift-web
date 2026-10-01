@@ -96,7 +96,7 @@ export async function fetchWebsitePage(path: string): Promise<WebsitePageFetch> 
   try {
     const res = await fetch(url, {
       // Tagged so a publish can revalidate exactly this page later.
-      next: { tags: ["website-page", `website-page:${path}`], revalidate: 60 },
+      next: { tags: ["website-page", `website-page:${path}`], revalidate: 3600 },
     });
 
     if (res.status === 404) return { state: "missing" };

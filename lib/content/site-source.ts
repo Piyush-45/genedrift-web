@@ -135,7 +135,7 @@ export async function fetchSiteChrome(): Promise<SiteChrome> {
 
   try {
     const res = await fetch(`${baseUrl}/v1/public/site`, {
-      next: { tags: ["website-site"], revalidate: 60 },
+      next: { tags: ["website-site"], revalidate: 3600 },
     });
     if (!res.ok) return BUILT_IN;
 

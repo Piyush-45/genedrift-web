@@ -241,7 +241,7 @@ export async function fetchCaseStudies(): Promise<CaseStudyCollection> {
     const res = await fetch(`${baseUrl}/v1/public/case-studies`, {
       // One tag for the whole collection — publishing invalidates the listing
       // and every detail page at once.
-      next: { tags: ["website-case-studies"], revalidate: 60 },
+      next: { tags: ["website-case-studies"], revalidate: 3600 },
     });
     if (!res.ok) return { studies: [...BUILT_IN_CASE_STUDIES], source: "built-in" };
 

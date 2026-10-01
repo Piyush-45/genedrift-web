@@ -14,10 +14,16 @@ import { timingSafeEqual } from "node:crypto";
  *   { "collection": "site" }            the menu and footer, i.e. every page
  *   Authorization: Bearer <REVALIDATE_SECRET>
  *
- * WHY THIS EXISTS. Pages are cached with `revalidate: 60`, so an edit already
- * appears within a minute on its own. This endpoint turns "within a minute"
- * into "immediately", which is the difference between an editor believing the
- * CMS works and an editor pressing Publish three more times.
+ * WHY THIS EXISTS. CMS content is cached with `revalidate: 3600`, so without
+ * this endpoint an edit could take up to an hour to appear. Creator calls it
+ * on every publish, which makes an edit appear immediately.
+ *
+ * The fallback was 60 seconds until 1 Oct 2026. With the menu and footer on
+ * every page, that re-rendered every page about once a minute whenever it was
+ * visited (bots included) and used up Vercel Hobby's 200K monthly ISR writes,
+ * which paused the preview site. An hour costs nothing in freshness because
+ * publishing is the real trigger. So in production, Website_Base_URL and
+ * Revalidate_Secret MUST be set in Creator, matching REVALIDATE_SECRET here.
  *
  * WHY IT IS A SEPARATE SECRET from the publish HMAC: this one is handed to a
  * different caller for a different job, and a cache flush is far less
