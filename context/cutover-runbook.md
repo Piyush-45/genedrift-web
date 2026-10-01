@@ -160,7 +160,7 @@ with the app. Republishing from Creator is how it reaches the new one.
 | `ZOHO_OPENINGS_URL` | unchanged — already reads their `proton` app, must end `&field_config=all` |
 | `ZOHO_APPLY_URL` / `ZOHO_APPLY_REF_FIELD` | once the client sends them |
 | `CREATOR_CONTACT_ENDPOINT` / `CREATOR_CONTACT_TOKEN` | once the client names the destination |
-| `REVALIDATE_SECRET` | **new**, 32+ characters |
+| `REVALIDATE_SECRET` | **new**, 32+ characters. **Required**, and the same value goes in Creator `Revalidate_Secret` with `Website_Base_URL` set: CMS pages only refresh hourly on their own since 1 Oct, so publishing must trigger the refresh |
 | `NEXT_PUBLIC_SITE_URL` | `https://www.genedrift.com` |
 | `SITE_INDEXABLE` | **leave unset** until Phase 9 |
 
