@@ -149,6 +149,19 @@ with the app. Republishing from Creator is how it reaches the new one.
 
 ## Phase 5 — Website hosting: Vercel to their account
 
+> **Hosting is Hostinger, not Vercel (decided 28–30 Sept).** Read "Vercel" in
+> the steps below as their **Hostinger Node.js web app**. Same idea:
+> Hostinger connects to the GitHub repo through its GitHub App (private repos
+> supported), auto-deploys on every push to `main` (install, `npm run build`,
+> restart), and keeps environment variables across deploys. No rollback
+> button is documented: undo = `git revert` + push.
+>
+> **Repo ownership first.** Move `Piyush-45/genedrift-web` to a Genedrift-owned
+> GitHub account (transfer, or new repo + push) and add Piyush as a
+> collaborator for the AMC year. Connect Hostinger to *their* repo, not
+> Piyush's personal one. Catalyst updates stay manual (zip upload in their
+> console); Creator updates stay paste-in.
+
 1. In **their** Vercel account, import the GitHub repo as a new project.
 2. Set environment variables for **Production**:
 
