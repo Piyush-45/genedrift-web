@@ -108,6 +108,11 @@ compare them field by field.
 
 ---
 
+> **Rehearsed 2 Oct 2026 on a fresh Catalyst account.** Both services deployed
+> and verified. Read the "Lessons" list in `progress.md` (2 Oct) before Phase 3:
+> use `GD_` env names, apply env changes with Create Deployment, Job Pool
+> names alphanumeric only, editorial Data Store tables are manual.
+
 ## Phase 3 — Publishing API: Catalyst to their account
 
 1. Create a Catalyst project on their account, same data centre as Creator.

@@ -5,6 +5,65 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## 2026-10-02 — rehearsal move to a new Catalyst account; Knowledge Hub redesign
+
+### Rehearsal: both publishers moved to a fresh Catalyst account (India DC)
+
+Practice run for the client move, on Piyush's new Catalyst account
+(piyushtyagidev@gmail.com). Creator apps stayed on the piyugene02 trial
+(expires ~7 Oct). Full log: project doc `claude/editorial-status.md`.
+
+| Service | Project | AppSail URL | Result |
+|---|---|---|---|
+| Website publisher | `gd-genedrift-website` | `gd-website-publisher-50046491440.development.catalystappsail.in` | Home, menu/footer, 46 markets, case studies published from Creator |
+| Editorial publisher | `gd-genedrift-editorial` | `gd-editorial-publisher-50046492215.development.catalystappsail.in` | Test article published end to end, cover image fetched from Creator via OAuth, callback reached Creator |
+
+`.env.local` now points at both (old lines kept as comments; backup in
+`Claude outputs/.env.local.before-rehearsal`). Vercel is still paused and
+still points at the old (expired) services.
+
+**Lessons for the client move (also in the runbook):**
+- AppSail env keys starting `CATALYST_` cannot be added or edited after
+  deploy ("reserved keywords"). Use the `GD_` aliases the editorial service
+  accepts from day one (`GD_STRATUS_*`, `GD_JOBPOOL_NAME`, `GD_APPSAIL_*`).
+  Delete the `CATALYST_` key first: it wins over the alias.
+- Changed env vars do not reach a running AppSail. Apply them with
+  **Deployments → Create Deployment** (same zip). There is no restart button.
+- Job Pool names: letters and digits only (`genedriftpublishing`).
+- Data Store has no CREATE TABLE. The 7 editorial tables are made by hand
+  (~95 columns) unless a project export from an old account is available.
+- `CATALYST_APPSAIL_BASE_URL`/`GD_APPSAIL_BASE_URL` is unknown until the first
+  deploy: deploy with a placeholder, then set it and redeploy.
+- Secrets exposed during the rehearsal (refresh token, internal job secret,
+  half of the website HMAC secret) must be regenerated; the client setup gets
+  fresh ones regardless.
+
+### Knowledge Hub redesign (pushed 2 Oct)
+
+Piyush asked for a premium reading experience. Researched B2B article
+patterns, then built:
+- **List (`/insights`):** newest article as a large lead card (only on the
+  unfiltered first page); cover thumbnails on every card; branded fallback
+  tile (deep purple, dot grid, glow varied per article, wordmark) when no
+  cover; hover lift; the empty-cell purple block bug fixed; dates fixed (the
+  old helper broke full ISO timestamps, so live cards showed no date).
+- **Article page:** full-width cover with the headline on an overlapping
+  white panel (deep-purple hero when no cover); 44rem reading column, 18px
+  body; sticky share rail (copy link, LinkedIn, email; no third-party
+  scripts); sticky "On this page" with scroll highlight (2+ h2s; ids added
+  after sanitising, from heading text); collapsible contents on mobile;
+  reading progress bar; topics, share and a "Speak to an Expert" prompt at the
+  end; "Keep reading" with 3 related articles.
+- Files: `components/insights/*`, `lib/content/format-date.ts`,
+  `lib/content/toc.ts`, article-head/body/grid, `app/insights/*`, prose CSS.
+- Gotcha recorded: `cn()` (tailwind-merge) treats custom colour and size
+  tokens as the same utility (`text-display` vs `text-on-deep`) and drops
+  one. Use plain strings when combining them.
+- Not client-requested; a design improvement. Cover images were absent from
+  the approved concept; mention it with the change-list discussion.
+
+---
+
 ## 2026-10-01/02 — email to Ashish: move, separate milestone, Milestone 2
 
 **30 Sept follow-up email was sent** ("Follow-up on Contract" thread, to

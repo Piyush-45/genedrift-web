@@ -247,6 +247,18 @@ still two raw numbers, and markets are not in the editor widget.
 
 ---
 
+## Knowledge Hub cover images — decided 2026-10-02
+
+The approved design was typographic: no cover images on cards or the article
+page. Piyush decided to add them for a premium reading experience. The rule
+that keeps it safe: **every slot has a designed no-image state** (branded
+tile on cards, deep-purple hero on the article page), so a grid of mixed
+articles never looks half-finished and nothing depends on editors always
+supplying an image. Covers are cropped to fixed frames (object-cover); an
+odd upload never breaks the layout.
+
+---
+
 ## Capacity is not scope — decided 2026-09-30
 
 Ashish read the Work Order's scale targets ("1,000+ pages") as room to change
