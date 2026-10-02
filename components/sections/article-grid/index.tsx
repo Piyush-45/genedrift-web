@@ -1,19 +1,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
-import { articleHref, articleKind, type Article } from "@/lib/content/article";
+import type { Article } from "@/lib/content/article";
+import { ArticleCard, FeaturedArticleCard } from "@/components/insights/article-card";
 import type { ArticleGridProps } from "./schema";
-
-function formatDate(iso?: string) {
-  if (!iso) return null;
-  const d = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 export function ArticleGrid({
   eyebrow,
@@ -28,6 +17,7 @@ export function ArticleGrid({
   page = 1,
   pages = 1,
   basePath = "/insights",
+  filtered = false,
 }: ArticleGridProps & {
   articles?: Article[];
   /** From the API's `facets.categories` — matched by NAME, not slug. */
@@ -36,7 +26,13 @@ export function ArticleGrid({
   page?: number;
   pages?: number;
   basePath?: string;
+  /** True when a tag or search narrows the list, so there is no "Latest". */
+  filtered?: boolean;
 }) {
+  const showLead = page === 1 && !activeCategory && !filtered && articles.length > 0;
+  const lead = showLead ? articles[0] : undefined;
+  const rest = showLead ? articles.slice(1) : articles;
+
   const filterHref = (name?: string) =>
     name ? `${basePath}?category=${encodeURIComponent(name)}` : basePath;
 
@@ -95,36 +91,25 @@ export function ArticleGrid({
             {emptyMessage}
           </p>
         ) : (
-          <ul className="mt-11 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => {
-              const kind = articleKind(article);
-              const date = formatDate(article.publishedAt);
-              return (
-                <li key={article.uuid} className="bg-canvas">
-                  <Link href={articleHref(article)} className="group flex h-full flex-col p-7.5">
-                    <span className="label text-accent">
-                      {kind?.name}
-                      {date ? ` · ${date}` : ""}
-                    </span>
-
-                    <span className="mt-4 block text-h4 leading-snug font-bold group-hover:text-accent">
-                      {article.title}
-                    </span>
-
-                    {article.excerpt && (
-                      <span className="mt-3 block text-sm text-muted">{article.excerpt}</span>
-                    )}
-
-                    {article.readingTimeMinutes ? (
-                      <span className="label mt-auto pt-6 text-faint">
-                        {article.readingTimeMinutes} min read
-                      </span>
-                    ) : null}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <>
+            {/* The newest article leads, but only on the unfiltered first
+                page: a "Latest" banner on page 3, or inside a filter, would be
+                lying about what is latest. */}
+            {lead && (
+              <div className="mt-11">
+                <FeaturedArticleCard article={lead} />
+              </div>
+            )}
+            {rest.length > 0 && (
+              <ul className={cn("grid gap-6 sm:grid-cols-2 lg:grid-cols-3", lead ? "mt-6" : "mt-11")}>
+                {rest.map((article) => (
+                  <li key={article.uuid}>
+                    <ArticleCard article={article} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
 
         {pages > 1 && (

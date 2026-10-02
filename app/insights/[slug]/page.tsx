@@ -12,6 +12,9 @@ import {
   fetchArticles,
 } from "@/lib/content/articles-source";
 import { isCatalystConfigured } from "@/lib/content/catalyst";
+import { articleHref } from "@/lib/content/article";
+import { ReadingProgress } from "@/components/insights/reading-progress";
+import { RelatedArticles } from "@/components/insights/related-articles";
 
 /**
  * Template F — one article, at /insights/{slug}.
@@ -113,16 +116,24 @@ export default async function ArticlePage({
   if (result.state === "missing") notFound();
   const { article } = result;
 
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.genedrift.com").replace(/\/$/, "");
+  const shareUrl = `${siteUrl}${articleHref(article)}`;
+
   return (
     <main className="pb-section">
-      <ArticleHead
-        type="article-head"
-        articleSlug={article.slug}
-        backLabel="← All insights"
-        backHref="/insights"
-        article={article}
-      />
-      <ArticleBody type="article-body" articleSlug={article.slug} article={article} />
+      <ReadingProgress targetId="article-reading" />
+      <article id="article-reading">
+        <ArticleHead
+          type="article-head"
+          articleSlug={article.slug}
+          backLabel="← All insights"
+          backHref="/insights"
+          article={article}
+        />
+        <ArticleBody type="article-body" articleSlug={article.slug} article={article} shareUrl={shareUrl} />
+      </article>
+
+      <RelatedArticles article={article} />
       <ContactSplit {...contactSplitFixture} />
     </main>
   );

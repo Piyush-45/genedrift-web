@@ -277,33 +277,47 @@
    cannot carry our utility classes — these style the bare tags Catalyst emits.
    The tag list mirrors lib/content/sanitize.ts exactly; keep them in step.
 --------------------------------------------------------------------------- */
-.article-prose > * + * { margin-top: 1.5rem; }
+.article-prose > * + * { margin-top: 1.6rem; }
 
-.article-prose p { font-size: var(--text-lead); line-height: 1.75; color: var(--color-mid); }
-.article-prose h2 { margin-top: 3rem; font-size: var(--text-h3); }
-.article-prose h3 { margin-top: 2.25rem; font-size: var(--text-h4); }
+/* Reading type: 18px on a ~70-character measure, generous leading. The first
+   paragraph opens a little larger and darker, the way a print piece leads. */
+.article-prose p { font-size: 1.125rem; line-height: 1.8; color: var(--color-mid); }
+.article-prose > p:first-child { font-size: 1.25rem; line-height: 1.7; color: var(--color-ink); }
+.article-prose strong, .article-prose b { color: var(--color-ink); font-weight: 600; }
+
+.article-prose h2,
+.article-prose h3,
 .article-prose h4,
 .article-prose h5,
-.article-prose h6 { margin-top: 2rem; font-size: var(--text-h5); }
+.article-prose h6 { color: var(--color-ink); font-weight: 700; letter-spacing: -0.01em; scroll-margin-top: 6rem; }
+.article-prose h2 { margin-top: 3.5rem; font-size: var(--text-h2); line-height: 1.2; }
+.article-prose h3 { margin-top: 2.75rem; font-size: var(--text-h3); line-height: 1.3; }
+.article-prose h4,
+.article-prose h5,
+.article-prose h6 { margin-top: 2.25rem; font-size: var(--text-h5); line-height: 1.35; }
+.article-prose h2 + *, .article-prose h3 + *, .article-prose h4 + * { margin-top: 1rem; }
 
-.article-prose a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
-.article-prose a:hover { color: var(--color-deep); }
+.article-prose a { color: var(--color-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; text-decoration-color: var(--color-line-tint); transition: color .2s, text-decoration-color .2s; }
+.article-prose a:hover { color: var(--color-deep); text-decoration-color: currentColor; }
 
 .article-prose ul,
-.article-prose ol { padding-left: 1.5rem; color: var(--color-mid); font-size: var(--text-lead); line-height: 1.75; }
+.article-prose ol { padding-left: 1.5rem; color: var(--color-mid); font-size: 1.125rem; line-height: 1.8; }
 .article-prose ul { list-style: disc; }
 .article-prose ol { list-style: decimal; }
-.article-prose li + li { margin-top: 0.5rem; }
+.article-prose li + li { margin-top: 0.6rem; }
 .article-prose li::marker { color: var(--color-accent); }
 
+/* Pull-quote: a larger, inked line with the accent rule. */
 .article-prose blockquote {
-  border-left: 2px solid var(--color-accent);
-  padding-left: 1.75rem;
+  margin-block: 2.75rem;
+  border-left: 3px solid var(--color-accent);
+  padding: 0.25rem 0 0.25rem 1.75rem;
   font-size: var(--text-h4);
-  line-height: 1.4;
+  line-height: 1.45;
   font-weight: 500;
   color: var(--color-ink);
 }
+.article-prose blockquote p { font-size: inherit; line-height: inherit; color: inherit; }
 
 .article-prose code {
   font-family: var(--font-mono);
@@ -313,8 +327,8 @@
   border-radius: 0.25rem;
 }
 
-.article-prose hr { border: 0; border-top: 1px solid var(--color-line); margin-block: 3rem; }
+.article-prose hr { border: 0; border-top: 1px solid var(--color-line); margin-block: 3.5rem; }
 
-.article-prose figure { margin-block: 2.5rem; }
-.article-prose img { width: 100%; height: auto; border-radius: var(--radius-panel); }
+.article-prose figure { margin-block: 3rem; }
+.article-prose img { width: 100%; height: auto; border-radius: var(--radius-panel); border: 1px solid var(--color-line); }
 .article-prose figcaption { margin-top: 0.75rem; font-size: var(--text-sm); color: var(--color-muted); }

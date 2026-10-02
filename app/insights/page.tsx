@@ -45,6 +45,7 @@ export default async function InsightsIndex({
         articles={result.articles}
         categories={result.facets?.categories ?? []}
         activeCategory={category}
+        filtered={Boolean(tag || q)}
         page={result.page}
         pages={result.pages}
       />
