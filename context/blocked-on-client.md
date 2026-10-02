@@ -1,5 +1,7 @@
 # Blocked on the client
 
+> **Updated 2026-10-02** — preview paused (Vercel Hobby limit). Asked for: Catalyst project (first), Creator developer access, Hostinger Cloud Startup + access, **GitHub account for Genedrift**; Cloudflare later (their DNS is on Cloudflare). Asked to confirm **Milestone 2** complete. Still waiting for the change list.
+>
 > **Updated 2026-09-30 (evening)** — call with Ashish. Waiting for his **written list of changes with images/infographics**. No development until it arrives. Country service pages on hold (new page type, SOW 09). Still owed: Catalyst project (priority), Creator developer access, Hostinger plan + access, Cloudflare access, content sign-off, PV owner.
 >
 > **Updated 2026-09-30** — contact destination received (sent 28 Sept inline) and live. Our Catalyst trial expired: their Catalyst is now the top blocker.

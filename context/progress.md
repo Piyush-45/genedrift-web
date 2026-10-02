@@ -5,6 +5,48 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## 2026-10-01/02 — email to Ashish: move, separate milestone, Milestone 2
+
+**30 Sept follow-up email was sent** ("Follow-up on Contract" thread, to
+Ashish, Akshay, Sohan): Contact + Careers live, build complete, hosting
+recommendation, access list, capacity vs new page types.
+
+**Next email drafted (reply in that thread), final version agreed 1 Oct.**
+Piyush wants it humble and warm; Work Order mentioned only for the
+milestone points. Content, in this order:
+1. Preview paused: dev hosting reached free plan limits; site complete.
+2. Needed now: Catalyst project (first), Creator developer access, Hostinger
+   Cloud Startup + access, **GitHub account for Genedrift** (code in their
+   name). Cloudflare only on switch day.
+3. Additional changes: welcome; per the SOW, agreed before work; launch the
+   agreed scope first, new work as a **separate milestone**.
+4. Milestone 2: Blog, Careers and Contact live as per Work Order M2; "kindly
+   check whether it can be marked as complete".
+Check before sending: no M2 payment received since the 25 Sept notice. Not
+yet confirmed as sent.
+
+**Milestone 2 status:** invoice email 22 Sept ("Genedrift Website –
+Milestone 2 Invoice"); Ashish objected because Careers and Contact were not
+done. Both are now live. Office locations built, live with the move. The 25
+Sept "Payment from Genedrift" notice is still unconfirmed (check amount:
+₹28,000 = M1, ₹42,000 = M2).
+
+**DNS:** genedrift.com is **registered at Hostinger** but its **nameservers
+are Cloudflare** (`amir.ns.cloudflare.com`, `nola.ns.cloudflare.com`). The
+client said "the domain is on Hostinger"; that is the registration only.
+Website records are changed in Cloudflare on switch day; MX/email records
+are never touched.
+
+**Updates after the move:** Hostinger Node.js app auto-deploys from GitHub on
+push; env vars persist; no documented rollback (revert + push). Catalyst =
+zip upload; Creator = paste Deluge. Repo moves to Genedrift's GitHub, Piyush
+as collaborator (runbook Phase 5).
+
+**Rejected:** a second Vercel Hobby account to dodge the pause (Hobby is
+non-commercial only; risks a ban). Recommended Pro for a month or wait.
+
+---
+
 ## 2026-10-01 — preview paused by Vercel; cache fix
 
 **www.genedrift.site is paused** (`402 DEPLOYMENT_DISABLED`). Vercel Hobby

@@ -147,6 +147,11 @@ with the app. Republishing from Creator is how it reaches the new one.
 
 ---
 
+> **DNS facts (checked 1 Oct 2026):** genedrift.com is registered at
+> Hostinger, nameservers `amir.ns.cloudflare.com` / `nola.ns.cloudflare.com`.
+> So DNS is edited in **Cloudflare**, not Hostinger. Change only the website
+> records (apex and `www`); never touch MX, SPF, DKIM, DMARC or verification TXT.
+
 ## Phase 5 — Website hosting: Vercel to their account
 
 > **Hosting is Hostinger, not Vercel (decided 28–30 Sept).** Read "Vercel" in
