@@ -69,9 +69,40 @@ export async function generateMetadata({
     };
   }
   const { article } = result;
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.genedrift.com").replace(/\/$/, "");
+  const url = `${siteUrl}${articleHref(article)}`;
+  const title = article.seoTitle ?? `${article.title} — Genedrift`;
+  const description = article.seoDescription ?? article.excerpt;
+  const image = article.socialImage;
+  const robots = article.robots ?? { index: true, follow: true };
   return {
-    title: article.seoTitle ?? `${article.title} — Genedrift`,
-    description: article.seoDescription ?? article.excerpt,
+    title,
+    description,
+    // The editor's choice in Creator. The site-wide no-index (SITE_INDEXABLE)
+    // still wins before launch: next.config.ts sends X-Robots-Tag on every page.
+    robots: { index: robots.index, follow: robots.follow },
+    alternates: { canonical: article.canonicalUrl ?? url },
+    openGraph: {
+      type: "article",
+      url,
+      title: article.seoTitle ?? article.title,
+      description,
+      siteName: "Genedrift",
+      publishedTime: article.firstPublishedAt ?? article.publishedAt,
+      modifiedTime: article.publishedAt,
+      authors: article.authors?.map((a) => a.name),
+      section: article.category?.name,
+      tags: article.tags.map((t) => t.name),
+      ...(image
+        ? { images: [{ url: image.url, alt: image.alt, width: image.width, height: image.height }] }
+        : {}),
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: article.seoTitle ?? article.title,
+      description,
+      ...(image ? { images: [image.url] } : {}),
+    },
   };
 }
 

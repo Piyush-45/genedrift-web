@@ -82,8 +82,16 @@ export interface Article {
   seoTitle?: string;
   seoDescription?: string;
   publishedAt?: string;
+  /** First time the article went live. Differs from publishedAt after a correction. */
+  firstPublishedAt?: string;
   readingTimeMinutes?: number;
   wordCount?: number;
+  /** Editor's search-engine choice, from Creator's Robots_Directive. */
+  robots?: { index: boolean; follow: boolean };
+  /** Editor's canonical override. Absent means this page is its own canonical. */
+  canonicalUrl?: string;
+  /** Image for link previews on LinkedIn, WhatsApp, email. Falls back to the cover. */
+  socialImage?: ArticleMedia;
   /** Absent today — the publish payload carries no author. Renders when present. */
   authors?: ArticleAuthor[];
 }

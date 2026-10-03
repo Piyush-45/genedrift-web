@@ -41,7 +41,40 @@ const ALLOWED_TAGS = [
   "figure",
   "img",
   "figcaption",
+  // Added with Catalyst 0.5.0, which renders the editor's tables, highlights,
+  // sub/superscript and alignment instead of flattening them.
+  "mark",
+  "sub",
+  "sup",
+  "table",
+  "thead",
+  "tbody",
+  "tr",
+  "th",
+  "td",
 ];
+
+const ALIGNMENTS = ["center", "right", "justify"];
+const SIZES = ["small", "medium", "large", "full"];
+const IMAGE_ALIGNMENTS = ["left", "center", "right"];
+
+/** Keep one data attribute only when it is one of the known words. */
+function keepWord(attribute: string, allowed: string[]) {
+  return (tagName: string, attribs: Record<string, string>) => {
+    const value = attribs[attribute];
+    return { tagName, attribs: value && allowed.includes(value) ? { [attribute]: value } : {} };
+  };
+}
+
+/** Table cell spans as small positive integers, nothing else. */
+function positiveSpans(tagName: string, attribs: Record<string, string>) {
+  const next: Record<string, string> = {};
+  for (const key of ["colspan", "rowspan"]) {
+    const n = Number(attribs[key]);
+    if (Number.isInteger(n) && n > 1 && n <= 200) next[key] = String(n);
+  }
+  return { tagName, attribs: next };
+}
 
 export function sanitizeArticleHtml(html: string): string {
   return sanitizeHtml(html, {
@@ -49,7 +82,19 @@ export function sanitizeArticleHtml(html: string): string {
     allowedAttributes: {
       a: ["href", "title", "target", "rel"],
       img: ["src", "alt", "title", "width", "height", "loading"],
+      p: ["data-align"],
+      h2: ["data-align"],
+      h3: ["data-align"],
+      h4: ["data-align"],
+      h5: ["data-align"],
+      h6: ["data-align"],
+      th: ["colspan", "rowspan"],
+      td: ["colspan", "rowspan"],
+      figure: ["data-size", "data-alignment"],
     },
+    // Layout hints are a closed set of words styled in globals.css. Anything
+    // else is dropped, so no inline style can ever reach the page.
+
     // Images come from the Catalyst/Stratus public host over HTTPS.
     allowedSchemes: ["https", "mailto"],
     allowedSchemesByTag: { img: ["https"] },
@@ -71,6 +116,22 @@ export function sanitizeArticleHtml(html: string): string {
         tagName,
         attribs: { ...attribs, loading: "lazy" },
       }),
+      p: keepWord("data-align", ALIGNMENTS),
+      h2: keepWord("data-align", ALIGNMENTS),
+      h3: keepWord("data-align", ALIGNMENTS),
+      h4: keepWord("data-align", ALIGNMENTS),
+      h5: keepWord("data-align", ALIGNMENTS),
+      h6: keepWord("data-align", ALIGNMENTS),
+      figure: (tagName, attribs) => {
+        const next: Record<string, string> = {};
+        const size = attribs["data-size"] ?? "";
+        const alignment = attribs["data-alignment"] ?? "";
+        if (SIZES.includes(size)) next["data-size"] = size;
+        if (IMAGE_ALIGNMENTS.includes(alignment)) next["data-alignment"] = alignment;
+        return { tagName, attribs: next };
+      },
+      th: positiveSpans,
+      td: positiveSpans,
     },
     // Drop the contents of anything disallowed, rather than leaving stray text.
     nonTextTags: ["style", "script", "textarea", "option", "noscript"],

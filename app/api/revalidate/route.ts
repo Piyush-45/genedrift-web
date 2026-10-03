@@ -12,6 +12,7 @@ import { timingSafeEqual } from "node:crypto";
  *   { "collection": "case-studies" }    the case studies listing and details
  *   { "collection": "country-services" } country service pages and lists
  *   { "collection": "site" }            the menu and footer, i.e. every page
+ *   { "collection": "articles" }        Knowledge Hub listing, articles, sitemap, RSS
  *   Authorization: Bearer <REVALIDATE_SECRET>
  *
  * WHY THIS EXISTS. CMS content is cached with `revalidate: 3600`, so without
@@ -77,6 +78,16 @@ export async function POST(request: Request) {
    * that genuinely touches the whole site. Still a single tag: enumerating
    * every path would be a list that goes stale the moment a page is added.
    */
+  /**
+   * Editorial publishes, corrections and retractions. Called by the editorial
+   * Creator app's publication callback, so a withdrawn article disappears in
+   * seconds rather than at the end of the 5-minute article cache.
+   */
+  if (collection === "articles") {
+    revalidateTag("articles", { expire: 0 });
+    return NextResponse.json({ ok: true, collection: "articles" });
+  }
+
   if (collection === "site") {
     revalidateTag("website-site", { expire: 0 });
     return NextResponse.json({ ok: true, collection: "site" });

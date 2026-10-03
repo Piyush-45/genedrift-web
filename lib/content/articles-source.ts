@@ -296,3 +296,48 @@ export async function fetchArticle(slug: string): Promise<ArticleFetch> {
   if (result.state !== "ok" || !result.data.article) return { state: "missing" };
   return { state: "ok", article: fromDetail(result.data.article) };
 }
+
+
+/* ------------------------------------------------------------------------ *
+ * Indexable articles, for /sitemap.xml and /rss.xml.
+ *
+ *   GET /v1/public/discoverable   (Catalyst 0.5.0 and later)
+ *
+ * Catalyst has already dropped anything withdrawn or marked "Noindex" by the
+ * editor. Older Catalyst builds do not have the endpoint; then the listing is
+ * used instead, which is correct for every article set to "Index Follow".
+ * ------------------------------------------------------------------------ */
+
+export interface DiscoverableArticle {
+  slug: string;
+  title: string;
+  excerpt: string;
+  primaryCategory: string;
+  publishedAt: string;
+}
+
+export async function fetchDiscoverableArticles(): Promise<DiscoverableArticle[]> {
+  if (!isCatalystConfigured()) {
+    return allArticles().map((a) => ({
+      slug: a.slug,
+      title: a.title,
+      excerpt: a.excerpt ?? "",
+      primaryCategory: a.category?.name ?? "",
+      publishedAt: a.publishedAt ?? "",
+    }));
+  }
+  const result = await catalystGet<{ ok: boolean; articles: DiscoverableArticle[] }>("/discoverable", {
+    revalidate: 3600,
+    tags: ["articles"],
+  });
+  if (result.state === "ok" && Array.isArray(result.data.articles)) return result.data.articles;
+
+  const { articles } = await fetchArticles({ limit: API_MAX_LIMIT });
+  return articles.map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    excerpt: a.excerpt ?? "",
+    primaryCategory: a.category?.name ?? "",
+    publishedAt: a.publishedAt ?? "",
+  }));
+}

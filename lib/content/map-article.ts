@@ -78,7 +78,11 @@ export interface ApiArticleDetail {
     featuredMediaId?: string | null;
     socialMediaId?: string | null;
     approvedAt: string;
+    /** Public bylines, primary author first. Sent by Catalyst 0.5.0 and later. */
+    authors?: { name: string; role?: string }[];
   };
+  /** First time this article went live. Sent by Catalyst 0.5.0 and later. */
+  firstPublishedAt?: string;
   media: ApiMedia[];
   html: string;
   authors?: { name: string; jobTitle?: string; avatarUrl?: string; contribution?: string }[];
@@ -158,11 +162,36 @@ export function fromSummary(row: ApiArticleSummary): Article {
   };
 }
 
+/** Creator's three Robots_Directive choices. Anything unexpected stays indexable. */
+function robotsOf(directive: string | undefined): Article["robots"] {
+  if (directive === "Noindex Follow") return { index: false, follow: true };
+  if (directive === "Noindex Nofollow") return { index: false, follow: false };
+  return { index: true, follow: true };
+}
+
+/** Only an absolute https URL is a usable canonical; anything else is ignored. */
+function canonicalOf(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "https:" ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function fromDetail(detail: ApiArticleDetail): Article {
   const { article, revision } = detail;
   const featured = revision.featuredMediaId
     ? detail.media.find((m) => m.mediaId === revision.featuredMediaId)
     : undefined;
+  const social = revision.socialMediaId
+    ? detail.media.find((m) => m.mediaId === revision.socialMediaId)
+    : undefined;
+  const bylines = revision.authors?.length
+    ? revision.authors.map((a) => ({ name: a.name, jobTitle: a.role || undefined }))
+    : detail.authors;
 
   return {
     uuid: article.uuid,
@@ -177,9 +206,13 @@ export function fromDetail(detail: ApiArticleDetail): Article {
     seoTitle: revision.seoTitle || undefined,
     seoDescription: revision.seoDescription || undefined,
     publishedAt: detail.publishedAt,
+    firstPublishedAt: detail.firstPublishedAt || detail.publishedAt,
     readingTimeMinutes: revision.readingTimeMinutes || undefined,
     wordCount: revision.wordCount || undefined,
-    authors: detail.authors,
+    authors: bylines,
+    robots: robotsOf(revision.robotsDirective),
+    canonicalUrl: canonicalOf(revision.canonicalUrlOverride),
+    socialImage: media(social) ?? media(featured),
   };
 }
 

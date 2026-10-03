@@ -18,8 +18,16 @@ import type { ArticleHeadProps } from "./schema";
  */
 function HeadText({ article, onDark }: { article: Article; onDark?: boolean }) {
   const kind = articleKind(article);
-  const date = formatArticleDate(article.publishedAt, "long");
-  const meta = [date, article.readingTimeMinutes ? `${article.readingTimeMinutes} min read` : null].filter(Boolean);
+  // After a correction the article keeps its original date, and says when it
+  // was last updated, which is the honest thing for a regulatory notice.
+  const first = article.firstPublishedAt ?? article.publishedAt;
+  const date = formatArticleDate(first, "long");
+  const updated = formatArticleDate(article.publishedAt, "long");
+  const meta = [
+    date,
+    updated && updated !== date ? `Updated ${updated}` : null,
+    article.readingTimeMinutes ? `${article.readingTimeMinutes} min read` : null,
+  ].filter(Boolean);
 
   const pill = onDark
     ? "bg-on-deep-accent/15 text-on-deep-accent hover:bg-on-deep-accent hover:text-deep"
