@@ -1,5 +1,7 @@
 # Blocked on the client
 
+> **Updated 2026-10-07** — Akshay: proceed, no scope dispute. Still owed: **Catalyst access** (invite failed: India-DC email; need a user on their domain or a never-used-with-Zoho email), **Hostinger Cloud Startup** purchase + hPanel access, **GitHub org** for Genedrift (Piyush-45 as Owner), choice of Creator route (import .ds as new apps vs IDE into proton), **Team module fields** for the reviewer directory, **Milestone 2 confirmation** (unpaid). Our Creator trial ended 7 Oct: editorial cannot be demoed until it is in their Creator.
+>
 > **Updated 2026-10-02** — preview paused (Vercel Hobby limit). Asked for: Catalyst project (first), Creator developer access, Hostinger Cloud Startup + access, **GitHub account for Genedrift**; Cloudflare later (their DNS is on Cloudflare). Asked to confirm **Milestone 2** complete. Still waiting for the change list.
 >
 > **Updated 2026-09-30 (evening)** — call with Ashish. Waiting for his **written list of changes with images/infographics**. No development until it arrives. Country service pages on hold (new page type, SOW 09). Still owed: Catalyst project (priority), Creator developer access, Hostinger plan + access, Cloudflare access, content sign-off, PV owner.

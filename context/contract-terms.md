@@ -21,9 +21,9 @@ and acceptance.
 The Work Order's M2 also names representative Careers and Contact
 Us/location. The client's objection had a basis. **Update 1–2 Oct:** Careers
 and Contact are now live, so M2 confirmation was requested again (humbly);
-office locations go live with the move. Whether the 25 Sept payment was M1 or
-M2 is still unconfirmed. M2 appears paid (payment
-notice 25 Sept). Do not reuse that argument.
+office locations go live with the move. **Payment status (7 Oct): M1 (₹28,000) paid; M2 (₹42,000) NOT paid**,
+and the client has not said whether they consider M2 complete. Asked
+again in the 7 Oct reply to Akshay. Do not reuse that argument.
 
 The SOW has a different milestone table (30/30/20/20). For payment, the Work
 Order wins.

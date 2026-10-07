@@ -5,6 +5,100 @@ chat reads after `00-start-here.md`.
 
 ---
 
+## 2026-10-07 — reviewer templates built and tested; Creator trial ended; reply to Akshay
+
+### Editorial: review templates + Master Approver (widget v0.9.3)
+
+Built after Akshay's 7 Oct email (option a: blog now, free; website-content
+review later as a separate, out-of-scope step). Repo `Piyush-45/genedrift-editorial`
+(local folder `g-p-6a88…`), commits `bddcfe4` v0.9.0, `9c8723f` v0.9.1,
+`964b51c` v0.9.2, `4ea6453` v0.9.3 (not pushed). Setup and test guide:
+`creator/REVIEW_TEMPLATES_SETUP.md`. Project doc: `claude/editorial-review-templates.md`.
+
+Final rules (Piyush's decisions, matching what the client asked for):
+- Three ways to send: **template** (everyone in it approves; parallel or
+  sequential by Step number), **choose reviewers** (everyone picked approves),
+  **shared queue** (default policy's count, admin setting).
+- Writers no longer pick an approval policy; new articles get the default.
+- A writer listed in a template is left out of their own article's review;
+  the template is hidden only if they are its only reviewer.
+- **Master Approver** approves on a reviewer's behalf with a reason
+  (10+ chars), recorded on the review + "Review Overridden" history event +
+  notifications. Not on own article, not where they are a reviewer on that
+  article (so one person can never approve alone). Tip for client: give the
+  role to two people.
+- v0.9.1 fixed "This is no longer the active editable draft" on new articles
+  (missing Active_Draft_Revision_ID pointer is repaired from the newest Draft).
+
+**Tested live in the piyugene02 trial on 7 Oct:** save fix, parallel template,
+override, approval, history, writer-skip. Sequential flow not re-tested with
+correct Step numbers before the trial ended.
+
+Diagrams: `Claude outputs/Genedrift - Blog review workflow.png` (client-facing
+flow, in the editorial folder) and `review-order-explained.png`.
+
+### Creator trial ended (7–8 Oct)
+
+The piyugene02 Creator trial expired; widgets are locked. **Both apps exported
+after expiry (8 Oct 00:11):** `GeneDrift_Editorial_Platform-10.ds` and
+`Genedrift_Website-2.ds`. Checked: all forms (editorial 18, website 9), all
+Deluge functions (29 / 6) with the latest code, workflows, schedules and
+variables are inside. **Not in a .ds:** Custom APIs (editorial 15:
+submit_article_for_review, record_review_decision, claim_review_assignment,
+add_review_comment, override_review_assignment, start_new_revision,
+discard_new_revision, archive_draft_article, restore_archived_article,
+save_article_taxonomy, create_editorial_taxonomy_term, update_media_metadata,
+publish_approved_article, schedule_approved_article, retract_published_article;
+website 1: publish_website_page), widget zips, users/roles, records.
+Website export has no `Website_Offices` (never created in the trial; created
+at the move). **Both .ds files contain signing secrets.**
+
+Decision: no new personal account or second trial. Rebuild happens once, in
+the client's Creator. Editorial cannot be demoed live until then.
+
+### Client: Akshay's second email (7 Oct) and our reply
+
+Akshay: no dispute on scope; proceed ASAP. Workspace scroll fix approved.
+Contact/Careers clear; a short video "if feasible" (acceptable to skip while
+the deployment is down). Wants reviewer workflow for blog, website pages,
+markets and case studies, using their **Team** module as the reviewer
+directory; offered to configure website forms internally (15–30 min) if we
+name the forms; asked for workflow details (order, statuses, notifications,
+publish permissions, override record) and said "do not rework, just explain
+what is ready". Catalyst invite to tyagipiyush2233@gmail.com fails ("User
+exists in another data center"). Asked for: Creator/IDE route and how import
+avoids touching their operational app; GitHub (why; WorkDrive alternative?);
+URLs/redirects; Editor's Guide in Word; confirm Hostinger Cloud Startup with
+screenshot; Catalyst email; Hostinger and GitHub account details/permissions.
+
+Reply drafted 7 Oct (full text: project doc `claude/genedrift-reply-akshay-2026-10-07.md`).
+Key positions:
+- Blog review: ready, described in full; diagram + screenshots attached.
+- Website review: named the forms (Website_Pages/Sections, Website_Markets/
+  Market_Capabilities, Website_Case_Studies/Case_Study_Metrics, Review_Templates
+  + Reviewers subform); the real work is holding changes until approved and
+  whole-list publishing; discuss after the agreed implementation.
+- Creator: import both .ds as **new separate apps** (proton untouched); IDE
+  paste into proton as fallback; their choice. Note Work Order 1(g)/1(j) say
+  "within the COMPANY's existing Zoho Creator application".
+- Catalyst: user on their domain (recommended) or a never-used-with-Zoho email.
+- GitHub: needed for ownership, history and Hostinger deploys; WorkDrive for
+  documents. Org for Genedrift, Piyush-45 as Owner during implementation.
+- Hostinger: Cloud Startup confirmed; share hPanel access, no billing.
+- Editor's Guide: Word v1 attached (`genedrift-web/Claude outputs/Genedrift-Editors-Guide.docx`);
+  final at handover.
+- Contact/Careers video: after the site runs on their Hostinger (preview paused).
+- **Milestone 2 asked again.** M1 paid; **M2 (₹42,000) not paid**, status
+  unconfirmed by the client. Move starts once M2 is confirmed; access can be
+  arranged meanwhile. Move/content checklists go in a separate email.
+
+Out-of-scope items, all parked as a separate milestone after launch (none
+approved, none refused): more pages/sitemap growth (Ashish), country service
+pages (on hold, do not mention), Market Capabilities change, website-content
+review.
+
+---
+
 ## 2026-10-02 — rehearsal move to a new Catalyst account; Knowledge Hub redesign
 
 ### Rehearsal: both publishers moved to a fresh Catalyst account (India DC)

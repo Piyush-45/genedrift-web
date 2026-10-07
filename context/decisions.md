@@ -583,3 +583,27 @@ fallback.
 
 **Hostinger Cloud Startup recommended** against the Work Order's 100,000
 views/day; Unlimited offered as the lower-cost option with its trade-off stated.
+
+## Review workflow and the move — decided 2026-10-07
+
+**Blog review templates built at no charge; website-content review is out of
+scope.** Templates, choose-reviewers and the shared queue all require every
+named reviewer; the approval policy now only sets the shared-queue count and
+writers no longer pick it. Review for pages, markets and case studies is a new
+workflow (SOW 7.4 / 09): it needs changes held until approval and a decision on
+per-change vs whole-list approval. Discuss after the agreed implementation.
+
+**Master Approver cannot override where they are a reviewer.** Otherwise one
+person can approve an article alone. The writer is left out of a template
+rather than the template being hidden.
+
+**No second personal Creator account after the trial ended.** Both apps were
+exported as .ds; the rebuild happens once, in the client's Creator.
+
+**Recommended route: import both .ds as new apps in the client's Creator**
+(their operational app untouched); IDE paste into their existing app as the
+fallback. Their choice: Work Order 1(g)/1(j) mention their existing
+application.
+
+**GitHub stays** for ownership, history and Hostinger deploys; WorkDrive for
+documents only.
