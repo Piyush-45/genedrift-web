@@ -28,7 +28,13 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; background: var(--
 
 .shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
 
-.sidebar { background: var(--rail); border-right: 1px solid var(--line); padding: 20px 0; }
+/* The page list scrolls on its own and stays in view while a long page is
+   edited (client request, 7 Oct). */
+.sidebar {
+  background: var(--rail); border-right: 1px solid var(--line); padding: 20px 0;
+  position: sticky; top: 0; align-self: start;
+  height: 100vh; overflow-y: auto; overscroll-behavior: contain;
+}
 .sidebar h1 { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin: 0 20px 14px; }
 .pagelist { list-style: none; margin: 0; padding: 0; }
 .pagelist button {
